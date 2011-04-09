@@ -1,0 +1,75 @@
+<html>
+
+<head>
+ <script src="block.js"></script>
+ <script src="blokus.js"></script>
+ <script src="Drag.js"></script>
+ <style type="text/css">
+   .board { position: absolute;
+            background-color: #ccc;
+            border: solid black;
+            border-width: 1px;
+	    left: 99px;
+            top: 39px;
+            width: 280px;
+            height: 280px;
+   }
+   .vgrid { position: absolute;
+            top: 0px;
+            width: 1px;
+            height: 280px;
+            border: solid #eee;
+            border-width: 0px 0px 0px 1px;
+   }
+   .hgrid { position: absolute;
+            left: 0px;
+            width: 280px;
+            height: 1px;
+            border: solid #eee;
+            border-width: 1px 0px 0px 0px;
+   }
+   .marker { position: absolute;
+             width: 17px;
+             height: 17px;
+             border-radius: 17px;
+   }
+ </style>
+</head>
+
+<body onload="initBlokus()">
+  <div class="board">
+    <div class="vgrid" style="left: 20px"></div>
+    <div class="vgrid" style="left: 40px"></div>
+    <div class="vgrid" style="left: 60px"></div>
+    <div class="vgrid" style="left: 80px"></div>
+    <div class="vgrid" style="left:100px"></div>
+    <div class="vgrid" style="left:120px"></div>
+    <div class="vgrid" style="left:140px"></div>
+    <div class="vgrid" style="left:160px"></div>
+    <div class="vgrid" style="left:180px"></div>
+    <div class="vgrid" style="left:200px"></div>
+    <div class="vgrid" style="left:220px"></div>
+    <div class="vgrid" style="left:240px"></div>
+    <div class="vgrid" style="left:260px"></div>
+
+    <div class="hgrid" style="top: 20px"></div>
+    <div class="hgrid" style="top: 40px"></div>
+    <div class="hgrid" style="top: 60px"></div>
+    <div class="hgrid" style="top: 80px"></div>
+    <div class="hgrid" style="top:100px"></div>
+    <div class="hgrid" style="top:120px"></div>
+    <div class="hgrid" style="top:140px"></div>
+    <div class="hgrid" style="top:160px"></div>
+    <div class="hgrid" style="top:180px"></div>
+    <div class="hgrid" style="top:200px"></div>
+    <div class="hgrid" style="top:220px"></div>
+    <div class="hgrid" style="top:240px"></div>
+    <div class="hgrid" style="top:260px"></div>
+
+    <div class="marker"
+	 style="left: 82px; top: 82px; background-color:#a8f"></div>
+    <div class="marker"
+	 style="left:182px; top:182px; background-color:#fb6"></div>
+  </div>
+</body>
+</html>
