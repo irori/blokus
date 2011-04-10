@@ -34,6 +34,30 @@ function click(e) {
     }
 }
 
+function drag(event) {
+    var elem = this;
+    var deltaX = event.clientX - this.offsetLeft;
+    var deltaY = event.clientY - this.offsetTop;
+
+    document.addEventListener("mousemove", moveHandler, true);
+    document.addEventListener("mouseup", upHandler, true);
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    function moveHandler(e) {
+        elem.style.left = (e.clientX - deltaX) + "px";
+        elem.style.top = (e.clientY - deltaY) + "px";
+        e.stopPropagation();
+    }
+
+    function upHandler(e) {
+        document.removeEventListener("mouseup", upHandler, true);
+        document.removeEventListener("mousemove", moveHandler, true);
+        e.stopPropagation();
+    }
+}
+
 function createPiece(x, y, id, dir) {
     var elem = document.createElement("div");
     elem.blockId = id;
@@ -54,7 +78,7 @@ function createPiece(x, y, id, dir) {
 	cell.className = "block" + Blokus.board.player();
 	elem.appendChild(cell);
     }
-    elem.addEventListener("mousedown", function(e){drag(elem, e)}, false);
+    elem.addEventListener("mousedown", drag, false);
     elem.addEventListener("DOMMouseScroll", wheel, false);
     elem.addEventListener("mousewheel", wheel, false);
     elem.addEventListener("click", click, false);
