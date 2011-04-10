@@ -27,7 +27,7 @@ test("Board constructor", function(){
 	}
     }
     same(b.turn, 0);
-    ok(b.isViolet());
+    same(b.player(), 0);
     for (var p = 0; p < 2; p++) {
 	for (var i = 0; i < 21; i++)
 	    ok(!b.isUsed(p, i));
@@ -51,7 +51,7 @@ test("first move", function(){
 
     b.doMove(new Move("66t0"));
     same(b.turn, 1);
-    ok(!b.isViolet());
+    same(b.player(), 1);
     ok(b.isUsed(0, 1));
     ok(!b.isUsed(1, 1));
     same(b.violetScore(), 5);
@@ -68,7 +68,7 @@ test("fourth move", function(){
     b.doMove(new Move("78l5"));
 
     same(b.turn, 3);
-    ok(!b.isViolet());
+    same(b.player(), 1);
     same(b.violetScore(), 10);
     same(b.orangeScore(), 5);
     ok(b.canMove());

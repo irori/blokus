@@ -58,13 +58,13 @@ Board.prototype.inBounds = function(x, y) {
     return (x >= 0 && y >= 0 && x < 14 && y < 14);
 }
 Board.prototype.at = function(x, y) { return this.square[y][x]; }
-Board.prototype.isViolet = function() { return (this.turn & 1) == 0; }
+Board.prototype.player = function() { return this.turn % 2; }
 
 Board.prototype.isValidMove = function(move) {
     if (move.isPass())
 	return true;
 
-    if (this.used[move.blockId() + (this.isViolet() ? 0 : 21)])
+    if (this.used[move.blockId() + this.player() * 21])
 	return false;
 
     var rot = blockSet[move.blockId()].rotations[move.direction()];
@@ -80,7 +80,7 @@ Board.prototype.isValidMove = function(move) {
     for (var i = 0; i < piece.size; i++) {
 	var x = px + piece.coords[i][0];
 	var y = py + piece.coords[i][1];
-	if (this.square[y][x] & (this.isViolet() ? Board.VIOLET_EDGE : Board.ORANGE_EDGE))
+	if (this.square[y][x] & [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
 	    return true;
     }
     return false;
@@ -97,9 +97,9 @@ Board.prototype.doMove = function(move) {
     var py = move.y() + rot.offsetY;
     var piece = rot.piece;
 
-    var block = this.isViolet() ? Board.VIOLET_BLOCK : Board.ORANGE_BLOCK;
-    var side_bit = this.isViolet() ? Board.VIOLET_SIDE : Board.ORANGE_SIDE;
-    var edge_bit = this.isViolet() ? Board.VIOLET_EDGE : Board.ORANGE_EDGE;
+    var block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
+    var side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
+    var edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
 
     for (var i = 0; i < piece.size; i++) {
 	var x = px + piece.coords[i][0];
@@ -115,7 +115,7 @@ Board.prototype.doMove = function(move) {
 	if (this.inBounds(x+1,y+1)) this.square[y+1][x+1] |= edge_bit;
     }
 
-    this.used[move.blockId() + (this.isViolet() ? 0 : 21)] = true;
+    this.used[move.blockId() + this.player() * 21] = true;
     this.turn++;
 }
 
@@ -140,8 +140,8 @@ Board.prototype.orangeScore = function() {
 }
 
 Board.prototype._isMovable = function(px, py, piece) {
-    var mask = this.isViolet() ? (Board.VIOLET_BLOCK|Board.VIOLET_SIDE|Board.ORANGE_BLOCK)
-	: (Board.ORANGE_BLOCK|Board.ORANGE_SIDE|Board.VIOLET_BLOCK);
+    var mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
+	[Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
 
     for (var i = 0; i < piece.size; i++) {
 	var x = px + piece.coords[i][0];

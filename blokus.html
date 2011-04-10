@@ -2,6 +2,7 @@
 
 <head>
  <script src="block.js"></script>
+ <script src="board.js"></script>
  <script src="blokus.js"></script>
  <script src="Drag.js"></script>
  <style type="text/css">
@@ -33,11 +34,15 @@
              height: 17px;
              border-radius: 17px;
    }
+   .block0 { background-color: #63d;
+   }
+   .block1 { background-color: #f72;
+   }
  </style>
 </head>
 
 <body onload="initBlokus()">
-  <div class="board">
+  <div class="board" id="board">
     <div class="vgrid" style="left: 20px"></div>
     <div class="vgrid" style="left: 40px"></div>
     <div class="vgrid" style="left: 60px"></div>

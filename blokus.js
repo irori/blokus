@@ -34,15 +34,15 @@ function click(e) {
     }
 }
 
-function createPiece(x, y, name, dir) {
+function createPiece(x, y, id, dir) {
     var elem = document.createElement("div");
-    elem.blockId = 117 - name.charCodeAt(0); // 117 is 'u'
+    elem.blockId = id;
     elem.direction = dir;
     elem.setAttribute("style",
 		      "left:" + x * scale + "px;" +
 		      "top:" + y * scale + "px;" +
 		      "position:absolute;")
-    piece = pieceSet[name + dir];
+    piece = blockSet[id].rotations[dir].piece;
     for (var i = 0; i < piece.size; i++) {
 	var cell = document.createElement("div");
 	cell.setAttribute("style",
@@ -50,8 +50,8 @@ function createPiece(x, y, name, dir) {
 			  "left:" + piece.coords[i][0] * scale + "px;" +
 			  "top:" + piece.coords[i][1] * scale + "px;" +
 			  "width:" + scale + "px;" +
-			  "height:" + scale + "px;" +
-			  "background-color:#63d;");
+			  "height:" + scale + "px;");
+	cell.className = "block" + Blokus.board.player();
 	elem.appendChild(cell);
     }
     elem.addEventListener("mousedown", function(e){drag(elem, e)}, false);
@@ -62,31 +62,81 @@ function createPiece(x, y, name, dir) {
 }
 
 function createPieces() {
+    var table = [
+	[1, 1, 0],
+	[5, 1, 0],
+	[9, 1, 0],
+	[13, 1, 0],
+	[16, 2, 0],
+	[21, 1, 0],
+	[24, 1, 0],
+	[1, 5, 0],
+	[4, 5, 0],
+	[7, 5, 2],
+	[12, 5, 2],
+	[18, 5, 2],
+	[23, 5, 0],
+	[0, 8, 0],
+	[4, 8, 2],
+	[8, 9, 2],
+	[13, 8, 2],
+	[16, 9, 0],
+	[20, 9, 2],
+	[23, 8, 0],
+	[25, 9, 0],
+    ];
     var left = 2;
     var top = 20;
-    createPiece(left + 1, top + 1, "u", 0);
-    createPiece(left + 5, top + 1, "t", 0);
-    createPiece(left + 9, top + 1, "s", 0);
-    createPiece(left + 13, top + 1, "r", 0);
-    createPiece(left + 16, top + 2, "q", 0);
-    createPiece(left + 21, top + 1, "p", 0);
-    createPiece(left + 24, top + 1, "o", 0);
-    createPiece(left + 1, top + 5, "n", 0);
-    createPiece(left + 4, top + 5, "m", 0);
-    createPiece(left + 7, top + 5, "l", 2);
-    createPiece(left + 12, top + 5, "k", 2);
-    createPiece(left + 18, top + 5, "j", 2);
-    createPiece(left + 23, top + 5, "i", 0);
-    createPiece(left + 0, top + 8, "h", 0);
-    createPiece(left + 4, top + 8, "g", 2);
-    createPiece(left + 8, top + 9, "f", 2);
-    createPiece(left + 13, top + 8, "e", 2);
-    createPiece(left + 16, top + 9, "d", 0);
-    createPiece(left + 20, top + 9, "c", 2);
-    createPiece(left + 23, top + 8, "b", 0);
-    createPiece(left + 25, top + 9, "a", 0);
+    for (var i = 0; i < table.length; i++) {
+	var a = table[i];
+	if (!Blokus.board.isUsed(Blokus.board.player(), i))
+	    createPiece(left + a[0], top + a[1], i, a[2]);
+    }
 }
 
+function updateBoardView() {
+    boardElem = document.getElementById("board");
+    for (var y = 0; y < 14; y++) {
+	for (var x = 0; x < 14; x++) {
+	    var sq = Blokus.board.at(x, y);
+	    if ((sq & (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK)) == 0)
+		continue;
+	    var id = "board_" + x.toString(16) + y.toString(16);
+	    if (document.getElementById(id))
+		continue;
+	    var cell = document.createElement("div");
+	    cell.id = id;
+	    cell.setAttribute("style",
+			      "position:absolute;" +
+			      "left:" + x * scale + "px;" +
+			      "top:" + y * scale + "px;" +
+			      "width:" + scale + "px;" +
+			      "height:" + scale + "px;");
+	    cell.className = (sq & Board.VIOLET_BLOCK) ? "block0" : "block1";
+	    boardElem.appendChild(cell);
+	}
+    }
+}
+
+function createBoard(state) {
+    board = new Board();
+    if (state) {
+	var moves = state.split("/");
+	for (var i = 0; i < moves.length; i++) {
+	    var move = new Move(moves[i]);
+	    if (board.isValidMove(move))
+		board.doMove(move)
+	    else
+		throw new Error("invalid move: " + move.fourcc());
+	}
+    }
+    return board;
+}
+
+Blokus = {}
+
 function initBlokus() {
+    Blokus.board = createBoard(window.location.hash.substring(1));
     createPieces();
+    updateBoardView();
 }
