@@ -46,16 +46,60 @@ function drag(event) {
     event.preventDefault();
 
     function moveHandler(e) {
-        elem.style.left = (e.clientX - deltaX) + "px";
-        elem.style.top = (e.clientY - deltaY) + "px";
         e.stopPropagation();
+	var x = e.clientX - deltaX;
+	var y = e.clientY - deltaY;
+	var bpos = toBoardPosition(x, y);
+	var pieceId = elem.blockId << 3 | elem.direction;
+	if (bpos &&
+	    Blokus.board.isValidMove(new Move(bpos[0], bpos[1], pieceId))) {
+	    var epos = fromBoardPosition(bpos[0], bpos[1]);
+	    elem.style.left = epos[0] + "px";
+	    elem.style.top = epos[1] + "px";
+	}
+	else {
+            elem.style.left = x + "px";
+            elem.style.top = y + "px";
+	}
     }
 
     function upHandler(e) {
         document.removeEventListener("mouseup", upHandler, true);
         document.removeEventListener("mousemove", moveHandler, true);
         e.stopPropagation();
+
+	var bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
+	if (bpos) {
+	    var move = new Move(bpos[0], bpos[1],
+				elem.blockId << 3 | elem.direction);
+	    if (Blokus.board.isValidMove(move)) {
+		Blokus.board.doMove(move);
+		elem.style.visibility = "hidden";
+		updateBoardView();
+	    }
+	}	
     }
+}
+
+function toBoardPosition(x, y) {
+    var boardStyle = window.getComputedStyle(document.getElementById("board"), null);
+    x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
+    y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
+    x = Math.round(x / scale);
+    y = Math.round(y / scale);
+    if (Blokus.board.inBounds(x, y))
+	return [x, y];
+    else
+	return null;
+}
+
+function fromBoardPosition(x, y) {
+    var boardStyle = window.getComputedStyle(document.getElementById("board"), null);
+    return [
+	x * scale + parseInt(boardStyle.left) +
+	    parseInt(boardStyle.borderLeftWidth),
+	y * scale + parseInt(boardStyle.top) +
+	    parseInt(boardStyle.borderTopWidth)];
 }
 
 function createPiece(x, y, id, dir) {
@@ -75,7 +119,7 @@ function createPiece(x, y, id, dir) {
 			  "top:" + piece.coords[i][1] * scale + "px;" +
 			  "width:" + scale + "px;" +
 			  "height:" + scale + "px;");
-	cell.className = "block" + Blokus.board.player();
+	cell.className = "block" + Blokus.player;
 	elem.appendChild(cell);
     }
     elem.addEventListener("mousedown", drag, false);
@@ -114,7 +158,7 @@ function createPieces() {
 
     for (var i = 0; i < table.length; i++) {
 	var a = table[i];
-	if (!Blokus.board.isUsed(Blokus.board.player(), i))
+	if (!Blokus.board.isUsed(Blokus.player, i))
 	    createPiece(left + a[0], top + a[1], i, a[2]);
     }
 }
@@ -146,7 +190,7 @@ function createOpponentsPieces() {
 
     for (var id = 0; id < table.length; id++) {
 	var a = table[id];
-	if (Blokus.board.isUsed(1 - Blokus.board.player(), id))
+	if (Blokus.board.isUsed(1 - Blokus.player, id))
 	    continue;
 
 	var x = 8 + a[0];
@@ -168,7 +212,7 @@ function createOpponentsPieces() {
 			      "top:" + piece.coords[i][1] * s + "px;" +
 			      "width:" + s + "px;" +
 			      "height:" + s + "px;");
-	    cell.className = "block" + (1 - Blokus.board.player());
+	    cell.className = "block" + (1 - Blokus.player);
 	    elem.appendChild(cell);
 	}
 	document.body.appendChild(elem);
@@ -176,7 +220,7 @@ function createOpponentsPieces() {
 }
 
 function updateBoardView() {
-    boardElem = document.getElementById("board");
+    var boardElem = document.getElementById("board");
     for (var y = 0; y < 14; y++) {
 	for (var x = 0; x < 14; x++) {
 	    var sq = Blokus.board.at(x, y);
@@ -218,6 +262,7 @@ Blokus = {}
 
 function initBlokus() {
     Blokus.board = createBoard(window.location.hash.substring(1));
+    Blokus.player = Blokus.board.player();
     createPieces();
     createOpponentsPieces();
     updateBoardView();
