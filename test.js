@@ -26,7 +26,7 @@ test("Board constructor", function(){
 		same(b.at(x, y), 0);
 	}
     }
-    same(b.turn, 0);
+    same(b.history.length, 0);
     same(b.player(), 0);
     for (var p = 0; p < 2; p++) {
 	for (var i = 0; i < 21; i++)
@@ -50,7 +50,8 @@ test("first move", function(){
     ok(!b.isValidMove(new Move("65t6")));
 
     b.doMove(new Move("66t0"));
-    same(b.turn, 1);
+    same(b.history.length, 1);
+    same(b.getPath(), "66t0");
     same(b.player(), 1);
     ok(b.isUsed(0, 1));
     ok(!b.isUsed(1, 1));
@@ -67,7 +68,7 @@ test("fourth move", function(){
     b.doMove(new Move("99t4"));
     b.doMove(new Move("78l5"));
 
-    same(b.turn, 3);
+    same(b.getPath(), "55t6/99t4/78l5");
     same(b.player(), 1);
     same(b.violetScore(), 10);
     same(b.orangeScore(), 5);

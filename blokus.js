@@ -15,6 +15,8 @@ function rotate(elem, dir, x, y) {
 }
 
 function wheel(e) {
+    if (Blokus.board.player() != Blokus.player)
+	return;
     var raw = e.detail ? e.detail : -e.wheelDelta;
     var x = e.clientX + window.pageXOffset;
     var y = e.clientY + window.pageYOffset;
@@ -27,6 +29,8 @@ function wheel(e) {
 }
 
 function click(e) {
+    if (Blokus.board.player() != Blokus.player)
+	return;
     if (e.detail % 2 == 0) {
 	var x = e.clientX + window.pageXOffset;
 	var y = e.clientY + window.pageYOffset;
@@ -35,6 +39,8 @@ function click(e) {
 }
 
 function drag(event) {
+    if (Blokus.board.player() != Blokus.player)
+	return;
     var elem = this;
     var deltaX = event.clientX - this.offsetLeft;
     var deltaY = event.clientY - this.offsetTop;
@@ -74,6 +80,7 @@ function drag(event) {
 				elem.blockId << 3 | elem.direction);
 	    if (Blokus.board.isValidMove(move)) {
 		Blokus.board.doMove(move);
+		opponentMove();
 		elem.style.visibility = "hidden";
 		updateBoardView();
 	    }
@@ -199,6 +206,7 @@ function createOpponentsPieces() {
 	var s = scale * 3 >> 3;
 
 	var elem = document.createElement("div");
+	elem.id = "o" + String.fromCharCode(117 - id);
 	elem.setAttribute("style",
 			  "left:" + x * s + "px;" +
 			  "top:" + y * s + "px;" +
@@ -241,6 +249,24 @@ function updateBoardView() {
 	    boardElem.appendChild(cell);
 	}
     }
+}
+
+function opponentMove() {
+    var request = new window.XMLHttpRequest();
+    request.open("GET", "http://localhost:4000/hmmm/" + Blokus.board.getPath());
+    request.onreadystatechange = function() {
+	if (request.readyState != 4)
+	    return;
+	if (request.status != 200)
+	    throw new Error("status: " + request.status);
+	var move = new Move(request.responseText);
+	Blokus.board.doMove(move);
+	elem = document.getElementById("o" + move.fourcc().substring(2, 3))
+	if (elem)
+	    elem.style.visibility = "hidden";
+	updateBoardView();
+    }
+    request.send(null);
 }
 
 function createBoard(state) {

@@ -20,7 +20,7 @@ Move.prototype.pieceId = function() { return this.m >> 8; }
 Move.prototype.blockId = function() { return this.m >> 11; }
 Move.prototype.direction = function() { return this.m >> 8 & 0x7; }
 Move.prototype.isPass = function() { return this.m == 0xffff; }
-Move.prototype.fourcc = function() {
+Move.prototype.fourcc = Move.prototype.toString = function() {
     if (this.isPass())
 	return "----";
     return ((this.m & 0xff) + 0x11).toString(16) +
@@ -41,7 +41,7 @@ function Board() {
     }
     this.square[4][4] = Board.VIOLET_EDGE;
     this.square[9][9] = Board.ORANGE_EDGE;
-    this.turn = 0;
+    this.history = [];
     this.used = new Array(21*2);
 }
 
@@ -58,7 +58,8 @@ Board.prototype.inBounds = function(x, y) {
     return (x >= 0 && y >= 0 && x < 14 && y < 14);
 }
 Board.prototype.at = function(x, y) { return this.square[y][x]; }
-Board.prototype.player = function() { return this.turn % 2; }
+Board.prototype.turn = function() { return this.history.length; }
+Board.prototype.player = function() { return this.turn() % 2; }
 
 Board.prototype.isValidMove = function(move) {
     if (move.isPass())
@@ -88,7 +89,7 @@ Board.prototype.isValidMove = function(move) {
 
 Board.prototype.doMove = function(move) {
     if (move.isPass()) {
-	this.doPass();
+	this.history.push(move);
 	return;
     }
 
@@ -116,10 +117,10 @@ Board.prototype.doMove = function(move) {
     }
 
     this.used[move.blockId() + this.player() * 21] = true;
-    this.turn++;
+    this.history.push(move);
 }
 
-Board.prototype.doPass = function() { this.turn++; }
+Board.prototype.doPass = function() { this.history.push(Move.PASS); }
 
 Board.prototype.violetScore = function() {
     var score = 0;
@@ -157,10 +158,9 @@ Board.prototype.isUsed = function(player, blockId) {
 }
 
 Board.prototype.canMove = function() {
-    var player = this.turn % 2;
     for (var p in pieceSet) {
 	var id = pieceSet[p].id
-	if (this.used[(id >> 3) + player * 21])
+	if (this.used[(id >> 3) + this.player() * 21])
 	    continue;
 	for (var y = 0; y < 14; y++) {
 	    for (var x = 0; x < 14; x++) {
@@ -170,4 +170,8 @@ Board.prototype.canMove = function() {
 	}
     }
     return false;
+}
+
+Board.prototype.getPath = function() {
+    return this.history.join("/");
 }
