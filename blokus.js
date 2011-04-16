@@ -323,9 +323,10 @@ function createBoard(state) {
 
 Blokus = {}
 
-function initBlokus() {
-    Blokus.board = createBoard(window.location.hash.substring(1));
-    Blokus.player = Blokus.board.player();
+function initBlokus(path) {
+    Blokus.board = createBoard(path);
+    if (Blokus.player == undefined)
+	Blokus.player = Blokus.board.player();
     var violet, orange;
     if (Blokus.player == 0) {
 	violet = "You";
@@ -341,4 +342,20 @@ function initBlokus() {
     createOpponentsPieces();
     updateBoardView();
     updateScore();
+}
+
+function init() {
+    var path = window.location.hash.substring(1);
+    if (path) {
+	document.getElementById("start-game").style.visibility = "hidden";
+	initBlokus(path);
+    }
+}
+
+function startGame(player) {
+    document.getElementById("start-game").style.visibility = "hidden";
+    Blokus.player = player;
+    initBlokus();
+    if (player == 1)
+	opponentMove();
 }

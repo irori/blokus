@@ -93,10 +93,17 @@
      background-color: #bdf;
      visibility: hidden;
    }
+   #start-game {
+     position: absolute;
+     left: 250px;
+     top: 350px;
+     text-align: center;
+   }
  </style>
+ <title>Blokus Duo</title>
 </head>
 
-<body onload="initBlokus()">
+<body onload="init()">
   <div id="board">
     <div class="vgrid" style="left: 20px"></div>
     <div class="vgrid" style="left: 40px"></div>
@@ -143,6 +150,10 @@
     <tr><td id="orange-time" class="scoreboard-time">00:00</td></tr>
     <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
   </table>
-  <div id="message">Orange plays</div>
+  <div id="message"></div>
+  <table id="start-game">
+    <tr><td><button onclick="startGame(0)">Violet</button></td></tr>
+    <tr><td><button onclick="startGame(1)">Orange</button></td></tr>
+  </div>
 </body>
 </html>
