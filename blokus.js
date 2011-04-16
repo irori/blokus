@@ -136,67 +136,44 @@ function createPiece(x, y, id, dir) {
     document.body.appendChild(elem);
 }
 
+var piecePositionTable = [ // x, y, dir
+    [1, 1, 0], // u
+    [5, 1, 0], // t
+    [9, 1, 0], // s
+    [13, 1, 0], // r
+    [16, 2, 0], // q
+    [21, 1, 0], // p
+    [24, 1, 0], // o
+    [1, 5, 0], // n
+    [4, 5, 0], // m
+    [7, 5, 2], // l
+    [12, 5, 2], // k
+    [18, 5, 2], // j
+    [23, 5, 0], // i
+    [0, 8, 0], // h
+    [4, 8, 2], // g
+    [8, 9, 2], // f
+    [13, 8, 2], // e
+    [16, 9, 0], // d
+    [20, 9, 2], // c
+    [23, 8, 0], // b
+    [25, 9, 0], // a
+];
+
 function createPieces() {
-    var table = [ // x, y, dir
-	[1, 1, 0], // u
-	[5, 1, 0], // t
-	[9, 1, 0], // s
-	[13, 1, 0], // r
-	[16, 2, 0], // q
-	[21, 1, 0], // p
-	[24, 1, 0], // o
-	[1, 5, 0], // n
-	[4, 5, 0], // m
-	[7, 5, 2], // l
-	[12, 5, 2], // k
-	[18, 5, 2], // j
-	[23, 5, 0], // i
-	[0, 8, 0], // h
-	[4, 8, 2], // g
-	[8, 9, 2], // f
-	[13, 8, 2], // e
-	[16, 9, 0], // d
-	[20, 9, 2], // c
-	[23, 8, 0], // b
-	[25, 9, 0], // a
-    ];
     var left = 2;
     var top = 20;
 
-    for (var i = 0; i < table.length; i++) {
-	var a = table[i];
+    for (var i = 0; i < piecePositionTable.length; i++) {
+	var a = piecePositionTable[i];
 	if (!Blokus.board.isUsed(Blokus.player, i))
 	    createPiece(left + a[0], top + a[1], i, a[2]);
     }
 }
 
 function createOpponentsPieces() {
-    var table = [ // x, y, dir
-	[1, 1, 0], // u
-	[5, 1, 0], // t
-	[9, 1, 0], // s
-	[13, 1, 0], // r
-	[16, 2, 0], // q
-	[21, 1, 0], // p
-	[24, 1, 0], // o
-	[1, 5, 0], // n
-	[4, 5, 0], // m
-	[7, 5, 2], // l
-	[12, 5, 2], // k
-	[18, 5, 2], // j
-	[23, 5, 0], // i
-	[0, 8, 0], // h
-	[4, 8, 2], // g
-	[8, 9, 2], // f
-	[13, 8, 2], // e
-	[16, 9, 0], // d
-	[20, 9, 2], // c
-	[23, 8, 0], // b
-	[25, 9, 0], // a
-    ];
-
-    for (var id = 0; id < table.length; id++) {
-	var a = table[id];
+    for (var id = 0; id < piecePositionTable.length; id++) {
+	var a = piecePositionTable[id];
 	if (Blokus.board.isUsed(1 - Blokus.player, id))
 	    continue;
 
