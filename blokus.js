@@ -171,28 +171,28 @@ function createPieces() {
 }
 
 function createOpponentsPieces() {
-    var table = [ //x, y, dir
+    var table = [ // x, y, dir
 	[1, 1, 0], // u
-	[1, 5, 0], // t
-	[1, 9, 0], // s
-	[1, 13, 0], // r
-	[0, 17, 0], // q
-	[1, 20, 0], // p
-	[4, 1, 0], // o
-	[1, 24, 2], // n
-	[1, 27, 2], // m
-	[5, 7, 0], // l
-	[5, 12, 0], // k
-	[5, 17, 0], // j
-	[1, 29, 0], // i
-	[4, 21, 0], // h
-	[1, 32, 2], // g
-	[1, 36, 2], // f
-	[5, 25, 0], // e
-	[4, 30, 0], // d
-	[5, 33, 0], // c
-	[5, 36, 2], // b
-	[3, 34, 0], // a
+	[5, 1, 0], // t
+	[9, 1, 0], // s
+	[13, 1, 0], // r
+	[16, 2, 0], // q
+	[21, 1, 0], // p
+	[24, 1, 0], // o
+	[1, 5, 0], // n
+	[4, 5, 0], // m
+	[7, 5, 2], // l
+	[12, 5, 2], // k
+	[18, 5, 2], // j
+	[23, 5, 0], // i
+	[0, 8, 0], // h
+	[4, 8, 2], // g
+	[8, 9, 2], // f
+	[13, 8, 2], // e
+	[16, 9, 0], // d
+	[20, 9, 2], // c
+	[23, 8, 0], // b
+	[25, 9, 0], // a
     ];
 
     for (var id = 0; id < table.length; id++) {
@@ -200,10 +200,13 @@ function createOpponentsPieces() {
 	if (Blokus.board.isUsed(1 - Blokus.player, id))
 	    continue;
 
-	var x = 8 + a[0];
-	var y = 8 + a[1];
-	var dir = a[2];
-	var s = scale * 3 >> 3;
+	var x = 4 + 10 - a[1];
+	var y = 5 + a[0];
+	var dir = (a[2] + 2) & 7;
+	var s = scale >> 1;
+	var piece = blockSet[id].rotations[dir].piece;
+	x += blockSet[id].rotations[dir].offsetX;
+	y += blockSet[id].rotations[dir].offsetY;
 
 	var elem = document.createElement("div");
 	elem.id = "o" + String.fromCharCode(117 - id);
@@ -211,7 +214,6 @@ function createOpponentsPieces() {
 			  "left:" + x * s + "px;" +
 			  "top:" + y * s + "px;" +
 			  "position:absolute;")
-	piece = blockSet[id].rotations[dir].piece;
 	for (var i = 0; i < piece.size; i++) {
 	    var cell = document.createElement("div");
 	    cell.setAttribute("style",
