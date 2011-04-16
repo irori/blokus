@@ -5,43 +5,74 @@
  <script src="board.js"></script>
  <script src="blokus.js"></script>
  <style type="text/css">
-   .board { position: absolute;
-            background-color: #ccc;
-            border: solid black;
-            border-width: 1px;
-	    left: 179px;
-            top: 39px;
-            width: 280px;
-            height: 280px;
+   #board {
+     position: absolute;
+     background-color: #ccc;
+     border: solid black;
+     border-width: 1px;
+     left: 179px;
+     top: 39px;
+     width: 280px;
+     height: 280px;
    }
-   .vgrid { position: absolute;
-            top: 0px;
-            width: 1px;
-            height: 280px;
-            border: solid #eee;
-            border-width: 0px 0px 0px 1px;
+   #piece-area {
+     position: absolute;
+     left: 40px;
+     top: 400px;
+     width: 520px;
+     height: 200px;
    }
-   .hgrid { position: absolute;
-            left: 0px;
-            width: 280px;
-            height: 1px;
-            border: solid #eee;
-            border-width: 1px 0px 0px 0px;
+   #opponents-piece-area {
+     position: absolute;
+     left: 50px;
+     top: 50px;
+     width: 100px;
+     height: 260px;
    }
-   .marker { position: absolute;
-             width: 17px;
-             height: 17px;
-             border-radius: 17px;
+   .vgrid {
+     position: absolute;
+     top: 0px;
+     width: 1px;
+     height: 280px;
+     border: solid #eee;
+     border-width: 0px 0px 0px 1px;
    }
-   .block0 { background-color: #63d;
+   .hgrid {
+     position: absolute;
+     left: 0px;
+     width: 280px;
+     height: 1px;
+     border: solid #eee;
+     border-width: 1px 0px 0px 0px;
    }
-   .block1 { background-color: #f72;
+   .marker {
+     position: absolute;
+     width: 17px;
+     height: 17px;
+     border-radius: 17px;
+   }
+   .block0 {
+     background-color: #63d;
+   }
+   .block1 {
+     background-color: #f72;
+   }
+   #message {
+     position: absolute;
+     left: 50px;
+     top: 350px;
+     width: 500px;
+     padding: 5px;
+     text-align: center;
+     font-weight: bold;
+     background-color: #bdf;
+     visibility: hidden;
    }
  </style>
 </head>
 
 <body onload="initBlokus()">
-  <div class="board" id="board">
+  <div id="board">
     <div class="vgrid" style="left: 20px"></div>
     <div class="vgrid" style="left: 40px"></div>
     <div class="vgrid" style="left: 60px"></div>
@@ -75,5 +106,8 @@
     <div class="marker"
 	 style="left:182px; top:182px; background-color:#fb6"></div>
   </div>
+  <div id="opponents-piece-area"></div>
+  <div id="piece-area"></div>
+  <div id="message">Orange plays</div>
 </body>
 </html>

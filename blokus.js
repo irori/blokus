@@ -1,5 +1,15 @@
 var scale = 20
 
+function showMessage(msg) {
+    var elem = document.getElementById("message");
+    elem.innerHTML = msg;
+    elem.style.visibility = "visible";
+}
+
+function hideMessage() {
+    document.getElementById("message").style.visibility = "hidden";
+}
+
 function rotate(elem, dir, x, y) {
     elem.direction = dir;
     var rot = blockSet[elem.blockId].rotations[dir];
@@ -10,8 +20,10 @@ function rotate(elem, dir, x, y) {
 	elem.childNodes[i].style.top =
 	    (rot.offsetY + piece.coords[i][1]) * scale + "px";
     }
-    elem.style.left = x - scale / 2 + "px";
-    elem.style.top = y - scale / 2 + "px";
+    if (x != undefined) {
+	elem.style.left = x - scale / 2 + "px";
+	elem.style.top = y - scale / 2 + "px";
+    }
 }
 
 function wheel(e) {
@@ -110,12 +122,22 @@ function fromBoardPosition(x, y) {
 }
 
 function createPiece(x, y, id, dir) {
-    var elem = document.createElement("div");
+    var elem = document.getElementById("b" + id);
+    if (elem) {
+	elem.style.left = x + "px";
+	elem.style.top = y + "px";
+	rotate(elem, dir);
+	return;
+    }
+
+    // create a new piece
+    elem = document.createElement("div");
+    elem.id = "b" + id;
     elem.blockId = id;
     elem.direction = dir;
     elem.setAttribute("style",
-		      "left:" + x * scale + "px;" +
-		      "top:" + y * scale + "px;" +
+		      "left:" + x + "px;" +
+		      "top:" + y + "px;" +
 		      "position:absolute;")
     piece = blockSet[id].rotations[dir].piece;
     for (var i = 0; i < piece.size; i++) {
@@ -161,24 +183,25 @@ var piecePositionTable = [ // x, y, dir
 ];
 
 function createPieces() {
-    var left = 2;
-    var top = 20;
-
+    var area = window.getComputedStyle(document.getElementById("piece-area"), null);
+    var left = parseInt(area.left);
+    var top = parseInt(area.top);
     for (var i = 0; i < piecePositionTable.length; i++) {
 	var a = piecePositionTable[i];
 	if (!Blokus.board.isUsed(Blokus.player, i))
-	    createPiece(left + a[0], top + a[1], i, a[2]);
+	    createPiece(left + a[0] * scale, top + a[1] * scale, i, a[2]);
     }
 }
 
 function createOpponentsPieces() {
+    var area = document.getElementById("opponents-piece-area");
     for (var id = 0; id < piecePositionTable.length; id++) {
 	var a = piecePositionTable[id];
 	if (Blokus.board.isUsed(1 - Blokus.player, id))
 	    continue;
 
-	var x = 4 + 10 - a[1];
-	var y = 5 + a[0];
+	var x = 9 - a[1];
+	var y = a[0];
 	var dir = (a[2] + 2) & 7;
 	var s = scale >> 1;
 	var piece = blockSet[id].rotations[dir].piece;
@@ -186,7 +209,7 @@ function createOpponentsPieces() {
 	y += blockSet[id].rotations[dir].offsetY;
 
 	var elem = document.createElement("div");
-	elem.id = "o" + String.fromCharCode(117 - id);
+	elem.id = "o" + id;
 	elem.setAttribute("style",
 			  "left:" + x * s + "px;" +
 			  "top:" + y * s + "px;" +
@@ -202,7 +225,7 @@ function createOpponentsPieces() {
 	    cell.className = "block" + (1 - Blokus.player);
 	    elem.appendChild(cell);
 	}
-	document.body.appendChild(elem);
+	area.appendChild(elem);
     }
 }
 
@@ -231,6 +254,7 @@ function updateBoardView() {
 }
 
 function opponentMove() {
+    showMessage(["Orange", "Violet"][Blokus.player] + " plays");
     var request = new window.XMLHttpRequest();
     request.open("GET", "http://localhost:4000/hmmm/" + Blokus.board.getPath());
     request.onreadystatechange = function() {
@@ -240,10 +264,13 @@ function opponentMove() {
 	    throw new Error("status: " + request.status);
 	var move = new Move(request.responseText);
 	Blokus.board.doMove(move);
-	elem = document.getElementById("o" + move.fourcc().substring(2, 3))
+	elem = document.getElementById("o" + move.blockId())
 	if (elem)
 	    elem.style.visibility = "hidden";
+	hideMessage();
 	updateBoardView();
+	createPieces();
+	window.location.replace("#" + Blokus.board.getPath());
     }
     request.send(null);
 }
@@ -253,11 +280,13 @@ function createBoard(state) {
     if (state) {
 	var moves = state.split("/");
 	for (var i = 0; i < moves.length; i++) {
+	    if (!moves[i])
+		continue;
 	    var move = new Move(moves[i]);
 	    if (board.isValidMove(move))
 		board.doMove(move)
 	    else
-		throw new Error("invalid move: " + move.fourcc());
+		throw new Error("invalid move: " + moves[i]);
 	}
     }
     return board;
