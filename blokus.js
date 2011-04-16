@@ -95,6 +95,7 @@ function drag(event) {
 		opponentMove();
 		elem.style.visibility = "hidden";
 		updateBoardView();
+		updateScore();
 	    }
 	}	
     }
@@ -253,6 +254,13 @@ function updateBoardView() {
     }
 }
 
+function updateScore() {
+    document.getElementById("violet-score").innerHTML =
+	Blokus.board.violetScore() + " points";
+    document.getElementById("orange-score").innerHTML =
+	Blokus.board.orangeScore() + " points";
+}
+
 function opponentMove() {
     showMessage(["Orange", "Violet"][Blokus.player] + " plays");
     var request = new window.XMLHttpRequest();
@@ -269,6 +277,7 @@ function opponentMove() {
 	    elem.style.visibility = "hidden";
 	hideMessage();
 	updateBoardView();
+	updateScore();
 	createPieces();
 	window.location.replace("#" + Blokus.board.getPath());
     }
@@ -297,7 +306,19 @@ Blokus = {}
 function initBlokus() {
     Blokus.board = createBoard(window.location.hash.substring(1));
     Blokus.player = Blokus.board.player();
+    var violet, orange;
+    if (Blokus.player == 0) {
+	violet = "You";
+	orange = "Computer";
+    }
+    else {
+	violet = "Computer";
+	orange = "You";
+    }
+    document.getElementById("violet-name").innerHTML = violet;
+    document.getElementById("orange-name").innerHTML = orange;
     createPieces();
     createOpponentsPieces();
     updateBoardView();
+    updateScore();
 }
