@@ -280,8 +280,28 @@ function opponentMove() {
 	updateScore();
 	createPieces();
 	window.location.replace("#" + Blokus.board.getPath());
+	if (!Blokus.board.canMove()) {
+	    if (move.isPass())
+		gameEnd();
+	    else {
+		Blokus.board.doPass();
+		opponentMove();
+	    }
+	    return;
+	}
     }
     request.send(null);
+}
+
+function gameEnd() {
+    var vscore = Blokus.board.violetScore();
+    var oscore = Blokus.board.orangeScore();
+    if (vscore > oscore)
+	showMessage(document.getElementById("violet-name").innerHTML + " win");
+    else if (vscore < oscore)
+	showMessage(document.getElementById("orange-name").innerHTML + " win");
+    else
+	showMessage("Draw");
 }
 
 function createBoard(state) {
