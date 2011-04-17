@@ -27,11 +27,13 @@ function rotate(elem, dir, x, y) {
 }
 
 function wheel(e) {
+    e = getEvent(e);
+
     if (Blokus.board.player() != Blokus.player)
 	return;
     var raw = e.detail ? e.detail : -e.wheelDelta;
-    var x = e.clientX + window.pageXOffset;
-    var y = e.clientY + window.pageYOffset;
+    var x = e.clientX + getHScroll();
+    var y = e.clientY + getVScroll();
     if (raw < 0)
 	rotate(this, (this.direction + 6) & 7, x, y);
     else
@@ -40,30 +42,43 @@ function wheel(e) {
     e.preventDefault();
 }
 
-function click(e) {
+function dblclick(e) {
+    e = getEvent(e);
+
     if (Blokus.board.player() != Blokus.player)
 	return;
-    if (e.detail % 2 == 0) {
-	var x = e.clientX + window.pageXOffset;
-	var y = e.clientY + window.pageYOffset;
-	rotate(this, this.direction ^ 1, x, y);
-    }
+
+    var x = e.clientX + getHScroll();
+    var y = e.clientY + getVScroll();
+    rotate(this, this.direction ^ 1, x, y);
 }
 
-function drag(event) {
+function drag(e) {
+    e = getEvent(e);
+
     if (Blokus.board.player() != Blokus.player)
 	return;
     var elem = this;
-    var deltaX = event.clientX - this.offsetLeft;
-    var deltaY = event.clientY - this.offsetTop;
+    var deltaX = e.clientX - this.offsetLeft;
+    var deltaY = e.clientY - this.offsetTop;
 
-    document.addEventListener("mousemove", moveHandler, true);
-    document.addEventListener("mouseup", upHandler, true);
+    if (document.addEventListener) {
+	document.addEventListener("mousemove", moveHandler, true);
+	document.addEventListener("mouseup", upHandler, true);
+    }
+    else { // for IE
+	elem.setCapture();
+	elem.attachEvent("onmousemove", moveHandler);
+	elem.attachEvent("onmouseup", upHandler);
+	elem.attachEvent("onlosecapture", upHandler);
+    }
 
-    event.stopPropagation();
-    event.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
 
     function moveHandler(e) {
+	e = getEvent(e);
+
         e.stopPropagation();
 	var x = e.clientX - deltaX;
 	var y = e.clientY - deltaY;
@@ -82,8 +97,18 @@ function drag(event) {
     }
 
     function upHandler(e) {
-        document.removeEventListener("mouseup", upHandler, true);
-        document.removeEventListener("mousemove", moveHandler, true);
+	e = getEvent(e);
+
+	if (document.removeEventListener) {
+            document.removeEventListener("mouseup", upHandler, true);
+            document.removeEventListener("mousemove", moveHandler, true);
+	}
+	else { // for IE
+	    elem.detachEvent("onlosecapture", upHandler);
+	    elem.detachEvent("onmouseup", upHandler);
+	    elem.detachEvent("onmousemove", moveHandler);
+	    elem.releaseCapture();
+	}
         e.stopPropagation();
 
 	var bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
@@ -102,7 +127,7 @@ function drag(event) {
 }
 
 function toBoardPosition(x, y) {
-    var boardStyle = window.getComputedStyle(document.getElementById("board"), null);
+    var boardStyle = getStyle("board");
     x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
     y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
     x = Math.round(x / scale);
@@ -114,7 +139,7 @@ function toBoardPosition(x, y) {
 }
 
 function fromBoardPosition(x, y) {
-    var boardStyle = window.getComputedStyle(document.getElementById("board"), null);
+    var boardStyle = getStyle("board");
     return [
 	x * scale + parseInt(boardStyle.left) +
 	    parseInt(boardStyle.borderLeftWidth),
@@ -152,10 +177,14 @@ function createPiece(x, y, id, dir) {
 	cell.className = "block" + Blokus.player;
 	elem.appendChild(cell);
     }
-    elem.addEventListener("mousedown", drag, false);
-    elem.addEventListener("DOMMouseScroll", wheel, false);
-    elem.addEventListener("mousewheel", wheel, false);
-    elem.addEventListener("click", click, false);
+
+    // set event handlers
+    elem.onmousedown = drag;
+    elem.ondblclick = dblclick;
+    elem.onmousewheel = wheel;
+    if (elem.addEventListener)
+	elem.addEventListener("DOMMouseScroll", wheel, false);	// for FF
+
     document.body.appendChild(elem);
 }
 
@@ -180,11 +209,11 @@ var piecePositionTable = [ // x, y, dir
     [16, 9, 0], // d
     [20, 9, 2], // c
     [23, 8, 0], // b
-    [25, 9, 0], // a
+    [25, 9, 0]  // a
 ];
 
 function createPieces() {
-    var area = window.getComputedStyle(document.getElementById("piece-area"), null);
+    var area = getStyle("piece-area");
     var left = parseInt(area.left);
     var top = parseInt(area.top);
     for (var i = 0; i < piecePositionTable.length; i++) {
@@ -305,7 +334,7 @@ function gameEnd() {
 }
 
 function createBoard(state) {
-    board = new Board();
+    var board = new Board();
     if (state) {
 	var moves = state.split("/");
 	for (var i = 0; i < moves.length; i++) {
@@ -327,17 +356,11 @@ function initBlokus(path) {
     Blokus.board = createBoard(path);
     if (Blokus.player == undefined)
 	Blokus.player = Blokus.board.player();
-    var violet, orange;
-    if (Blokus.player == 0) {
-	violet = "You";
-	orange = "Computer";
-    }
-    else {
-	violet = "Computer";
-	orange = "You";
-    }
-    document.getElementById("violet-name").innerHTML = violet;
-    document.getElementById("orange-name").innerHTML = orange;
+
+    var names = ["You", "Computer"]
+    document.getElementById("violet-name").innerHTML = names[Blokus.player];
+    document.getElementById("orange-name").innerHTML = names[Blokus.player ^ 1];
+
     createPieces();
     createOpponentsPieces();
     updateBoardView();
@@ -358,4 +381,39 @@ function startGame(player) {
     initBlokus();
     if (player == 1)
 	opponentMove();
+}
+
+// utility functions for cross-browser support
+
+function getStyle(elem) {
+    if (typeof elem == "string")
+	elem = document.getElementById(elem);
+    if (elem.currentStyle)
+	return elem.currentStyle;
+    else
+	return window.getComputedStyle(elem, null);
+}
+
+function getHScroll() {
+    if (window.pageXOffset !== undefined)
+	return window.pageXOffset;
+    else
+	return document.body.scrollLeft;
+}
+
+function getVScroll() {
+    if (window.pageXOffset !== undefined)
+	return window.pageYOffset;
+    else
+	return document.body.scrollTop;
+}
+
+function getEvent(e) {
+    if (!e)
+	e = window.event;
+    if (!e.stopPropagation)
+	e.stopPropagation = function() { this.cancelBubble = true; }
+    if (!e.preventDefault)
+	e.preventDefault = function() { this.returnValue = false; }
+    return e;
 }
