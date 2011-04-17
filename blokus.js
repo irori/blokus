@@ -402,10 +402,10 @@ function getHScroll() {
 }
 
 function getVScroll() {
-    if (window.pageXOffset !== undefined)
+    if (window.pageYOffset !== undefined)
 	return window.pageYOffset;
     else
-	return document.body.scrollTop;
+	return document.documentElement.scrollTop;
 }
 
 function getEvent(e) {
