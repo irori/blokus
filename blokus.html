@@ -49,18 +49,26 @@
    .active .block0, .active .block1 {
      cursor: pointer;
    }
+   .logo {
+     position: absolute;
+     left: 460px;
+     top: 20px;
+     width: 100px;
+     text-align: center;
+     font: bold xx-large "Comic Sans MS";
+   }
    .violet-scoreboard {
      position: absolute;
      left: 460px;
-     top: 80px;
-     width: 80px;
+     top: 190px;
+     width: 100px;
      color: #63d;
    }
    .orange-scoreboard {
      position: absolute;
      left: 460px;
-     top: 200px;
-     width: 80px;
+     top: 260px;
+     width: 100px;
      color: #f72;
    }
    .scoreboard-name {
@@ -157,6 +165,7 @@
   <div id="opponents-piece-area"><div id="opponents-pieces"></div></div>
   <div id="piece-area"></div>
   <div id="pieces"></div>
+  <div class="logo">Blokus Duo</div>
   <table class="violet-scoreboard">
     <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>
     <tr><td id="violet-score" class="scoreboard-score">0 points</td></tr>
