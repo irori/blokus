@@ -293,7 +293,7 @@ function updateScore() {
 function opponentMove() {
     showMessage(["Orange", "Violet"][Blokus.player] + " plays");
     var request = new window.XMLHttpRequest();
-    request.open("GET", "http://localhost:4000/hmmm/" + Blokus.board.getPath());
+    request.open("GET", "/hmmm/" + Blokus.board.getPath());
     request.onreadystatechange = function() {
 	if (request.readyState != 4)
 	    return;
