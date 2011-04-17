@@ -10,6 +10,13 @@ function hideMessage() {
     document.getElementById("message").style.visibility = "hidden";
 }
 
+function setActiveArea() {
+    var p = Blokus.board.player() ^ Blokus.player;
+    var classes = ["active-area", "inactive-area"];
+    document.getElementById("piece-area").className = classes[p];
+    document.getElementById("opponents-piece-area").className = classes[1-p];
+}
+
 function rotate(elem, dir, x, y) {
     elem.direction = dir;
     var rot = blockSet[elem.blockId].rotations[dir];
@@ -307,7 +314,9 @@ function updateScore() {
 }
 
 function opponentMove() {
+    setActiveArea();
     showMessage(["Orange", "Violet"][Blokus.player] + " plays");
+
     var request = new window.XMLHttpRequest();
     request.open("GET", "/hmmm/" + Blokus.board.getPath());
     request.onreadystatechange = function() {
@@ -317,13 +326,12 @@ function opponentMove() {
 	    throw new Error("status: " + request.status);
 	var move = new Move(request.responseText);
 	Blokus.board.doMove(move);
-	elem = document.getElementById("o" + move.blockId())
-	if (elem)
-	    elem.style.visibility = "hidden";
+	document.getElementById("o" + move.blockId()).style.visibility = "hidden";
 	hideMessage();
 	updateBoardView();
 	updateScore();
 	createPieces();
+	setActiveArea();
 	window.location.replace("#" + Blokus.board.getPath());
 	if (!Blokus.board.canMove()) {
 	    if (move.isPass())
@@ -381,6 +389,7 @@ function initBlokus(path) {
     createOpponentsPieces();
     updateBoardView();
     updateScore();
+    setActiveArea();
 }
 
 function init() {

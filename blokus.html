@@ -6,48 +6,57 @@
  <script src="board.js"></script>
  <script src="blokus.js"></script>
  <style type="text/css">
+   body {
+     background-color: #ffe;
+   }
    #board {
      position: absolute;
      background-color: #ccc;
      border: solid black;
      border-width: 1px;
-     left: 179px;
-     top: 39px;
+     left: 159px;
+     top: 19px;
      width: 280px;
      height: 280px;
    }
    #piece-area {
      position: absolute;
-     left: 40px;
-     top: 400px;
+     left: 20px;
+     top: 360px;
      width: 520px;
      height: 200px;
-     background-color: #eee;
      padding: 10px;
+     border-radius: 10px;
    }
    #opponents-piece-area {
      position: absolute;
-     left: 40px;
-     top: 40px;
+     left: 20px;
+     top: 20px;
      width: 100px;
      height: 260px;
-     background-color: #eee;
      padding: 10px;
+     border-radius: 10px;
    }
    #opponents-pieces {
      position: relative;
    }
+   .active-area {
+     background-color: #eee;
+   }
+   .inactive-area {
+     background-color: #ccc;
+   }
    .violet-scoreboard {
      position: absolute;
-     left: 480px;
-     top: 100px;
+     left: 460px;
+     top: 80px;
      width: 80px;
      color: #63d;
    }
    .orange-scoreboard {
      position: absolute;
-     left: 480px;
-     top: 220px;
+     left: 460px;
+     top: 200px;
      width: 80px;
      color: #f72;
    }
@@ -88,9 +97,9 @@
    }
    #message {
      position: absolute;
-     left: 50px;
-     top: 350px;
-     width: 500px;
+     left: 60px;
+     top: 320px;
+     width: 440px;
      padding: 5px;
      text-align: center;
      font-weight: bold;
@@ -99,8 +108,8 @@
    }
    #start-game {
      position: absolute;
-     left: 250px;
-     top: 350px;
+     left: 230px;
+     top: 330px;
      text-align: center;
    }
  </style>
