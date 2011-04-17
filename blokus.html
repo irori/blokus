@@ -11,7 +11,7 @@
      background-color: #ccc;
      border: solid black;
      border-width: 1px;
-     left: 169px;
+     left: 179px;
      top: 39px;
      width: 280px;
      height: 280px;
@@ -22,13 +22,20 @@
      top: 400px;
      width: 520px;
      height: 200px;
+     background-color: #eee;
+     padding: 10px;
    }
    #opponents-piece-area {
      position: absolute;
-     left: 50px;
-     top: 50px;
+     left: 40px;
+     top: 40px;
      width: 100px;
      height: 260px;
+     background-color: #eee;
+     padding: 10px;
+   }
+   #opponents-pieces {
+     position: relative;
    }
    .violet-scoreboard {
      position: absolute;
@@ -135,7 +142,7 @@
     <div class="marker"
 	 style="left:182px; top:182px; background-color:#fb6"></div>
   </div>
-  <div id="opponents-piece-area"></div>
+  <div id="opponents-piece-area"><div id="opponents-pieces"></div></div>
   <div id="piece-area"></div>
   <table class="violet-scoreboard">
     <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>

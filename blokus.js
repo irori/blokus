@@ -42,8 +42,23 @@ function wheel(e) {
     e.preventDefault();
 }
 
+function click(e) {
+    e = getEvent(e);
+    if (!e.shiftKey) // handle only shift+click
+	return;
+
+    if (Blokus.board.player() != Blokus.player)
+	return;
+
+    var x = e.clientX + getHScroll();
+    var y = e.clientY + getVScroll();
+    rotate(this, (this.direction + 2) & 7, x, y);
+}
+
 function dblclick(e) {
     e = getEvent(e);
+    if (e.shiftKey) // do not handle shift+dblclick
+	return;
 
     if (Blokus.board.player() != Blokus.player)
 	return;
@@ -180,6 +195,7 @@ function createPiece(x, y, id, dir) {
 
     // set event handlers
     elem.onmousedown = drag;
+    elem.onclick = click;
     elem.ondblclick = dblclick;
     elem.onmousewheel = wheel;
     if (elem.addEventListener)
@@ -214,8 +230,8 @@ var piecePositionTable = [ // x, y, dir
 
 function createPieces() {
     var area = getStyle("piece-area");
-    var left = parseInt(area.left);
-    var top = parseInt(area.top);
+    var left = parseInt(area.left) + parseInt(area.paddingLeft);
+    var top = parseInt(area.top) + parseInt(area.paddingTop);
     for (var i = 0; i < piecePositionTable.length; i++) {
 	var a = piecePositionTable[i];
 	if (!Blokus.board.isUsed(Blokus.player, i))
@@ -224,7 +240,7 @@ function createPieces() {
 }
 
 function createOpponentsPieces() {
-    var area = document.getElementById("opponents-piece-area");
+    var area = document.getElementById("opponents-pieces");
     for (var id = 0; id < piecePositionTable.length; id++) {
 	var a = piecePositionTable[id];
 	if (Blokus.board.isUsed(1 - Blokus.player, id))
