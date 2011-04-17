@@ -15,6 +15,8 @@ function setActiveArea() {
     var classes = ["active-area", "inactive-area"];
     document.getElementById("piece-area").className = classes[p];
     document.getElementById("opponents-piece-area").className = classes[1-p];
+
+    document.getElementById("pieces").className = (p == 0) ? "active" : "";
 }
 
 function rotate(elem, dir, x, y) {
@@ -208,7 +210,7 @@ function createPiece(x, y, id, dir) {
     if (elem.addEventListener)
 	elem.addEventListener("DOMMouseScroll", wheel, false);	// for FF
 
-    document.body.appendChild(elem);
+    document.getElementById("pieces").appendChild(elem);
 }
 
 var piecePositionTable = [ // x, y, dir

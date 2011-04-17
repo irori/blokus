@@ -46,6 +46,9 @@
    .inactive-area {
      background-color: #ccc;
    }
+   .active .block0, .active .block1 {
+     cursor: pointer;
+   }
    .violet-scoreboard {
      position: absolute;
      left: 460px;
@@ -97,9 +100,9 @@
    }
    #message {
      position: absolute;
-     left: 60px;
+     left: 100px;
      top: 320px;
-     width: 440px;
+     width: 360px;
      padding: 5px;
      text-align: center;
      font-weight: bold;
@@ -153,6 +156,7 @@
   </div>
   <div id="opponents-piece-area"><div id="opponents-pieces"></div></div>
   <div id="piece-area"></div>
+  <div id="pieces"></div>
   <table class="violet-scoreboard">
     <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>
     <tr><td id="violet-score" class="scoreboard-score">0 points</td></tr>
