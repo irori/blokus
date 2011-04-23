@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "board.h"
 #include "search.h"
 #include "opening.h"
@@ -71,6 +72,8 @@ Move com_move(Board* b, int time)
 
 int main(int argc, char *argv[])
 {
+    nice(5);
+
     map<string, string> params = parse_query();
     cout << "Content-Type: text/plain\r\n\r\n";
 
