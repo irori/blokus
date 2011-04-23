@@ -221,7 +221,8 @@ function opponentMove() {
   showMessage(['Orange', 'Violet'][Blokus.player] + ' plays');
 
   var request = new window.XMLHttpRequest();
-  request.open('GET', '/b/hm5move?b=' + Blokus.board.getPath());
+  request.open('GET', '/b/hm5move?l=' + Blokus.level +
+               '&b=' + Blokus.board.getPath());
   request.onreadystatechange = function() {
     if (request.readyState != 4)
       return;
@@ -277,7 +278,7 @@ function createBoard(state) {
   return board;
 }
 
-Blokus = {};
+Blokus = { level: 1 };
 
 function initBlokus(path) {
   Blokus.board = createBoard(path);
@@ -309,6 +310,10 @@ function startGame(player) {
   initBlokus();
   if (player == 1)
     opponentMove();
+}
+
+function setLevel(lv) {
+  Blokus.level = lv;
 }
 
 // event handlers

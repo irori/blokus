@@ -47,7 +47,7 @@ Move parse_move(string fourcc)
 	return INVALID_MOVE;
 }
 
-Move com_move(Board* b)
+Move com_move(Board* b, int time)
 {
     Move move;
     int score = 100;
@@ -57,7 +57,7 @@ Move com_move(Board* b)
     if (move == INVALID_MOVE) {
 	SearchResult r;
 	if (b->turn() < 25)
-	    r = search_negascout(b, 10, 1, 3);
+	    r = search_negascout(b, 10, time / 2, time);
 	else if (b->turn() < 27)
 	    r = wld(b, 1000);
 	else
@@ -74,6 +74,19 @@ int main(int argc, char *argv[])
     map<string, string> params = parse_query();
     cout << "Content-Type: text/plain\r\n\r\n";
 
+    int time_limit;
+    switch (atoi(params["l"].c_str())) {
+    case 2:
+        time_limit = 10;
+        break;
+    case 3:
+        time_limit = 30;
+        break;
+    default:
+        time_limit = 3;
+        break;
+    }
+
     Board b;
     istringstream path(params["b"]);
     string fourcc;
@@ -87,7 +100,7 @@ int main(int argc, char *argv[])
 	}
 	b.do_move(m);
     }
-    Move m = com_move(&b);
+    Move m = com_move(&b, time_limit);
     cout << m.fourcc();
 
     return 0;
