@@ -89,6 +89,8 @@ function createPiece(x, y, id, dir) {
 
   // set event handlers
   elem.onmousedown = drag;
+  if (elem.addEventListener)
+    elem.addEventListener('touchstart', drag, false);
   elem.onclick = click;
   elem.ondblclick = dblclick;
   elem.onmousewheel = wheel;
@@ -344,6 +346,14 @@ function drag(e) {
 
   if (Blokus.board.player() != Blokus.player)
     return;
+
+  if (e.targetTouches) {
+    if (e.targetTouches.length != 1)
+      return;
+    e.clientX = e.targetTouches[0].clientX;
+    e.clientY = e.targetTouches[0].clientY;
+  }
+
   var elem = this;
   var deltaX = e.clientX - this.offsetLeft;
   var deltaY = e.clientY - this.offsetTop;
@@ -351,6 +361,8 @@ function drag(e) {
   if (document.addEventListener) {
     document.addEventListener('mousemove', moveHandler, true);
     document.addEventListener('mouseup', upHandler, true);
+    elem.addEventListener('touchmove', moveHandler, false);
+    elem.addEventListener('touchend', upHandler, false);
   }
   else { // for IE
     elem.setCapture();
@@ -364,6 +376,15 @@ function drag(e) {
 
   function moveHandler(e) {
     e = getEvent(e);
+
+    if (e.targetTouches) {
+      if (e.targetTouches.length != 1)
+        return;
+      e.clientX = e.targetTouches[0].clientX;
+      e.clientY = e.targetTouches[0].clientY;
+      this.lastClientX = e.clientX;
+      this.lastClientY = e.clientY;
+    }
 
     e.stopPropagation();
     var x = e.clientX - deltaX;
@@ -385,9 +406,18 @@ function drag(e) {
   function upHandler(e) {
     e = getEvent(e);
 
+    if (e.targetTouches) {
+      if (e.targetTouches.length > 0)
+        return;
+      e.clientX = this.lastClientX;
+      e.clientY = this.lastClientY;
+    }
+
     if (document.removeEventListener) {
       document.removeEventListener('mouseup', upHandler, true);
       document.removeEventListener('mousemove', moveHandler, true);
+      document.removeEventListener('touchend', upHandler, false);
+      document.removeEventListener('touchmove', moveHandler, false);
     }
     else { // for IE
       elem.detachEvent('onlosecapture', upHandler);
