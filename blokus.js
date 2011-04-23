@@ -320,7 +320,7 @@ function opponentMove() {
     showMessage(["Orange", "Violet"][Blokus.player] + " plays");
 
     var request = new window.XMLHttpRequest();
-    request.open("GET", "/hmmm/" + Blokus.board.getPath());
+    request.open("GET", "/b/hm5move?b=" + Blokus.board.getPath());
     request.onreadystatechange = function() {
 	if (request.readyState != 4)
 	    return;
