@@ -89,8 +89,10 @@ function createPiece(x, y, id, dir) {
 
   // set event handlers
   elem.onmousedown = drag;
-  if (elem.addEventListener)
+  if (elem.addEventListener) {
     elem.addEventListener('touchstart', drag, false);
+    elem.addEventListener('gesturestart', gesture, false);
+  }
   elem.onclick = click;
   elem.ondblclick = dblclick;
   elem.onmousewheel = wheel;
@@ -439,6 +441,39 @@ function drag(e) {
         updateScore();
       }
     }
+  }
+}
+
+function gesture(e) {
+  if (Blokus.board.player() != Blokus.player)
+    return;
+
+  document.addEventListener('gesturechange', gestureChange, true);
+  document.addEventListener('gestureend', gestureEnd, true);
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  var elem = this;
+  elem.rotateBase = 0;
+
+  function gestureChange(e) {
+    e.stopPropagation();
+
+    if (e.rotation < elem.rotateBase - 20) {
+      elem.rotateBase -= 20;
+      rotate(elem, (elem.direction + 6) & 7);
+    }
+    else if (e.rotation > elem.rotateBase + 20) {
+      elem.rotateBase += 20;
+      rotate(elem, (elem.direction + 2) & 7);
+    }
+  }
+
+  function gestureEnd(e) {
+    e.stopPropagation();
+    document.removeEventListener('gesturechange', gestureChange, true);
+    document.removeEventListener('gestureend', gestureEnd, true);
   }
 }
 
