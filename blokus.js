@@ -413,13 +413,18 @@ function drag(e) {
         return;
       e.clientX = this.lastClientX;
       e.clientY = this.lastClientY;
+
+      var now = new Date().getTime();
+      if (this.lastTouch && now - this.lastTouch < 400)
+        rotate(elem, elem.direction ^ 1);
+      this.lastTouch = now;
     }
 
     if (document.removeEventListener) {
       document.removeEventListener('mouseup', upHandler, true);
       document.removeEventListener('mousemove', moveHandler, true);
-      document.removeEventListener('touchend', upHandler, false);
-      document.removeEventListener('touchmove', moveHandler, false);
+      elem.removeEventListener('touchend', upHandler, false);
+      elem.removeEventListener('touchmove', moveHandler, false);
     }
     else { // for IE
       elem.detachEvent('onlosecapture', upHandler);
