@@ -20,6 +20,18 @@ function setActiveArea() {
 }
 
 function rotate(elem, dir, x, y) {
+  switch (dir) {
+  case "left":
+    dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
+    break;
+  case "right":
+    dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
+    break;
+  case "flip":
+    dir = elem.direction ^ 1;
+    break;
+  }
+
   elem.direction = dir;
   var rot = blockSet[elem.blockId].rotations[dir];
   var piece = rot.piece;
@@ -310,9 +322,9 @@ function wheel(e) {
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
   if (raw < 0)
-    rotate(this, (this.direction + 6) & 7, x, y);
+    rotate(this, "left", x, y);
   else
-    rotate(this, (this.direction + 2) & 7, x, y);
+    rotate(this, "right", x, y);
   e.stopPropagation();
   e.preventDefault();
 }
@@ -327,7 +339,7 @@ function click(e) {
 
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
-  rotate(this, (this.direction + 2) & 7, x, y);
+  rotate(this, "right", x, y);
 }
 
 function dblclick(e) {
@@ -340,7 +352,7 @@ function dblclick(e) {
 
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
-  rotate(this, this.direction ^ 1, x, y);
+  rotate(this, "flip", x, y);
 }
 
 function drag(e) {
@@ -416,7 +428,7 @@ function drag(e) {
 
       var now = new Date().getTime();
       if (this.lastTouch && now - this.lastTouch < 400)
-        rotate(elem, elem.direction ^ 1);
+        rotate(elem, "flip");
       this.lastTouch = now;
     }
 
@@ -467,11 +479,11 @@ function gesture(e) {
 
     if (e.rotation < elem.rotateBase - 20) {
       elem.rotateBase -= 20;
-      rotate(elem, (elem.direction + 6) & 7);
+      rotate(elem, "left");
     }
     else if (e.rotation > elem.rotateBase + 20) {
       elem.rotateBase += 20;
-      rotate(elem, (elem.direction + 2) & 7);
+      rotate(elem, "right");
     }
   }
 
