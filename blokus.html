@@ -121,9 +121,14 @@
    }
    #start-game {
      position: absolute;
-     left: 230px;
+     left: 160px;
      top: 330px;
+     width: 280px;
      text-align: center;
+   }
+   .start-button {
+     padding: 5px 10px 5px 10px;
+     margin: 10px;
    }
  </style>
  <title>Blokus Duo</title>
@@ -177,9 +182,13 @@
     <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
   </table>
   <div id="message"></div>
-  <table id="start-game">
-    <tr><td><button onclick="startGame(0)">Violet</button></td></tr>
-    <tr><td><button onclick="startGame(1)">Orange</button></td></tr>
+  <div id="start-game">
+    <input type="radio" name="level" onclick="setLevel(1)" checked>Easy</input>
+    <input type="radio" name="level" onclick="setLevel(2)">Normal</input>
+    <input type="radio" name="level" onclick="setLevel(3)">Hard</input>
+    <p>
+    <button class="start-button" onclick="startGame(0)">Violet</button>
+    <button class="start-button" onclick="startGame(1)">Orange</button>
   </div>
 </body>
 </html>
