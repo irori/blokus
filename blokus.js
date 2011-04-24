@@ -206,7 +206,7 @@ function updateBoardView(moveToHighlight) {
       var cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
       for (var i = 0; i < coordsToHighlight.length; i++) {
         if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
-          cls += "highlight";
+          cls += 'highlight';
           break;
         }
       }
@@ -266,6 +266,7 @@ function gameEnd() {
     showMessage(document.getElementById('orange-name').innerHTML + ' win');
   else
     showMessage('Draw');
+  clearInterval(Blokus.timer);
 }
 
 function createBoard(state) {
@@ -285,6 +286,19 @@ function createBoard(state) {
   return board;
 }
 
+function timerHandler() {
+  function formatTime(t) {
+    var m = Math.floor(t / 60), s = t % 60;
+    return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+  }
+
+  Blokus.elapsed[Blokus.board.player()]++;
+  document.getElementById('violet-time').innerHTML =
+    formatTime(Blokus.elapsed[0]);
+  document.getElementById('orange-time').innerHTML =
+    formatTime(Blokus.elapsed[1]);
+}
+
 Blokus = { level: 1 };
 
 function initBlokus(path) {
@@ -301,6 +315,8 @@ function initBlokus(path) {
   updateBoardView();
   updateScore();
   setActiveArea();
+  Blokus.elapsed = [0, 0];
+  Blokus.timer = setInterval(timerHandler, 1000);
 }
 
 function init() {
