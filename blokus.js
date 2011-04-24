@@ -181,26 +181,36 @@ function createOpponentsPieces() {
   }
 }
 
-function updateBoardView() {
+function updateBoardView(moveToHighlight) {
   var boardElem = document.getElementById('board');
+  var coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
   for (var y = 0; y < 14; y++) {
     for (var x = 0; x < 14; x++) {
       var sq = Blokus.board.at(x, y);
       if ((sq & (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK)) == 0)
         continue;
       var id = 'board_' + x.toString(16) + y.toString(16);
-      if (document.getElementById(id))
-        continue;
-      var cell = document.createElement('div');
-      cell.id = id;
-      cell.setAttribute('style',
-                        'position:absolute;' +
-                        'left:' + x * scale + 'px;' +
-                        'top:' + y * scale + 'px;' +
-                        'width:' + scale + 'px;' +
-                        'height:' + scale + 'px;');
-      cell.className = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
-      boardElem.appendChild(cell);
+
+      var cell = document.getElementById(id);
+      if (!cell) {
+        cell = document.createElement('div');
+        cell.id = id;
+        cell.setAttribute('style',
+                          'position:absolute;' +
+                          'left:' + x * scale + 'px;' +
+                          'top:' + y * scale + 'px;' +
+                          'width:' + scale + 'px;' +
+                          'height:' + scale + 'px;');
+        boardElem.appendChild(cell);
+      }
+      var cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
+      for (var i = 0; i < coordsToHighlight.length; i++) {
+        if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
+          cls += "highlight";
+          break;
+        }
+      }
+      cell.className = cls;
     }
   }
 }
@@ -229,7 +239,7 @@ function opponentMove() {
     if (!move.isPass())
       document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
     hideMessage();
-    updateBoardView();
+    updateBoardView(move);
     updateScore();
     createPieces();
     setActiveArea();

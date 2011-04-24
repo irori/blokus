@@ -28,6 +28,8 @@ Move.prototype.fourcc = Move.prototype.toString = function() {
     this.direction();
 };
 Move.prototype.coords = function() {
+  if (this.isPass())
+    return [];
   var rot = blockSet[this.blockId()].rotations[this.direction()];
   var coords = [];
   for (var i = 0; i < rot.size; i++)
