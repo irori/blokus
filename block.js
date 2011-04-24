@@ -13,6 +13,16 @@ function Rotation(config) {
   this.offsetX = config[0];
   this.offsetY = config[1];
   this.piece = config[2];
+  this.size = this.piece.size;
+  this.coords = [];
+  for (var i = 0; i < this.piece.size; i++) {
+    this.coords[i] = [this.piece.coords[i][0] + this.offsetX,
+                      this.piece.coords[i][1] + this.offsetY];
+  }
+  this.minx = this.piece.minx + this.offsetX;
+  this.miny = this.piece.miny + this.offsetY;
+  this.maxx = this.piece.maxx + this.offsetX;
+  this.maxy = this.piece.maxy + this.offsetY;
 }
 
 function Block(id, size, rotations) {

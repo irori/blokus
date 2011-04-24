@@ -69,18 +69,16 @@ Board.prototype.isValidMove = function(move) {
     return false;
 
   var rot = blockSet[move.blockId()].rotations[move.direction()];
-  var px = move.x() + rot.offsetX;
-  var py = move.y() + rot.offsetY;
-  var piece = rot.piece;
 
-  if (px + piece.minx < 0 || px + piece.maxx >= 14 ||
-      py + piece.miny < 0 || py + piece.maxy >= 14 ||
-      !this._isMovable(px, py, piece))
+  var mx = move.x(), my = move.y();
+  if (mx + rot.minx < 0 || mx + rot.maxx >= 14 ||
+      my + rot.miny < 0 || my + rot.maxy >= 14 ||
+      !this._isMovable(mx, my, rot))
     return false;
 
-  for (var i = 0; i < piece.size; i++) {
-    var x = px + piece.coords[i][0];
-    var y = py + piece.coords[i][1];
+  for (var i = 0; i < rot.size; i++) {
+    var x = mx + rot.coords[i][0];
+    var y = my + rot.coords[i][1];
     if (this.square[y][x] &
         [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
       return true;
@@ -95,17 +93,14 @@ Board.prototype.doMove = function(move) {
   }
 
   var rot = blockSet[move.blockId()].rotations[move.direction()];
-  var px = move.x() + rot.offsetX;
-  var py = move.y() + rot.offsetY;
-  var piece = rot.piece;
 
   var block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
   var side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
   var edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
 
-  for (var i = 0; i < piece.size; i++) {
-    var x = px + piece.coords[i][0];
-    var y = py + piece.coords[i][1];
+  for (var i = 0; i < rot.size; i++) {
+    var x = move.x() + rot.coords[i][0];
+    var y = move.y() + rot.coords[i][1];
     this.square[y][x] |= block;
     if (this.inBounds(x - 1, y)) this.square[y][x - 1] |= side_bit;
     if (this.inBounds(x, y - 1)) this.square[y - 1][x] |= side_bit;
@@ -141,13 +136,13 @@ Board.prototype.orangeScore = function() {
   return score;
 };
 
-Board.prototype._isMovable = function(px, py, piece) {
+Board.prototype._isMovable = function(px, py, rot) {
   var mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
     [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
 
-  for (var i = 0; i < piece.size; i++) {
-    var x = px + piece.coords[i][0];
-    var y = py + piece.coords[i][1];
+  for (var i = 0; i < rot.size; i++) {
+    var x = px + rot.coords[i][0];
+    var y = py + rot.coords[i][1];
     if (this.square[y][x] & mask)
       return false;
   }

@@ -34,12 +34,9 @@ function rotate(elem, dir, x, y) {
 
   elem.direction = dir;
   var rot = blockSet[elem.blockId].rotations[dir];
-  var piece = rot.piece;
-  for (var i = 0; i < piece.size; i++) {
-    elem.childNodes[i].style.left =
-      (rot.offsetX + piece.coords[i][0]) * scale + 'px';
-    elem.childNodes[i].style.top =
-      (rot.offsetY + piece.coords[i][1]) * scale + 'px';
+  for (var i = 0; i < rot.size; i++) {
+    elem.childNodes[i].style.left = rot.coords[i][0] * scale + 'px';
+    elem.childNodes[i].style.top = rot.coords[i][1] * scale + 'px';
   }
   if (x != undefined) {
     elem.style.left = x - scale / 2 + 'px';
@@ -160,9 +157,7 @@ function createOpponentsPieces() {
     var y = a[0];
     var dir = (a[2] + 2) & 7;
     var s = scale >> 1;
-    var piece = blockSet[id].rotations[dir].piece;
-    x += blockSet[id].rotations[dir].offsetX;
-    y += blockSet[id].rotations[dir].offsetY;
+    var piece = blockSet[id].rotations[dir];
 
     var elem = document.createElement('div');
     elem.id = 'o' + id;
