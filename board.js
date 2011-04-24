@@ -71,9 +71,7 @@ Board.prototype.isValidMove = function(move) {
   var rot = blockSet[move.blockId()].rotations[move.direction()];
 
   var mx = move.x(), my = move.y();
-  if (mx + rot.minx < 0 || mx + rot.maxx >= 14 ||
-      my + rot.miny < 0 || my + rot.maxy >= 14 ||
-      !this._isMovable(mx, my, rot))
+  if (!this._isMovable(mx, my, rot))
     return false;
 
   for (var i = 0; i < rot.size; i++) {
@@ -143,7 +141,7 @@ Board.prototype._isMovable = function(px, py, rot) {
   for (var i = 0; i < rot.size; i++) {
     var x = px + rot.coords[i][0];
     var y = py + rot.coords[i][1];
-    if (this.square[y][x] & mask)
+    if (x < 0 || x >= 14 || y < 0 || y >= 14 || this.square[y][x] & mask)
       return false;
   }
   return true;
