@@ -27,6 +27,13 @@ Move.prototype.fourcc = Move.prototype.toString = function() {
     String.fromCharCode(117 - this.blockId()) +
     this.direction();
 };
+Move.prototype.coords = function() {
+  var rot = blockSet[this.blockId()].rotations[this.direction()];
+  var coords = [];
+  for (var i = 0; i < rot.size; i++)
+    coords[i] = [this.x() + rot.coords[i][0], this.y() + rot.coords[i][1]];
+  return coords;
+};
 
 Move.INVALID_MOVE = new Move(0xfffe);
 Move.PASS = new Move(0xffff);
@@ -68,15 +75,13 @@ Board.prototype.isValidMove = function(move) {
   if (this.used[move.blockId() + this.player() * 21])
     return false;
 
-  var rot = blockSet[move.blockId()].rotations[move.direction()];
+  var coords = move.coords();
 
-  var mx = move.x(), my = move.y();
-  if (!this._isMovable(mx, my, rot))
+  if (!this._isMovable(coords))
     return false;
 
-  for (var i = 0; i < rot.size; i++) {
-    var x = mx + rot.coords[i][0];
-    var y = my + rot.coords[i][1];
+  for (var i = 0; i < coords.length; i++) {
+    var x = coords[i][0], y = coords[i][1];
     if (this.square[y][x] &
         [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
       return true;
@@ -90,15 +95,14 @@ Board.prototype.doMove = function(move) {
     return;
   }
 
-  var rot = blockSet[move.blockId()].rotations[move.direction()];
+  var coords = move.coords();
 
   var block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
   var side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
   var edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
 
-  for (var i = 0; i < rot.size; i++) {
-    var x = move.x() + rot.coords[i][0];
-    var y = move.y() + rot.coords[i][1];
+  for (var i = 0; i < coords.length; i++) {
+    var x = coords[i][0], y = coords[i][1];
     this.square[y][x] |= block;
     if (this.inBounds(x - 1, y)) this.square[y][x - 1] |= side_bit;
     if (this.inBounds(x, y - 1)) this.square[y - 1][x] |= side_bit;
@@ -134,13 +138,12 @@ Board.prototype.orangeScore = function() {
   return score;
 };
 
-Board.prototype._isMovable = function(px, py, rot) {
+Board.prototype._isMovable = function(coords) {
   var mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
     [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
 
-  for (var i = 0; i < rot.size; i++) {
-    var x = px + rot.coords[i][0];
-    var y = py + rot.coords[i][1];
+  for (var i = 0; i < coords.length; i++) {
+    var x = coords[i][0], y = coords[i][1];
     if (x < 0 || x >= 14 || y < 0 || y >= 14 || this.square[y][x] & mask)
       return false;
   }
