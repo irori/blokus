@@ -2,7 +2,9 @@
 function Piece(id, coords) {
   this.id = id;
   this.size = coords.length;
-  this.coords = coords;
+  this.coords = [];
+  for (var i = 0; i < coords.length; i++)
+    this.coords[i] = { x: coords[i][0], y: coords[i][1] };
 }
 
 function Rotation(config) {
@@ -12,8 +14,8 @@ function Rotation(config) {
   this.size = this.piece.size;
   this.coords = [];
   for (var i = 0; i < this.piece.size; i++) {
-    this.coords[i] = [this.piece.coords[i][0] + this.offsetX,
-                      this.piece.coords[i][1] + this.offsetY];
+    this.coords[i] = { x: this.piece.coords[i].x + this.offsetX,
+                       y: this.piece.coords[i].y + this.offsetY };
   }
 }
 

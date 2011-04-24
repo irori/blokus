@@ -31,7 +31,8 @@ Move.prototype.coords = function() {
   var rot = blockSet[this.blockId()].rotations[this.direction()];
   var coords = [];
   for (var i = 0; i < rot.size; i++)
-    coords[i] = [this.x() + rot.coords[i][0], this.y() + rot.coords[i][1]];
+    coords[i] = { x: this.x() + rot.coords[i].x,
+                  y: this.y() + rot.coords[i].y };
   return coords;
 };
 
@@ -81,8 +82,7 @@ Board.prototype.isValidMove = function(move) {
     return false;
 
   for (var i = 0; i < coords.length; i++) {
-    var x = coords[i][0], y = coords[i][1];
-    if (this.square[y][x] &
+    if (this.square[coords[i].y][coords[i].x] &
         [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
       return true;
   }
@@ -102,7 +102,7 @@ Board.prototype.doMove = function(move) {
   var edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
 
   for (var i = 0; i < coords.length; i++) {
-    var x = coords[i][0], y = coords[i][1];
+    var x = coords[i].x, y = coords[i].y;
     this.square[y][x] |= block;
     if (this.inBounds(x - 1, y)) this.square[y][x - 1] |= side_bit;
     if (this.inBounds(x, y - 1)) this.square[y - 1][x] |= side_bit;
@@ -143,7 +143,7 @@ Board.prototype._isMovable = function(coords) {
     [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
 
   for (var i = 0; i < coords.length; i++) {
-    var x = coords[i][0], y = coords[i][1];
+    var x = coords[i].x, y = coords[i].y;
     if (x < 0 || x >= 14 || y < 0 || y >= 14 || this.square[y][x] & mask)
       return false;
   }

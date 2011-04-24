@@ -35,8 +35,8 @@ function rotate(elem, dir, x, y) {
   elem.direction = dir;
   var rot = blockSet[elem.blockId].rotations[dir];
   for (var i = 0; i < rot.size; i++) {
-    elem.childNodes[i].style.left = rot.coords[i][0] * scale + 'px';
-    elem.childNodes[i].style.top = rot.coords[i][1] * scale + 'px';
+    elem.childNodes[i].style.left = rot.coords[i].x * scale + 'px';
+    elem.childNodes[i].style.top = rot.coords[i].y * scale + 'px';
   }
   if (x != undefined) {
     elem.style.left = x - scale / 2 + 'px';
@@ -51,18 +51,19 @@ function toBoardPosition(x, y) {
   x = Math.round(x / scale);
   y = Math.round(y / scale);
   if (Blokus.board.inBounds(x, y))
-    return [x, y];
+    return {x: x, y: y};
   else
     return null;
 }
 
-function fromBoardPosition(x, y) {
+function fromBoardPosition(pos) {
   var boardStyle = getStyle('board');
-  return [
-    x * scale + parseInt(boardStyle.left) +
+  return {
+    x: pos.x * scale + parseInt(boardStyle.left) +
       parseInt(boardStyle.borderLeftWidth),
-    y * scale + parseInt(boardStyle.top) +
-      parseInt(boardStyle.borderTopWidth)];
+    y: pos.y * scale + parseInt(boardStyle.top) +
+      parseInt(boardStyle.borderTopWidth)
+  };
 }
 
 function createPiece(x, y, id, dir) {
@@ -88,8 +89,8 @@ function createPiece(x, y, id, dir) {
     var cell = document.createElement('div');
     cell.setAttribute('style',
                       'position:absolute;' +
-                      'left:' + piece.coords[i][0] * scale + 'px;' +
-                      'top:' + piece.coords[i][1] * scale + 'px;' +
+                      'left:' + piece.coords[i].x * scale + 'px;' +
+                      'top:' + piece.coords[i].y * scale + 'px;' +
                       'width:' + scale + 'px;' +
                       'height:' + scale + 'px;');
     cell.className = 'block' + Blokus.player;
@@ -169,8 +170,8 @@ function createOpponentsPieces() {
       var cell = document.createElement('div');
       cell.setAttribute('style',
                         'position:absolute;' +
-                        'left:' + piece.coords[i][0] * s + 'px;' +
-                        'top:' + piece.coords[i][1] * s + 'px;' +
+                        'left:' + piece.coords[i].x * s + 'px;' +
+                        'top:' + piece.coords[i].y * s + 'px;' +
                         'width:' + s + 'px;' +
                         'height:' + s + 'px;');
       cell.className = 'block' + (1 - Blokus.player);
@@ -407,10 +408,10 @@ function drag(e) {
     var bpos = toBoardPosition(x, y);
     var pieceId = elem.blockId << 3 | elem.direction;
     if (bpos &&
-        Blokus.board.isValidMove(new Move(bpos[0], bpos[1], pieceId))) {
-      var epos = fromBoardPosition(bpos[0], bpos[1]);
-      elem.style.left = epos[0] + 'px';
-      elem.style.top = epos[1] + 'px';
+        Blokus.board.isValidMove(new Move(bpos.x, bpos.y, pieceId))) {
+      var epos = fromBoardPosition(bpos);
+      elem.style.left = epos.x + 'px';
+      elem.style.top = epos.y + 'px';
     }
     else {
       elem.style.left = x + 'px';
@@ -449,7 +450,7 @@ function drag(e) {
 
     var bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
     if (bpos) {
-      var move = new Move(bpos[0], bpos[1],
+      var move = new Move(bpos.x, bpos.y,
                           elem.blockId << 3 | elem.direction);
       if (Blokus.board.isValidMove(move)) {
         Blokus.board.doMove(move);
