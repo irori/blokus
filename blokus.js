@@ -1,4 +1,5 @@
-var scale = 20;
+var Blokus = { level: 1 };
+var SCALE = 20;
 
 function showMessage(msg) {
   var elem = document.getElementById('message');
@@ -35,12 +36,12 @@ function rotate(elem, dir, x, y) {
   elem.direction = dir;
   var rot = blockSet[elem.blockId].rotations[dir];
   for (var i = 0; i < rot.size; i++) {
-    elem.childNodes[i].style.left = rot.coords[i].x * scale + 'px';
-    elem.childNodes[i].style.top = rot.coords[i].y * scale + 'px';
+    elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
+    elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
   }
   if (x != undefined) {
-    elem.style.left = x - scale / 2 + 'px';
-    elem.style.top = y - scale / 2 + 'px';
+    elem.style.left = x - SCALE / 2 + 'px';
+    elem.style.top = y - SCALE / 2 + 'px';
   }
 }
 
@@ -48,8 +49,8 @@ function toBoardPosition(x, y) {
   var boardStyle = getStyle('board');
   x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
   y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
-  x = Math.round(x / scale);
-  y = Math.round(y / scale);
+  x = Math.round(x / SCALE);
+  y = Math.round(y / SCALE);
   if (Blokus.board.inBounds(x, y))
     return {x: x, y: y};
   else
@@ -59,9 +60,9 @@ function toBoardPosition(x, y) {
 function fromBoardPosition(pos) {
   var boardStyle = getStyle('board');
   return {
-    x: pos.x * scale + parseInt(boardStyle.left) +
+    x: pos.x * SCALE + parseInt(boardStyle.left) +
       parseInt(boardStyle.borderLeftWidth),
-    y: pos.y * scale + parseInt(boardStyle.top) +
+    y: pos.y * SCALE + parseInt(boardStyle.top) +
       parseInt(boardStyle.borderTopWidth)
   };
 }
@@ -89,10 +90,10 @@ function createPiece(x, y, id, dir) {
     var cell = document.createElement('div');
     cell.setAttribute('style',
                       'position:absolute;' +
-                      'left:' + piece.coords[i].x * scale + 'px;' +
-                      'top:' + piece.coords[i].y * scale + 'px;' +
-                      'width:' + scale + 'px;' +
-                      'height:' + scale + 'px;');
+                      'left:' + piece.coords[i].x * SCALE + 'px;' +
+                      'top:' + piece.coords[i].y * SCALE + 'px;' +
+                      'width:' + SCALE + 'px;' +
+                      'height:' + SCALE + 'px;');
     cell.className = 'block' + Blokus.player;
     elem.appendChild(cell);
   }
@@ -143,7 +144,7 @@ function createPieces() {
   for (var i = 0; i < piecePositionTable.length; i++) {
     var a = piecePositionTable[i];
     if (!Blokus.board.isUsed(Blokus.player, i))
-      createPiece(left + a[0] * scale, top + a[1] * scale, i, a[2]);
+      createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
   }
 }
 
@@ -157,7 +158,7 @@ function createOpponentsPieces() {
     var x = 9 - a[1];
     var y = a[0];
     var dir = (a[2] + 2) & 7;
-    var s = scale >> 1;
+    var s = SCALE >> 1;
     var piece = blockSet[id].rotations[dir];
 
     var elem = document.createElement('div');
@@ -197,10 +198,10 @@ function updateBoardView(moveToHighlight) {
         cell.id = id;
         cell.setAttribute('style',
                           'position:absolute;' +
-                          'left:' + x * scale + 'px;' +
-                          'top:' + y * scale + 'px;' +
-                          'width:' + scale + 'px;' +
-                          'height:' + scale + 'px;');
+                          'left:' + x * SCALE + 'px;' +
+                          'top:' + y * SCALE + 'px;' +
+                          'width:' + SCALE + 'px;' +
+                          'height:' + SCALE + 'px;');
         boardElem.appendChild(cell);
       }
       var cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
@@ -217,9 +218,9 @@ function updateBoardView(moveToHighlight) {
 
 function updateScore() {
   document.getElementById('violet-score').innerHTML =
-    Blokus.board.violetScore() + ' points';
+    Blokus.board.score(0) + ' points';
   document.getElementById('orange-score').innerHTML =
-    Blokus.board.orangeScore() + ' points';
+    Blokus.board.score(1) + ' points';
 }
 
 function opponentMove() {
@@ -258,32 +259,15 @@ function opponentMove() {
 }
 
 function gameEnd() {
-  var vscore = Blokus.board.violetScore();
-  var oscore = Blokus.board.orangeScore();
-  if (vscore > oscore)
-    showMessage(document.getElementById('violet-name').innerHTML + ' win');
-  else if (vscore < oscore)
-    showMessage(document.getElementById('orange-name').innerHTML + ' win');
+  var myScore = Blokus.board.score(Blokus.player);
+  var yourScore = Blokus.board.score(Blokus.player ^ 1);
+  if (myScore > yourScore)
+    showMessage('You win!');
+  else if (myScore < yourScore)
+    showMessage('You lose...');
   else
     showMessage('Draw');
   clearInterval(Blokus.timer);
-}
-
-function createBoard(state) {
-  var board = new Board();
-  if (state) {
-    var moves = state.split('/');
-    for (var i = 0; i < moves.length; i++) {
-      if (!moves[i])
-        continue;
-      var move = new Move(moves[i]);
-      if (board.isValidMove(move))
-        board.doMove(move);
-      else
-        throw new Error('invalid move: ' + moves[i]);
-    }
-  }
-  return board;
 }
 
 function timerHandler() {
@@ -299,17 +283,12 @@ function timerHandler() {
     formatTime(Blokus.elapsed[1]);
 }
 
-Blokus = { level: 1 };
-
-function initBlokus(path) {
-  Blokus.board = createBoard(path);
-  if (Blokus.player == undefined)
-    Blokus.player = Blokus.board.player();
-
+function startGame() {
   var names = ['You', 'Computer'];
   document.getElementById('violet-name').innerHTML = names[Blokus.player];
   document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
 
+  document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
   createOpponentsPieces();
   updateBoardView();
@@ -319,18 +298,21 @@ function initBlokus(path) {
   Blokus.timer = setInterval(timerHandler, 1000);
 }
 
+// functions called from blokus.html
+
 function init() {
   var path = window.location.hash.substring(1);
   if (path) {
-    document.getElementById('start-game').style.visibility = 'hidden';
-    initBlokus(path);
+    Blokus.board = new Board(path);
+    Blokus.player = Blokus.board.player();
+    startGame(path);
   }
 }
 
-function startGame(player) {
-  document.getElementById('start-game').style.visibility = 'hidden';
+function startButton(player) {
+  Blokus.board = new Board();
   Blokus.player = player;
-  initBlokus();
+  startGame();
   if (player == 1)
     opponentMove();
 }

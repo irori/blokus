@@ -42,7 +42,7 @@ Move.INVALID_MOVE = new Move(0xfffe);
 Move.PASS = new Move(0xffff);
 
 
-function Board() {
+function Board(path) {
   this.square = [];
   for (var y = 0; y < 14; y++) {
     this.square[y] = [];
@@ -53,6 +53,19 @@ function Board() {
   this.square[9][9] = Board.ORANGE_EDGE;
   this.history = [];
   this.used = new Array(21 * 2);
+
+  if (path) {
+    var moves = path.split('/');
+    for (var i = 0; i < moves.length; i++) {
+      if (!moves[i])
+        continue;
+      var move = new Move(moves[i]);
+      if (this.isValidMove(move))
+        this.doMove(move);
+      else
+        throw new Error('invalid move: ' + moves[i]);
+    }
+  }
 }
 
 Board.VIOLET_MASK = 0x07;
@@ -122,19 +135,10 @@ Board.prototype.doMove = function(move) {
 
 Board.prototype.doPass = function() { this.history.push(Move.PASS); };
 
-Board.prototype.violetScore = function() {
+Board.prototype.score = function(player) {
   var score = 0;
   for (var i = 0; i < 21; i++) {
-    if (this.used[i])
-      score += blockSet[i].size;
-  }
-  return score;
-};
-
-Board.prototype.orangeScore = function() {
-  var score = 0;
-  for (var i = 0; i < 21; i++) {
-    if (this.used[21 + i])
+    if (this.used[i + player * 21])
       score += blockSet[i].size;
   }
   return score;
