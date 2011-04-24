@@ -230,7 +230,8 @@ function opponentMove() {
       throw new Error('status: ' + request.status);
     var move = new Move(request.responseText);
     Blokus.board.doMove(move);
-    document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
+    if (!move.isPass())
+      document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
     hideMessage();
     updateBoardView();
     updateScore();
