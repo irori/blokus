@@ -21,13 +21,13 @@ function setActiveArea() {
 
 function rotate(elem, dir, x, y) {
   switch (dir) {
-  case "left":
+  case 'left':
     dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
     break;
-  case "right":
+  case 'right':
     dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
     break;
-  case "flip":
+  case 'flip':
     dir = elem.direction ^ 1;
     break;
   }
@@ -323,9 +323,9 @@ function wheel(e) {
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
   if (raw < 0)
-    rotate(this, "left", x, y);
+    rotate(this, 'left', x, y);
   else
-    rotate(this, "right", x, y);
+    rotate(this, 'right', x, y);
   e.stopPropagation();
   e.preventDefault();
 }
@@ -340,7 +340,7 @@ function click(e) {
 
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
-  rotate(this, "right", x, y);
+  rotate(this, 'right', x, y);
 }
 
 function dblclick(e) {
@@ -353,7 +353,7 @@ function dblclick(e) {
 
   var x = e.clientX + getHScroll();
   var y = e.clientY + getVScroll();
-  rotate(this, "flip", x, y);
+  rotate(this, 'flip', x, y);
 }
 
 function drag(e) {
@@ -429,7 +429,7 @@ function drag(e) {
 
       var now = new Date().getTime();
       if (this.lastTouch && now - this.lastTouch < 400)
-        rotate(elem, "flip");
+        rotate(elem, 'flip');
       this.lastTouch = now;
     }
 
@@ -480,11 +480,11 @@ function gesture(e) {
 
     if (e.rotation < elem.rotateBase - 20) {
       elem.rotateBase -= 20;
-      rotate(elem, "left");
+      rotate(elem, 'left');
     }
     else if (e.rotation > elem.rotateBase + 20) {
       elem.rotateBase += 20;
-      rotate(elem, "right");
+      rotate(elem, 'right');
     }
   }
 
