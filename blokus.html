@@ -134,6 +134,36 @@
      50%  { background-color: #fb8; }
      100% { background-color: #f72; }
    }
+   .piece {
+     -webkit-transition-property: -webkit-transform;
+     -webkit-transform-origin: 10px 10px;
+     -moz-transition-property: -moz-transform;
+     -moz-transform-origin: 10px 10px;
+   }
+   .rotate-left {
+     -webkit-transform: rotate(90deg);
+     -webkit-transition-duration: 0s;
+     -moz-transform: rotate(90deg);
+     -moz-transition-duration: 0s;
+   }
+   .rotate-right {
+     -webkit-transform: rotate(-90deg);
+     -webkit-transition-duration: 0s;
+     -moz-transform: rotate(-90deg);
+     -moz-transition-duration: 0s;
+   }
+   .rotate-flip {
+     -webkit-transform: rotateY(180deg);
+     -webkit-transition-duration: 0s;
+     -moz-transform: scaleX(-1);
+     -moz-transition-duration: 0s;
+   }
+   .rotating {
+     -webkit-transition-duration: 0.2s;
+     -webkit-transform: rotate(0deg);
+     -moz-transition-duration: 0.2s;
+     -moz-transform: rotate(0deg);
+   }
    #message {
      position: absolute;
      left: 100px;
