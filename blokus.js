@@ -331,8 +331,13 @@ function setLevel(lv) {
 
 function wheel(e) {
   e = getEvent(e);
+  e.stopPropagation();
+  e.preventDefault();
+
   if (wheel.lock)
     return;
+  wheel.lock = true;
+  setTimeout(function(){wheel.lock = false}, 50)
 
   if (Blokus.board.player() != Blokus.player)
     return;
@@ -343,11 +348,6 @@ function wheel(e) {
     rotate(this, 'left', x, y);
   else
     rotate(this, 'right', x, y);
-  wheel.lock = true;
-  setTimeout(function(){wheel.lock = false}, 100)
-
-  e.stopPropagation();
-  e.preventDefault();
 }
 
 function click(e) {
