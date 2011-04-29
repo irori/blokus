@@ -2,11 +2,13 @@
 <html>
 
 <head>
+ <meta http-equiv="Content-Script-Type" content="text/javascript">
+ <meta http-equiv="Content-Style-Type" content="text/css">
  <meta name="viewport" content="width=580">
 
- <script src="piece.js"></script>
- <script src="board.js"></script>
- <script src="blokus.js"></script>
+ <script type="text/javascript" src="piece.js"></script>
+ <script type="text/javascript" src="board.js"></script>
+ <script type="text/javascript" src="blokus.js"></script>
  <style type="text/css">
    body {
      background-color: #ffe;
@@ -230,12 +232,15 @@
     <!--[if lt IE 8]>
       <p>Sorry, IE 7 or older is not supported.</p>
     <![endif]-->
-    <input type="radio" name="level" onclick="setLevel(1)" checked>Easy</input>
-    <input type="radio" name="level" onclick="setLevel(2)">Normal</input>
-    <input type="radio" name="level" onclick="setLevel(3)">Hard</input>
     <p>
-    <button class="start-button" onclick="startButton(0)">Violet</button>
-    <button class="start-button" onclick="startButton(1)">Orange</button>
+      <input type="radio" name="level" value="1" onclick="setLevel(1)" checked>Easy
+      <input type="radio" name="level" value="2" onclick="setLevel(2)">Normal
+      <input type="radio" name="level" value="3" onclick="setLevel(3)">Hard
+    </p>
+    <p>
+      <button class="start-button" onclick="startButton(0)">Violet</button>
+      <button class="start-button" onclick="startButton(1)">Orange</button>
+    </p>
   </div>
 </body>
 </html>
