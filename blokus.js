@@ -24,18 +24,18 @@ function rotate(elem, dir, x, y) {
   switch (dir) {
   case 'left':
     dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
-    elem.className = "piece rotate-left";
-    setTimeout(function(){elem.className = "piece rotating"}, 0);
+    elem.className = 'piece rotate-left';
+    setTimeout(function() {elem.className = 'piece rotating'}, 0);
     break;
   case 'right':
     dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
-    elem.className = "piece rotate-right";
-    setTimeout(function(){elem.className = "piece rotating"}, 0);
+    elem.className = 'piece rotate-right';
+    setTimeout(function() {elem.className = 'piece rotating'}, 0);
     break;
   case 'flip':
     dir = elem.direction ^ 1;
-    elem.className = "piece rotate-flip";
-    setTimeout(function(){elem.className = "piece rotating"}, 0);
+    elem.className = 'piece rotate-flip';
+    setTimeout(function() {elem.className = 'piece rotating'}, 0);
     break;
   }
 
@@ -337,7 +337,7 @@ function wheel(e) {
   if (wheel.lock)
     return;
   wheel.lock = true;
-  setTimeout(function(){wheel.lock = false}, 50)
+  setTimeout(function() {wheel.lock = false}, 50);
 
   if (Blokus.board.player() != Blokus.player)
     return;
