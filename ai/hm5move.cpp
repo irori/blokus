@@ -81,13 +81,13 @@ int main(int argc, char *argv[])
     int time_limit;
     switch (atoi(params["l"].c_str())) {
     case 2:
-        time_limit = 10;
+        time_limit = 6;
         break;
     case 3:
-        time_limit = 30;
+        time_limit = 18;
         break;
     default:
-        time_limit = 3;
+        time_limit = 2;
         break;
     }
 
