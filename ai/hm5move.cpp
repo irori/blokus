@@ -73,6 +73,7 @@ Move com_move(Board* b, int time)
 int main(int argc, char *argv[])
 {
     nice(5);
+    srand(time(NULL));
 
     map<string, string> params = parse_query();
     cout << "Content-Type: text/plain\r\n\r\n";
