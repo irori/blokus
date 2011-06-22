@@ -48,7 +48,7 @@ Move parse_move(string fourcc)
 	return INVALID_MOVE;
 }
 
-Move com_move(Board* b, int time)
+Move com_move(Board* b, int time_ms)
 {
     Move move;
     int score = 100;
@@ -58,7 +58,7 @@ Move com_move(Board* b, int time)
     if (move == INVALID_MOVE) {
 	SearchResult r;
 	if (b->turn() < 25)
-	    r = search_negascout(b, 10, time / 2, time);
+	    r = search_negascout(b, 10, time_ms / 2, time_ms);
 	else if (b->turn() < 27)
 	    r = wld(b, 1000);
 	else
@@ -81,13 +81,13 @@ int main(int argc, char *argv[])
     int time_limit;
     switch (atoi(params["l"].c_str())) {
     case 2:
-        time_limit = 6;
+        time_limit = 3000;
         break;
     case 3:
-        time_limit = 18;
+        time_limit = 10000;
         break;
     default:
-        time_limit = 2;
+        time_limit = 1000;
         break;
     }
 

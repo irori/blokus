@@ -10,7 +10,7 @@ extern bool quiet;
 class Timeout {};
 
 SearchResult search_negascout(Board* node, int max_depth,
-			      int stop_sec, int timeout_sec);
+			      int stop_ms, int timeout_ms);
 SearchResult wld(Board* node, int timeout_sec);
 SearchResult perfect(Board* node);
 
