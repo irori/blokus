@@ -267,13 +267,29 @@ function opponentMove() {
 function gameEnd() {
   var myScore = Blokus.board.score(Blokus.player);
   var yourScore = Blokus.board.score(Blokus.player ^ 1);
-  if (myScore > yourScore)
+  var jmsg;
+  if (myScore > yourScore) {
     showMessage('You win!');
-  else if (myScore < yourScore)
+    jmsg = '勝利';
+  } else if (myScore < yourScore) {
     showMessage('You lose...');
-  else
+    jmsg = '負け';
+  } else {
     showMessage('Draw');
+    jmsg = '引き分け';
+  }
   clearInterval(Blokus.timer);
+
+  var tweet = document.getElementById('tweet-button');
+  var resultUrl = 'http://kiritanpo.dyndns.org/result.html#' +
+    Blokus.player + '/' + Blokus.board.getPath();
+  tweet.getElementsByTagName('a')[0].href =
+    'http://twitter.com/intent/tweet?hashtags=hmmm_blokus&text=' +
+    encodeURIComponent('hmmm level ' + Blokus.level + ' に ' +
+                      Blokus.board.score(0) + ' 対 ' + Blokus.board.score(1) +
+                      ' で' + jmsg) +
+    '&url=' + encodeURIComponent(resultUrl);
+  tweet.style.visibility = 'visible';
 }
 
 function timerHandler() {

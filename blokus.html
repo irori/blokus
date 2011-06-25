@@ -2,6 +2,7 @@
 <html>
 
 <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  <meta http-equiv="Content-Script-Type" content="text/javascript">
  <meta http-equiv="Content-Style-Type" content="text/css">
  <meta name="viewport" content="width=580">
@@ -190,6 +191,19 @@
      padding: 5px 10px 5px 10px;
      margin: 10px;
    }
+   #tweet-button {
+     position: absolute;
+     top: 320px;
+     left: 490px;
+     visibility: hidden;
+   }
+   #tweet-button a {
+     display: block;
+     padding: 2px 5px 2px 20px;
+     background: url('http://a4.twimg.com/images/favicon.ico') 1px center no-repeat;
+     border: 1px solid #ccc;
+     text-decoration: none;
+   }
  </style>
  <title>Blokus Duo</title>
 </head>
@@ -257,6 +271,10 @@
       <button class="start-button" onclick="startButton(0)">Violet</button>
       <button class="start-button" onclick="startButton(1)">Orange</button>
     </p>
+  </div>
+  <div id="tweet-button">
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <a>Tweet</a>
   </div>
 </body>
 </html>
