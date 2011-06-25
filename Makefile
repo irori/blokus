@@ -16,3 +16,12 @@ $(TARGET_DIR)/blokus.js: piece.js board.js blokus.js
 
 $(TARGET_DIR)/blokus.html: blokus.html
 	grep -v 'piece.js\|board.js' $^ >$@
+
+
+result: $(TARGET_DIR)/result.js $(TARGET_DIR)/result.html
+
+$(TARGET_DIR)/result.js: piece.js board.js result.js
+	cat $^ >$@
+
+$(TARGET_DIR)/result.html: result.html
+	grep -v 'piece.js\|board.js' $^ >$@
