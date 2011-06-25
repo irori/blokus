@@ -179,14 +179,18 @@ function updateRecord() {
     row.className = ['record-violet', 'record-orange'][i % 2];
     row.insertCell(0).innerHTML = i + 1;
     row.insertCell(1).innerHTML = Blokus.board.history[i];
-    row.onmouseover = highlightCallback(i, true);
-    row.onmouseout = highlightCallback(i, false);
+    row.onmouseover = highlightCallback(row, i, true);
+    row.onmouseout = highlightCallback(row, i, false);
     row.onclick = (function(t){ return function() { rollback(t); }})(i);
   }
 }
 
-function highlightCallback(turn, hilit) {
+function highlightCallback(row, turn, hilit) {
   return function() {
+    if (hilit)
+      row.className += ' record-highlight';
+    else
+      row.className = row.className.replace(' record-highlight', '');
     for (var i = 0; i < 5; i++) {
       var e = document.getElementById(turn + '_' + i);
       if (!e)
@@ -197,14 +201,15 @@ function highlightCallback(turn, hilit) {
 }
 
 function rollback(turn) {
+  Blokus.displayTurn = turn;
   var table = document.getElementById('record');
   for (var i = 0; i < Blokus.board.turn(); i++) {
     var row = table.rows[i];
     if (row) {
+      var cls = 'record-gray';
       if (i <= turn)
-        row.className = ['record-violet', 'record-orange'][i % 2];
-      else
-        row.className = 'record-gray';
+        cls = ['record-violet', 'record-orange'][i % 2];
+      row.className = row.className.replace(/record-(violet|orange|gray)/, cls);
     }
     for (var j = 0; j < 5; j++) {
       var e = document.getElementById(i + '_' + j);
@@ -221,6 +226,7 @@ function init() {
   var path = window.location.hash.substring(3);
   Blokus.board = new Board(path);
   Blokus.player = parseInt(window.location.hash.charAt(1));
+  Blokus.displayTurn = Blokus.board.turn();
 
   createPieces();
   createOpponentsPieces();
