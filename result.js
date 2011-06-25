@@ -181,7 +181,7 @@ function updateRecord() {
     row.insertCell(1).innerHTML = Blokus.board.history[i];
     row.onmouseover = highlightCallback(row, i, true);
     row.onmouseout = highlightCallback(row, i, false);
-    row.onclick = (function(t){ return function() { rollback(t); }})(i);
+    row.onclick = (function(t) { return function() { rollback(t); }})(i);
   }
 }
 
@@ -202,7 +202,8 @@ function highlightCallback(row, turn, hilit) {
 
 function rollback(turn) {
   document.getElementById('back-button').disabled = turn <= 0;
-  document.getElementById('forward-button').disabled = turn >= Blokus.board.turn() - 1;
+  document.getElementById('forward-button').disabled =
+    turn >= Blokus.board.turn() - 1;
   Blokus.displayTurn = turn;
   var table = document.getElementById('record');
   for (var i = 0; i < Blokus.board.turn(); i++) {
