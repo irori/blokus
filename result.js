@@ -173,24 +173,44 @@ function updateBoardView() {
 }
 
 function updateRecord() {
-  table = document.getElementById('record');
+  var table = document.getElementById('record');
   for (var i = 0; i < Blokus.board.turn(); i++) {
-    row = table.insertRow(-1);
+    var row = table.insertRow(-1);
     row.className = ['record-violet', 'record-orange'][i % 2];
     row.insertCell(0).innerHTML = i + 1;
     row.insertCell(1).innerHTML = Blokus.board.history[i];
-    row.onmouseover = highlight(i, true);
-    row.onmouseout = highlight(i, false);
+    row.onmouseover = highlightCallback(i, true);
+    row.onmouseout = highlightCallback(i, false);
+    row.onclick = (function(t){ return function() { rollback(t); }})(i);
   }
 }
 
-function highlight(turn, hilit) {
+function highlightCallback(turn, hilit) {
   return function() {
-    for (i = 0; i < 5; i++) {
+    for (var i = 0; i < 5; i++) {
       var e = document.getElementById(turn + '_' + i);
-      if (e) {
-        e.className = 'block' + turn % 2 + (hilit ? 'highlight' : '');
-      }
+      if (!e)
+        break;
+      e.className = 'block' + turn % 2 + (hilit ? 'highlight' : '');
+    }
+  }
+}
+
+function rollback(turn) {
+  var table = document.getElementById('record');
+  for (var i = 0; i < Blokus.board.turn(); i++) {
+    var row = table.rows[i];
+    if (row) {
+      if (i <= turn)
+        row.className = ['record-violet', 'record-orange'][i % 2];
+      else
+        row.className = 'record-gray';
+    }
+    for (var j = 0; j < 5; j++) {
+      var e = document.getElementById(i + '_' + j);
+      if (!e)
+        break;
+      e.style.visibility = (i <= turn ? 'visible' : 'hidden');
     }
   }
 }
