@@ -60,6 +60,7 @@
      top: 150px;
      width: 100px;
      color: #63d;
+     font-weight: bold;
    }
    .orange-scoreboard {
      position: absolute;
@@ -67,13 +68,22 @@
      top: 230px;
      width: 100px;
      color: #f72;
-   }
-   .scoreboard-name {
      font-weight: bold;
    }
    .scoreboard-score {
-     font-weight: bold;
      text-align: right;
+   }
+   #record {
+     position: absolute;
+     left: 580px;
+     top: 20px;
+     font-family: monospace;
+   }
+   .record-violet {
+     color: #63d;
+   }
+   .record-orange {
+     color: #f72;
    }
    .vgrid {
      position: absolute;
@@ -153,13 +163,13 @@
   <div id="pieces"></div>
   <div class="logo">Blokus Duo</div>
   <table class="violet-scoreboard">
-    <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>
+    <tr><td id="violet-name">Violet</td></tr>
     <tr><td id="violet-score" class="scoreboard-score">0 points</td></tr>
   </table>
   <table class="orange-scoreboard">
-    <tr><td id="orange-name" class="scoreboard-name">Orange</td></tr>
+    <tr><td id="orange-name">Orange</td></tr>
     <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
   </table>
-  <div id="message"></div>
+  <table id="record"></table>
 </body>
 </html>

@@ -185,6 +185,16 @@ function updateBoardView(moveToHighlight) {
   }
 }
 
+function updateRecord() {
+  rows = []
+  for (var i = 0; i < Blokus.board.turn(); i++) {
+    cls = ['record-violet', 'record-orange'][i % 2];
+    rows[i] = '<tr class="' + cls + '"><td>' + (i+1) + '</td><td>' +
+      Blokus.board.history[i] + '</td>';
+  }
+  document.getElementById('record').innerHTML = rows.join('');
+}
+
 // functions called from result.html
 
 function init() {
@@ -195,6 +205,7 @@ function init() {
   createPieces();
   createOpponentsPieces();
   updateBoardView();
+  updateRecord();
 
   // update scoreboard
   var names = ['Player', 'Computer'];
