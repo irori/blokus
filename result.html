@@ -31,6 +31,7 @@
      height: 200px;
      padding: 10px;
      border-radius: 10px;
+     background-color: #ccc;
    }
    #opponents-piece-area {
      position: absolute;
@@ -40,18 +41,10 @@
      height: 260px;
      padding: 10px;
      border-radius: 10px;
+     background-color: #ccc;
    }
    #opponents-pieces {
      position: relative;
-   }
-   .active-area {
-     background-color: #eee;
-   }
-   .inactive-area {
-     background-color: #ccc;
-   }
-   .active .block0, .active .block1 {
-     cursor: pointer;
    }
    .logo {
      position: absolute;
@@ -77,10 +70,6 @@
    }
    .scoreboard-name {
      font-weight: bold;
-   }
-   .scoreboard-time {
-     font-weight: bold;
-     text-align: right;
    }
    .scoreboard-score {
      font-weight: bold;
@@ -115,80 +104,10 @@
      background-color: #f72;
    }
    .block0highlight {
-     -moz-animation-duration: 2s;
-     -moz-animation-iteration-count: 5;
-     -moz-animation-name: animation0;
-     -webkit-animation-duration: 2s;
-     -webkit-animation-iteration-count: 5;
-     -webkit-animation-name: animation0;
-     background-color: #63d;
-   }
-   @-moz-keyframes animation0 {
-     0%   { background-color: #63d; }
-     50%  { background-color: #a9e; }
-     100% { background-color: #63d; }
-   }
-   @-webkit-keyframes animation0 {
-     0%   { background-color: #63d; }
-     50%  { background-color: #a9e; }
-     100% { background-color: #63d; }
+     background-color: #a9e;
    }
    .block1highlight {
-     -moz-animation-duration: 2s;
-     -moz-animation-iteration-count: 5;
-     -moz-animation-name: animation1;
-     -webkit-animation-duration: 2s;
-     -webkit-animation-iteration-count: 5;
-     -webkit-animation-name: animation1;
-     background-color: #f72;
-   }
-   @-moz-keyframes animation1 {
-     0%   { background-color: #f72; }
-     50%  { background-color: #fb8; }
-     100% { background-color: #f72; }
-   }
-   @-webkit-keyframes animation1 {
-     0%   { background-color: #f72; }
-     50%  { background-color: #fb8; }
-     100% { background-color: #f72; }
-   }
-   .piece {
-     -webkit-transform-origin: 10px 10px;
-   }
-   .rotate-left {
-     -webkit-transform: rotate(90deg);
-   }
-   .rotate-right {
-     -webkit-transform: rotate(-90deg);
-   }
-   .rotate-flip {
-     -webkit-transform: rotateY(180deg);
-   }
-   .rotating {
-     -webkit-transition: -webkit-transform 0.1s linear;
-     -webkit-transform: rotate(0deg);
-   }
-   #message {
-     position: absolute;
-     left: 100px;
-     top: 320px;
-     width: 360px;
-     padding: 5px;
-     text-align: center;
-     font-weight: bold;
-     background-color: #bdf;
-     visibility: hidden;
-   }
-   #start-game {
-     position: absolute;
-     left: 160px;
-     top: 330px;
-     width: 280px;
-     text-align: center;
-   }
-   .start-button {
-     padding: 5px 10px 5px 10px;
-     margin: 10px;
+     background-color: #fb8;
    }
  </style>
  <title>Blokus Duo</title>

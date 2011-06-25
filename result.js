@@ -1,11 +1,6 @@
 var Blokus = { level: 1 };
 var SCALE = 20;
 
-function setActiveArea() {
-  document.getElementById('piece-area').className = 'inactive-area';
-  document.getElementById('opponents-piece-area').className = 'inactive-area';
-}
-
 function rotate(elem, dir, x, y) {
   switch (dir) {
   case 'left':
@@ -190,33 +185,25 @@ function updateBoardView(moveToHighlight) {
   }
 }
 
-function updateScore() {
-  document.getElementById('violet-score').innerHTML =
-    Blokus.board.score(0) + ' points';
-  document.getElementById('orange-score').innerHTML =
-    Blokus.board.score(1) + ' points';
-}
-
-function startGame() {
-  var names = ['Player', 'Computer'];
-  document.getElementById('violet-name').innerHTML = names[Blokus.player];
-  document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
-
-  createPieces();
-  createOpponentsPieces();
-  updateBoardView();
-  updateScore();
-  setActiveArea();
-  Blokus.elapsed = [0, 0];
-}
-
-// functions called from blokus.html
+// functions called from result.html
 
 function init() {
   var path = window.location.hash.substring(3);
   Blokus.board = new Board(path);
   Blokus.player = parseInt(window.location.hash.charAt(1));
-  startGame(path);
+
+  createPieces();
+  createOpponentsPieces();
+  updateBoardView();
+
+  // update scoreboard
+  var names = ['Player', 'Computer'];
+  document.getElementById('violet-name').innerHTML = names[Blokus.player];
+  document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
+  document.getElementById('violet-score').innerHTML =
+    Blokus.board.score(0) + ' points';
+  document.getElementById('orange-score').innerHTML =
+    Blokus.board.score(1) + ' points';
 }
 
 // utility functions for cross-browser support
@@ -228,20 +215,6 @@ function getStyle(elem) {
     return elem.currentStyle;
   else
     return window.getComputedStyle(elem, null);
-}
-
-function getHScroll() {
-  if (window.pageXOffset !== undefined)
-    return window.pageXOffset;
-  else
-    return document.body.scrollLeft;
-}
-
-function getVScroll() {
-  if (window.pageYOffset !== undefined)
-    return window.pageYOffset;
-  else
-    return document.documentElement.scrollTop;
 }
 
 function getEvent(e) {
