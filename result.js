@@ -186,13 +186,13 @@ function updateBoardView(moveToHighlight) {
 }
 
 function updateRecord() {
-  rows = []
+  table = document.getElementById('record');
   for (var i = 0; i < Blokus.board.turn(); i++) {
-    cls = ['record-violet', 'record-orange'][i % 2];
-    rows[i] = '<tr class="' + cls + '"><td>' + (i+1) + '</td><td>' +
-      Blokus.board.history[i] + '</td>';
+    row = table.insertRow(-1);
+    row.className = ['record-violet', 'record-orange'][i % 2];
+    row.insertCell(0).innerHTML = i + 1;
+    row.insertCell(1).innerHTML = Blokus.board.history[i];
   }
-  document.getElementById('record').innerHTML = rows.join('');
 }
 
 // functions called from result.html
