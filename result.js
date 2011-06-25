@@ -201,6 +201,8 @@ function highlightCallback(row, turn, hilit) {
 }
 
 function rollback(turn) {
+  document.getElementById('back-button').disabled = turn <= 0;
+  document.getElementById('forward-button').disabled = turn >= Blokus.board.turn() - 1;
   Blokus.displayTurn = turn;
   var table = document.getElementById('record');
   for (var i = 0; i < Blokus.board.turn(); i++) {
@@ -222,11 +224,19 @@ function rollback(turn) {
 
 // functions called from result.html
 
+function backButton() {
+  rollback(Blokus.displayTurn - 1);
+}
+
+function forwardButton() {
+  rollback(Blokus.displayTurn + 1);
+}
+
 function init() {
   var path = window.location.hash.substring(3);
   Blokus.board = new Board(path);
   Blokus.player = parseInt(window.location.hash.charAt(1));
-  Blokus.displayTurn = Blokus.board.turn();
+  Blokus.displayTurn = Blokus.board.turn() - 1;
 
   createPieces();
   createOpponentsPieces();

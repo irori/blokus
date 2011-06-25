@@ -89,7 +89,7 @@
      background-color: #eee;
    }
    .record-gray {
-     color: #888;
+     color: #aaa;
    }
    .vgrid {
      position: absolute;
@@ -124,6 +124,20 @@
    }
    .block1highlight {
      background-color: #f96;
+   }
+   #back-button {
+     position: absolute;
+     top: 300px;
+     left: 460px;
+     padding: 5px 10px 5px 10px;
+     margin: 10px;
+   }
+   #forward-button {
+     position: absolute;
+     top: 300px;
+     left: 510px;
+     padding: 5px 10px 5px 10px;
+     margin: 10px;
    }
  </style>
  <title>Blokus Duo</title>
@@ -177,5 +191,7 @@
     <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
   </table>
   <table id="record"></table>
+  <button id="back-button" onclick="backButton()">&lt;&lt;</button>
+  <button id="forward-button" onclick="forwardButton()" disabled>&gt;&gt;</button>
 </body>
 </html>
