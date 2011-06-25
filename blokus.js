@@ -285,9 +285,9 @@ function gameEnd() {
     Blokus.player + '/' + Blokus.board.getPath();
   tweet.getElementsByTagName('a')[0].href =
     'http://twitter.com/intent/tweet?hashtags=hmmm_blokus&text=' +
-    encodeURIComponent('hmmm level ' + Blokus.level + ' に ' +
-                      Blokus.board.score(0) + ' 対 ' + Blokus.board.score(1) +
-                      ' で' + jmsg) +
+    encodeURIComponent('hmmm level ' + Blokus.level + 'に' +
+                      Blokus.board.score(0) + '対' + Blokus.board.score(1) +
+                      'で' + jmsg) +
     '&url=' + encodeURIComponent(resultUrl);
   tweet.style.visibility = 'visible';
 }
