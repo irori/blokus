@@ -151,36 +151,23 @@ function createOpponentsPieces() {
   }
 }
 
-function updateBoardView(moveToHighlight) {
+function updateBoardView() {
   var boardElem = document.getElementById('board');
-  var coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
-  for (var y = 0; y < 14; y++) {
-    for (var x = 0; x < 14; x++) {
-      var sq = Blokus.board.at(x, y);
-      if ((sq & (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK)) == 0)
-        continue;
-      var id = 'board_' + x.toString(16) + y.toString(16);
-
-      var cell = document.getElementById(id);
-      if (!cell) {
-        cell = document.createElement('div');
-        cell.id = id;
-        cell.setAttribute('style',
-                          'position:absolute;' +
-                          'left:' + x * SCALE + 'px;' +
-                          'top:' + y * SCALE + 'px;' +
-                          'width:' + SCALE + 'px;' +
-                          'height:' + SCALE + 'px;');
-        boardElem.appendChild(cell);
-      }
-      var cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
-      for (var i = 0; i < coordsToHighlight.length; i++) {
-        if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
-          cls += 'highlight';
-          break;
-        }
-      }
-      cell.className = cls;
+  for (var i = 0; i < Blokus.board.turn(); i++) {
+    var coords = Blokus.board.history[i].coords();
+    for (var j = 0; j < coords.length; j++) {
+      var x = coords[j].x;
+      var y = coords[j].y;
+      cell = document.createElement('div');
+      cell.id = i + '_' + j;
+      cell.setAttribute('style',
+                        'position:absolute;' +
+                        'left:' + x * SCALE + 'px;' +
+                        'top:' + y * SCALE + 'px;' +
+                        'width:' + SCALE + 'px;' +
+                        'height:' + SCALE + 'px;');
+      cell.className = ['block0', 'block1'][i % 2];
+      boardElem.appendChild(cell);
     }
   }
 }
@@ -192,6 +179,19 @@ function updateRecord() {
     row.className = ['record-violet', 'record-orange'][i % 2];
     row.insertCell(0).innerHTML = i + 1;
     row.insertCell(1).innerHTML = Blokus.board.history[i];
+    row.onmouseover = highlight(i, true);
+    row.onmouseout = highlight(i, false);
+  }
+}
+
+function highlight(turn, hilit) {
+  return function() {
+    for (i = 0; i < 5; i++) {
+      var e = document.getElementById(turn + '_' + i);
+      if (e) {
+        e.className = 'block' + turn % 2 + (hilit ? 'highlight' : '');
+      }
+    }
   }
 }
 
