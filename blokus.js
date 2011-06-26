@@ -46,8 +46,10 @@ function rotate(elem, dir, x, y) {
     elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
   }
   if (x != undefined) {
-    elem.style.left = x - SCALE / 2 + 'px';
-    elem.style.top = y - SCALE / 2 + 'px';
+    setTimeout(function() {  // Avoid Chrome bug(?)
+      elem.style.left = x - SCALE / 2 + 'px';
+      elem.style.top = y - SCALE / 2 + 'px';
+    }, 0);
   }
 }
 
