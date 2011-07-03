@@ -49,16 +49,7 @@ function fromBoardPosition(pos) {
 }
 
 function createPiece(x, y, id, dir) {
-  var elem = document.getElementById('b' + id);
-  if (elem) {
-    elem.style.left = x + 'px';
-    elem.style.top = y + 'px';
-    rotate(elem, dir);
-    return;
-  }
-
-  // create a new piece
-  elem = document.createElement('div');
+  var elem = document.createElement('div');
   elem.id = 'b' + id;
   elem.blockId = id;
   elem.direction = dir;
@@ -80,6 +71,7 @@ function createPiece(x, y, id, dir) {
   }
 
   document.getElementById('pieces').appendChild(elem);
+  return elem;
 }
 
 var piecePositionTable = [ // x, y, dir
@@ -112,8 +104,9 @@ function createPieces() {
   var top = parseInt(area.top) + parseInt(area.paddingTop);
   for (var i = 0; i < piecePositionTable.length; i++) {
     var a = piecePositionTable[i];
-    if (!Blokus.board.isUsed(Blokus.player, i))
-      createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
+    var e = createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
+    if (Blokus.board.isUsed(Blokus.player, i))
+      e.style.visibility = 'hidden';
   }
 }
 
@@ -121,9 +114,6 @@ function createOpponentsPieces() {
   var area = document.getElementById('opponents-pieces');
   for (var id = 0; id < piecePositionTable.length; id++) {
     var a = piecePositionTable[id];
-    if (Blokus.board.isUsed(1 - Blokus.player, id))
-      continue;
-
     var x = 9 - a[1];
     var y = a[0];
     var dir = (a[2] + 2) & 7;
@@ -147,6 +137,8 @@ function createOpponentsPieces() {
       cell.className = 'block' + (1 - Blokus.player);
       elem.appendChild(cell);
     }
+    if (Blokus.board.isUsed(1 - Blokus.player, id))
+      elem.style.visibility = 'hidden';
     area.appendChild(elem);
   }
 }
@@ -154,7 +146,10 @@ function createOpponentsPieces() {
 function updateBoardView() {
   var boardElem = document.getElementById('board');
   for (var i = 0; i < Blokus.board.turn(); i++) {
-    var coords = Blokus.board.history[i].coords();
+    var move = Blokus.board.history[i];
+    if (move.isPass())
+      continue;
+    var coords = move.coords();
     for (var j = 0; j < coords.length; j++) {
       var x = coords[j].x;
       var y = coords[j].y;
@@ -169,6 +164,9 @@ function updateBoardView() {
       cell.className = ['block0', 'block1'][i % 2];
       boardElem.appendChild(cell);
     }
+    var id = (i % 2 == Blokus.player ? 'b' : 'o') + move.blockId();
+    var elem = document.getElementById(id);
+    elem.id = i + '_p';
   }
 }
 
@@ -214,11 +212,13 @@ function rollback(turn) {
         cls = ['record-violet', 'record-orange'][i % 2];
       row.className = row.className.replace(/record-(violet|orange|gray)/, cls);
     }
+    var e = document.getElementById(i + '_p');
+    if (e)
+      e.style.visibility = (i <= turn ? 'hidden' : 'visible');
     for (var j = 0; j < 5; j++) {
-      var e = document.getElementById(i + '_' + j);
-      if (!e)
-        break;
-      e.style.visibility = (i <= turn ? 'visible' : 'hidden');
+      e = document.getElementById(i + '_' + j);
+      if (e)
+        e.style.visibility = (i <= turn ? 'visible' : 'hidden');
     }
   }
 }
