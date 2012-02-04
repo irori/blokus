@@ -32,8 +32,8 @@ test("Board constructor", function(){
 	for (var i = 0; i < 21; i++)
 	    ok(!b.isUsed(p, i));
     }
-    same(b.violetScore(), 0);
-    same(b.orangeScore(), 0);
+    same(b.score(0), 0);
+    same(b.score(1), 0);
     ok(b.canMove());
 });
 
@@ -55,8 +55,8 @@ test("first move", function(){
     same(b.player(), 1);
     ok(b.isUsed(0, 1));
     ok(!b.isUsed(1, 1));
-    same(b.violetScore(), 5);
-    same(b.orangeScore(), 0);
+    same(b.score(0), 5);
+    same(b.score(1), 0);
     ok(b.canMove());
     ok(b.isValidMove(new Move("AAt0")));
     ok(!b.isValidMove(new Move("55u0")));
@@ -70,8 +70,8 @@ test("fourth move", function(){
 
     same(b.getPath(), "55t6/99t4/78l5");
     same(b.player(), 1);
-    same(b.violetScore(), 10);
-    same(b.orangeScore(), 5);
+    same(b.score(0), 10);
+    same(b.score(1), 5);
     ok(b.canMove());
     ok(b.isValidMove(new Move("7Bo3")));
     ok(!b.isValidMove(new Move("7Aa0")));
