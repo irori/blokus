@@ -283,7 +283,7 @@ function gameEnd() {
   clearInterval(Blokus.timer);
 
   var tweet = document.getElementById('tweet-button');
-  var resultUrl = 'http://kiritanpo.dyndns.org/result.html#' +
+  var resultUrl = 'http://irorin.org/result.html#' +
     Blokus.player + '/' + Blokus.board.getPath();
   tweet.getElementsByTagName('a')[0].href =
     'http://twitter.com/intent/tweet?hashtags=hmmm_blokus&text=' +
