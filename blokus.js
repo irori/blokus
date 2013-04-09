@@ -37,6 +37,16 @@ function rotate(elem, dir, x, y) {
     elem.className = 'piece rotate-flip';
     setTimeout(function() {elem.className = 'piece rotating'}, 0);
     break;
+  case 'cyclic':
+    if (elem.direction == 1 || elem.direction == 6) {
+      dir = elem.direction ^ 1;
+      elem.className = 'piece rotate-flip';
+    } else {
+      dir = elem.direction + (elem.direction & 1 ? -2 : 2);
+      elem.className = 'piece rotate-right';
+    }
+    setTimeout(function() {elem.className = 'piece rotating'}, 0);
+    break;
   }
 
   elem.direction = dir;
@@ -108,10 +118,9 @@ function createPiece(x, y, id, dir) {
 
   // set event handlers
   elem.onmousedown = drag;
-  if (elem.addEventListener) {
+  if (elem.addEventListener)
     elem.addEventListener('touchstart', drag, false);
-    elem.addEventListener('gesturestart', gesture, false);
-  }
+
   elem.onclick = click;
   elem.ondblclick = dblclick;
   elem.onmousewheel = wheel;
@@ -410,6 +419,7 @@ function drag(e) {
   var elem = this;
   var deltaX = e.clientX - this.offsetLeft;
   var deltaY = e.clientY - this.offsetTop;
+  var touchClick = true;
 
   if (document.addEventListener) {
     document.addEventListener('mousemove', moveHandler, true);
@@ -437,6 +447,7 @@ function drag(e) {
       e.clientY = e.targetTouches[0].clientY;
       this.lastClientX = e.clientX;
       this.lastClientY = e.clientY;
+      touchClick = false;
     }
 
     e.stopPropagation();
@@ -466,9 +477,8 @@ function drag(e) {
       e.clientY = this.lastClientY;
 
       var now = new Date().getTime();
-      if (this.lastTouch && now - this.lastTouch < 400)
-        rotate(elem, 'flip');
-      this.lastTouch = now;
+      if (touchClick)
+        rotate(elem, 'cyclic');
     }
 
     if (document.removeEventListener) {
@@ -497,39 +507,6 @@ function drag(e) {
         updateScore();
       }
     }
-  }
-}
-
-function gesture(e) {
-  if (Blokus.board.player() != Blokus.player)
-    return;
-
-  document.addEventListener('gesturechange', gestureChange, true);
-  document.addEventListener('gestureend', gestureEnd, true);
-
-  e.stopPropagation();
-  e.preventDefault();
-
-  var elem = this;
-  elem.rotateBase = 0;
-
-  function gestureChange(e) {
-    e.stopPropagation();
-
-    if (e.rotation < elem.rotateBase - 20) {
-      elem.rotateBase -= 20;
-      rotate(elem, 'left');
-    }
-    else if (e.rotation > elem.rotateBase + 20) {
-      elem.rotateBase += 20;
-      rotate(elem, 'right');
-    }
-  }
-
-  function gestureEnd(e) {
-    e.stopPropagation();
-    document.removeEventListener('gesturechange', gestureChange, true);
-    document.removeEventListener('gestureend', gestureEnd, true);
   }
 }
 
