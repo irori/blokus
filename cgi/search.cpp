@@ -23,6 +23,7 @@ int visited_nodes;
 static int check_point;
 static clock_t expire_clock;
 bool quiet = false;
+static bool timed_out;
 
 typedef map<BoardMapKey, pair<int, int> > Hash;
 
@@ -89,8 +90,10 @@ int negascout(Board* node, int depth, int alpha, int beta,
     assert(alpha <= beta);
 
     if (++visited_nodes >= check_point) {
-	if ((int)(expire_clock - clock()) < 0)
-	    throw Timeout();
+	if ((int)(expire_clock - clock()) < 0) {
+	    timed_out = true;
+	    return 0;
+	}
 	check_point += CHECKPOINT_INTERVAL;
     }
 
@@ -134,8 +137,11 @@ int negascout(Board* node, int depth, int alpha, int beta,
 	if (beta < INT_MAX) {
 	    int bound = (int)round_((thresh * pc->sigma + beta - pc->b)
 				    / pc->a);
-	    if (negascout(node, pc->depth, bound-1, bound,
-			  NULL, hash, prev_hash, 0) >= bound)
+	    int r = negascout(node, pc->depth, bound-1, bound,
+			      NULL, hash, prev_hash, 0);
+	    if (timed_out)
+		return 0;
+	    if (r >= bound)
 	    {
 		if (hash_entry)
 		    hash_entry->first = max(hash_entry->first, beta);
@@ -145,8 +151,11 @@ int negascout(Board* node, int depth, int alpha, int beta,
 	if (alpha > -INT_MAX) {
 	    int bound = (int)round_((-thresh * pc->sigma + alpha - pc->b)
 				    / pc->a);
-	    if (negascout(node, pc->depth, bound, bound+1,
-			  NULL, hash, prev_hash, 0) <= bound)
+	    int r = negascout(node, pc->depth, bound, bound+1,
+			      NULL, hash, prev_hash, 0);
+	    if (timed_out)
+		return 0;
+	    if (r <= bound)
 	    {
 		if (hash_entry)
 		    hash_entry->second = min(hash_entry->second, alpha);
@@ -178,13 +187,21 @@ int negascout(Board* node, int depth, int alpha, int beta,
 	if (found_pv) {
 	    score = -negascout(&i->board, depth-1, -a-1, -a, NULL,
 			       hash+1, prev_hash+1, hash_depth-1);
-	    if (score > a && score < beta)
+	    if (timed_out)
+		return 0;
+	    if (score > a && score < beta) {
 		score = -negascout(&i->board, depth-1, -beta, -score,
 				   NULL, hash+1, prev_hash+1, hash_depth-1);
+		if (timed_out)
+		    return 0;
+	    }
 	}
-	else
+	else {
 	    score = -negascout(&i->board, depth-1, -beta, -a,
 			       NULL, hash+1, prev_hash+1, hash_depth-1);
+	    if (timed_out)
+		return 0;
+	}
 
 	if (score >= beta) {
 	    if (hash_entry)
@@ -221,6 +238,7 @@ SearchResult search_negascout(Board* node, int max_depth,
     clock_t start = clock();
     expire_clock = start + timeout_ms * (CLOCKS_PER_SEC / 1000);
     check_point = visited_nodes + CHECKPOINT_INTERVAL;
+    timed_out = false;
 
 #ifdef PROBSTAT
     score = negascout(node, 1, -INT_MAX, INT_MAX, NULL, NULL, NULL, 0);
@@ -228,30 +246,30 @@ SearchResult search_negascout(Board* node, int max_depth,
 #endif
 
     Hash *prev_hash, *hash;
-    try {
-	prev_hash = new Hash[max_depth];
-	for (int i = 2; i <= max_depth; i++) {
-	    hash = new Hash[max_depth];
-	    Move move;
-	    score = negascout(node, i, -INT_MAX, INT_MAX, &move,
-			      hash, prev_hash, 8);
-	    double sec = (double)(clock() - start) / CLOCKS_PER_SEC;
-	    if (!quiet) {
-		printf("%d> %.3f %s (%d)\n",
-		       i, sec, move.fourcc(), score);
-	    }
-	    delete[] prev_hash;
-	    prev_hash = hash;
-	    best_move = move;
-	    if (sec * 1000 > stop_ms)
-		break;
+    prev_hash = new Hash[max_depth];
+    for (int i = 2; i <= max_depth; i++) {
+	hash = new Hash[max_depth];
+	Move move;
+	score = negascout(node, i, -INT_MAX, INT_MAX, &move,
+			  hash, prev_hash, 8);
+	if (timed_out)
+	    break;
+	double sec = (double)(clock() - start) / CLOCKS_PER_SEC;
+	if (!quiet) {
+	    printf("%d> %.3f %s (%d)\n",
+		   i, sec, move.fourcc(), score);
 	}
 	delete[] prev_hash;
+	prev_hash = hash;
+	best_move = move;
+	if (sec * 1000 > stop_ms)
+	    break;
     }
-    catch (Timeout& e) {
-	delete[] prev_hash;
+    delete[] prev_hash;
+
+    if (timed_out)
 	delete[] hash;
-    }
+
     return SearchResult(best_move, score);
 }
 
