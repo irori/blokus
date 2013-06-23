@@ -32,15 +32,15 @@ Move::Move(const char* fourcc)
     }
 }
 
-string Move::fourcc() const
+const char* Move::fourcc() const
 {
-    char buf[5];
+    static char buf[5];
     if (is_pass())
 	strcpy(buf, "----");
     else
 	sprintf(buf, "%2X%c%d",
 		(m_ & 0xff) + 0x11, 'u' - block_id(), direction());
-    return string(buf);
+    return buf;
 }
 
 Move Move::mirror() const

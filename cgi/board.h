@@ -1,10 +1,8 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
-#include <string>
 #include <string.h>
 #include "piece.h"
-using std::string;
 
 class Move {
 public:
@@ -18,7 +16,7 @@ public:
     int block_id() const { return m_ >> 11; }
     int direction() const { return m_ >> 8 & 0x7; }
     bool is_pass() const { return m_ == 0xffff; }
-    string fourcc() const;
+    const char* fourcc() const;
     bool operator<(const Move& rhs) const { return m_ < rhs.m_; }
     bool operator==(const Move& rhs) const { return m_ == rhs.m_; }
     unsigned char xy() const { return m_ & 0xff; }

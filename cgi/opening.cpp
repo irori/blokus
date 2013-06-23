@@ -1,9 +1,6 @@
-#include <map>
-#include <stdio.h>
 #include <stdlib.h>
 #include "board.h"
 #include "opening.h"
-using namespace std;
 
 #define SIZEOF_ARRAY(ar) (sizeof(ar)/sizeof((ar)[0]))
 
@@ -169,9 +166,6 @@ const unsigned short orange_unique_first_moves[] = {
     0
 };
 
-typedef map<BoardMapKey, Move> OpeningBook;
-static OpeningBook opening_book;
-
 Move random_move(Board* b)
 {
     Move movables[1500];
@@ -193,52 +187,11 @@ static Move first_move()
 
 Move opening_move(Board* b)
 {
-    OpeningBook::iterator i = opening_book.find(BoardMapKey(*b));
-    if (i != opening_book.end())
-	return i->second;
     if (b->turn() == 0)
 	return first_move();
 //    if (b->turn() < 2)
 //	return random_move(b);
     return INVALID_MOVE;
-}
-
-void load_opening_book(const char *fname)
-{
-    FILE* fp = fopen(fname, "r");
-    if (fp == NULL) {
-	perror(fname);
-	exit(1);
-    }
-    char buf[100];
-    for (int line = 1; fgets(buf, sizeof(buf), fp); line++) {
-	Move moves[20];
-	int nmove = 0;
-	for (char* tok = strtok(buf, " \n"); tok; tok = strtok(NULL, " \n"))
-	    moves[nmove++] = Move(tok);
-	if (nmove == 0)
-	    continue;
-	Board board, rboard;
-	for (int i = 0; i < nmove-1; i++) {
-	    if (!board.is_valid_move(moves[i])) {
-		fprintf(stderr, "%s line %d: invalid move %s\n",
-			fname, line, moves[i].fourcc().c_str());
-		exit(1);
-	    }
-	    board.do_move(moves[i]);
-	    rboard.do_move(moves[i].mirror());
-	}
-	if (board.is_valid_move(moves[nmove-1])) {
-	    opening_book[BoardMapKey(rboard)] = moves[nmove-1].mirror();
-	    opening_book[BoardMapKey(board)] = moves[nmove-1];
-	}
-	else {
-	    fprintf(stderr, "%s line %d: invalid move %s\n",
-		    fname, line, moves[nmove-1].fourcc().c_str());
-	    exit(1);
-	}
-    }
-    fclose(fp);
 }
 
 #ifdef MAKE_UNIQUE_MOVE_TABLE
@@ -293,7 +246,7 @@ void make_violet_unique_first_moves()
 	    continue;
 	if (find(begin, end, m) == end &&
 	    find(begin, end, m.mirror()) == end)
-	    fprintf(stderr, "not found: %s\n", m.fourcc().c_str());
+	    fprintf(stderr, "not found: %s\n", m.fourcc());
     }
     for (vector<Move>::const_iterator i = begin; i != end; ++i) {
 	Move m = *i;
@@ -301,7 +254,7 @@ void make_violet_unique_first_moves()
 	    if (m.mirror() == m)
 		fprintf(stderr, "mirror: 0x%04x\n", m.to_i());
 	    else
-		fprintf(stderr, "duplicated: %s\n", m.fourcc().c_str());
+		fprintf(stderr, "duplicated: %s\n", m.fourcc());
 	}
 	printf("0x%04x\n", m.to_i());
     }

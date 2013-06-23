@@ -238,7 +238,7 @@ SearchResult search_negascout(Board* node, int max_depth,
 	    double sec = (double)(clock() - start) / CLOCKS_PER_SEC;
 	    if (!quiet) {
 		printf("%d> %.3f %s (%d)\n",
-		       i, sec, move.fourcc().c_str(), score);
+		       i, sec, move.fourcc(), score);
 	    }
 	    delete[] prev_hash;
 	    prev_hash = hash;
@@ -406,7 +406,7 @@ void wld_test()
 	    double sec = (double)(clock() - start) / CLOCKS_PER_SEC;
 	    printf("time(%d): %d nodes / %.3f sec (%d nps)\n",
 		   b.turn(), visited_nodes, sec, (int)(visited_nodes / sec));
-	    printf("\n%s (%d)\n", m.fourcc().c_str(), result.second);
+	    printf("\n%s (%d)\n", m.fourcc(), result.second);
 
 	    npass = m.is_pass() ? npass+1 : 0;
 	    b.do_move(m);
@@ -442,7 +442,7 @@ void perfect_test()
 	double sec = (double)(clock() - start) / CLOCKS_PER_SEC;
 	printf("time(%d): %d nodes / %.3f sec (%d nps)\n",
 	       b.turn(), visited_nodes, sec, (int)(visited_nodes / sec));
-	printf("\n%s (%d)\n", m.fourcc().c_str(), result.second);
+	printf("\n%s (%d)\n", m.fourcc(), result.second);
 
 	npass = m.is_pass() ? npass+1 : 0;
 	b.do_move(m);
