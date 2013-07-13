@@ -3,7 +3,12 @@ var SCALE = 20;
 
 function showMessage(msg) {
   var elem = document.getElementById('message');
-  elem.innerHTML = msg;
+  if (typeof msg == 'string')
+    elem.innerHTML = msg;
+  else {
+    elem.innerHTML = '';
+    elem.appendChild(msg);
+  }
   elem.style.visibility = 'visible';
 }
 
@@ -278,29 +283,26 @@ function opponentMove() {
 function gameEnd() {
   var myScore = Blokus.board.score(Blokus.player);
   var yourScore = Blokus.board.score(Blokus.player ^ 1);
-  var jmsg;
+  var msg;
   if (myScore > yourScore) {
-    showMessage('You win!');
-    jmsg = '勝利';
+    msg = 'You win!';
   } else if (myScore < yourScore) {
-    showMessage('You lose...');
-    jmsg = '負け';
+    msg = 'You lose...';
   } else {
-    showMessage('Draw');
-    jmsg = '引き分け';
+    msg = 'Draw';
   }
   clearInterval(Blokus.timer);
 
-  var tweet = document.getElementById('tweet-button');
-  var resultUrl = 'http://irorin.org/result.html#' +
-    Blokus.player + '/' + Blokus.board.getPath();
-  tweet.getElementsByTagName('a')[0].href =
-    'http://twitter.com/intent/tweet?hashtags=hmmm_blokus&text=' +
-    encodeURIComponent('hmmm level ' + Blokus.level + 'に' +
-                      Blokus.board.score(0) + '対' + Blokus.board.score(1) +
-                      'で' + jmsg) +
-    '&url=' + encodeURIComponent(resultUrl);
-  tweet.style.visibility = 'visible';
+  var recordLink = document.createElement('a');
+  recordLink.href = [window.location.protocol, '//',
+                     window.location.host,
+                     window.location.pathname.replace(/[^\/]*$/, 'result.html'),
+                     '#',
+                     Blokus.player, '/',
+                     Blokus.board.getPath()
+                    ].join('');
+  recordLink.innerHTML = msg;
+  showMessage(recordLink);
 }
 
 function timerHandler() {
