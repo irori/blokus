@@ -35,5 +35,5 @@ WorkerBackend.prototype.request = function(path, level) {
 
 
 function createBackend(handler) {
-  return new WorkerBackend(handler);
+  return new CGIBackend(handler);
 }

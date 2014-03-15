@@ -232,7 +232,7 @@ int negascout(Board* node, int depth, int alpha, int beta,
 SearchResult search_negascout(Board* node, int max_depth,
 			      int stop_ms, int timeout_ms)
 {
-    Move best_move;
+    Move best_move = INVALID_MOVE;
     int score;
 
     clock_t start = clock();
