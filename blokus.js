@@ -53,6 +53,7 @@ function rotate(elem, dir, x, y) {
     setTimeout(function() {elem.className = 'piece rotating'}, 0);
     break;
   }
+  window.getComputedStyle(elem).transform;  // force style update
 
   elem.direction = dir;
   var rot = blockSet[elem.blockId].rotations[dir];

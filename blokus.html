@@ -128,15 +128,15 @@
      background-color: #f72;
    }
    .block0highlight {
-     -moz-animation-duration: 2s;
-     -moz-animation-iteration-count: 5;
-     -moz-animation-name: animation0;
+     animation-duration: 2s;
+     animation-iteration-count: 5;
+     animation-name: animation0;
      -webkit-animation-duration: 2s;
      -webkit-animation-iteration-count: 5;
      -webkit-animation-name: animation0;
      background-color: #63d;
    }
-   @-moz-keyframes animation0 {
+   @keyframes animation0 {
      0%   { background-color: #63d; }
      50%  { background-color: #a9e; }
      100% { background-color: #63d; }
@@ -147,15 +147,15 @@
      100% { background-color: #63d; }
    }
    .block1highlight {
-     -moz-animation-duration: 2s;
-     -moz-animation-iteration-count: 5;
-     -moz-animation-name: animation1;
+     animation-duration: 2s;
+     animation-iteration-count: 5;
+     animation-name: animation1;
      -webkit-animation-duration: 2s;
      -webkit-animation-iteration-count: 5;
      -webkit-animation-name: animation1;
      background-color: #f72;
    }
-   @-moz-keyframes animation1 {
+   @keyframes animation1 {
      0%   { background-color: #f72; }
      50%  { background-color: #fb8; }
      100% { background-color: #f72; }
@@ -167,19 +167,25 @@
    }
    .piece {
      -webkit-transform-origin: 10px 10px;
+     transform-origin: 10px 10px;
    }
    .rotate-left {
      -webkit-transform: rotate(90deg);
+     transform: rotate(90deg);
    }
    .rotate-right {
      -webkit-transform: rotate(-90deg);
+     transform: rotate(-90deg);
    }
    .rotate-flip {
      -webkit-transform: rotateY(180deg);
+     transform: rotateY(180deg);
    }
    .rotating {
      -webkit-transition: -webkit-transform 0.1s linear;
      -webkit-transform: rotate(0deg);
+     transition: transform 0.1s linear;
+     transform: rotate(0deg);
    }
    #message {
      position: absolute;
