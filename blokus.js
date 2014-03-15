@@ -248,36 +248,28 @@ function updateScore() {
 function opponentMove() {
   setActiveArea();
   showMessage(['Orange', 'Violet'][Blokus.player] + ' plays');
+  Blokus.backend.request(Blokus.board.getPath(), Blokus.level);
+}
 
-  var request = new window.XMLHttpRequest();
-  request.open('GET', '/b/hm5move?l=' + Blokus.level +
-               '&b=' + Blokus.board.getPath());
-  request.onreadystatechange = function() {
-    if (request.readyState != 4)
-      return;
-    if (request.status != 200)
-      throw new Error('status: ' + request.status);
-    var move = new Move(request.responseText);
-    Blokus.board.doMove(move);
-    if (!move.isPass())
-      document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
-    hideMessage();
-    updateBoardView(move);
-    updateScore();
-    createPieces();
-    setActiveArea();
-    // window.location.replace('#' + Blokus.board.getPath());
-    if (!Blokus.board.canMove()) {
-      if (move.isPass())
-        gameEnd();
-      else {
-        Blokus.board.doPass();
-        opponentMove();
-      }
-      return;
+function onOpponentMove(move) {
+  Blokus.board.doMove(move);
+  if (!move.isPass())
+    document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
+  hideMessage();
+  updateBoardView(move);
+  updateScore();
+  createPieces();
+  setActiveArea();
+  // window.location.replace('#' + Blokus.board.getPath());
+  if (!Blokus.board.canMove()) {
+    if (move.isPass())
+      gameEnd();
+    else {
+      Blokus.board.doPass();
+      opponentMove();
     }
+    return;
   }
-  request.send(null);
 }
 
 function gameEnd() {
@@ -340,6 +332,7 @@ function init() {
   if (path) {
     Blokus.board = new Board(path);
     Blokus.player = Blokus.board.player();
+    Blokus.backend = createBackend(onOpponentMove);
     startGame(path);
   }
 }
@@ -347,6 +340,7 @@ function init() {
 function startButton(player) {
   Blokus.board = new Board();
   Blokus.player = player;
+  Blokus.backend = createBackend(onOpponentMove);
   startGame();
   if (player == 1)
     opponentMove();
