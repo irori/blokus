@@ -281,5 +281,12 @@
       <button class="start-button" onclick="startButton(1)">Orange</button>
     </p>
   </div>
+
+  <div id="pnacl_listener">
+    <script type="text/javascript">
+      document.getElementById('pnacl_listener').addEventListener('load', PNaClBackend.moduleDidLoad, true);
+    </script>
+    <embed id="hm5move_pnacl" width=0 height=0 src="hm5move.nmf" type="application/x-pnacl" />
+  </div>
 </body>
 </html>

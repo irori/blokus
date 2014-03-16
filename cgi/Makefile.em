@@ -1,4 +1,4 @@
-# Makefile for emscripten
+# -*- Makefile -*- for emscripten
 
 CXX = em++
 CXXFLAGS = -Wall
