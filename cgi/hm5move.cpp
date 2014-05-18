@@ -3,10 +3,10 @@
 #include "search.h"
 #include "opening.h"
 
-extern "C" const char* hm5move(const char* pathstr, int time_limit);
+extern "C" const char* hm5move(const char* pathstr, int max_depth, int time_limit);
 extern "C" int getVisitedNodes();
 
-Move com_move(Board* b, int time_ms)
+Move com_move(Board* b, int max_depth, int time_ms)
 {
     Move move;
     int score = 100;
@@ -16,7 +16,7 @@ Move com_move(Board* b, int time_ms)
     if (move == INVALID_MOVE) {
 	SearchResult r;
 	if (b->turn() < 25)
-	    r = search_negascout(b, 10, time_ms / 2, time_ms);
+	    r = search_negascout(b, max_depth, time_ms / 2, time_ms);
 	else if (b->turn() < 27)
 	    r = wld(b, 1000);
 	else
@@ -28,7 +28,7 @@ Move com_move(Board* b, int time_ms)
     return move;
 }
 
-const char* hm5move(const char* path, int time_limit)
+const char* hm5move(const char* path, int max_depth, int time_limit)
 {
     Board b;
     while (*path) {
@@ -41,7 +41,7 @@ const char* hm5move(const char* path, int time_limit)
 	b.do_move(m);
     }
     visited_nodes = 0;
-    Move m = com_move(&b, time_limit);
+    Move m = com_move(&b, max_depth, time_limit);
     return m.fourcc();
 }
 

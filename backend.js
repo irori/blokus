@@ -47,8 +47,9 @@ function PNaClBackend(handler) {
 }
 
 PNaClBackend.prototype.request = function(path, level) {
-  var timeout = [1000, 3000, 10000][level - 1];
-  PNaClBackend.module.postMessage({'path': path, 'timeout': timeout});
+  var depth = [3, 10, 10][level - 1];
+  var timeout = [1000, 1000, 10000][level - 1];
+  PNaClBackend.module.postMessage({'path': path, 'depth': depth, 'timeout': timeout});
   this.startTime = Date.now();
 }
 

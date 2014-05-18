@@ -49,7 +49,7 @@ Move parse_move(string fourcc)
 	return INVALID_MOVE;
 }
 
-Move com_move(Board* b, int time_ms)
+Move com_move(Board* b, int max_depth, int time_ms)
 {
     Move move;
     int score = 100;
@@ -59,7 +59,7 @@ Move com_move(Board* b, int time_ms)
     if (move == INVALID_MOVE) {
 	SearchResult r;
 	if (b->turn() < 25)
-	    r = search_negascout(b, 10, time_ms / 2, time_ms);
+	    r = search_negascout(b, max_depth, time_ms / 2, time_ms);
 	else if (b->turn() < 27)
 	    r = wld(b, 1000);
 	else
@@ -79,15 +79,19 @@ int main(int argc, char *argv[])
     map<string, string> params = parse_query();
     cout << "Content-Type: text/plain\r\n\r\n";
 
+    int max_depth;
     int time_limit;
     switch (atoi(params["l"].c_str())) {
     case 2:
-        time_limit = 3000;
+	max_depth = 10;
+        time_limit = 1000;
         break;
     case 3:
+	max_depth = 10;
         time_limit = 10000;
         break;
     default:
+	max_depth = 3;
         time_limit = 1000;
         break;
     }
@@ -105,7 +109,7 @@ int main(int argc, char *argv[])
 	}
 	b.do_move(m);
     }
-    Move m = com_move(&b, time_limit);
+    Move m = com_move(&b, max_depth, time_limit);
     cout << m.fourcc();
 
     return 0;

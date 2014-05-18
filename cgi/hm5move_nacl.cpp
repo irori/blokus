@@ -7,7 +7,7 @@
 #include "ppapi/cpp/var.h"
 #include "ppapi/cpp/var_dictionary.h"
 
-Move com_move(Board* b, int time_ms)
+Move com_move(Board* b, int max_depth, int time_ms)
 {
     Move move;
     int score = 100;
@@ -17,7 +17,7 @@ Move com_move(Board* b, int time_ms)
     if (move == INVALID_MOVE) {
 	SearchResult r;
 	if (b->turn() < 25)
-	    r = search_negascout(b, 10, time_ms / 2, time_ms);
+	    r = search_negascout(b, max_depth, time_ms / 2, time_ms);
 	else if (b->turn() < 27)
 	    r = wld(b, 1000);
 	else
@@ -29,7 +29,7 @@ Move com_move(Board* b, int time_ms)
     return move;
 }
 
-const char* hm5move(const char* path, int time_limit)
+const char* hm5move(const char* path, int max_depth, int time_limit)
 {
     Board b;
     while (*path) {
@@ -42,7 +42,7 @@ const char* hm5move(const char* path, int time_limit)
 	b.do_move(m);
     }
     visited_nodes = 0;
-    Move m = com_move(&b, time_limit);
+    Move m = com_move(&b, max_depth, time_limit);
     return m.fourcc();
 }
 
@@ -59,12 +59,15 @@ class PpapiInstance : public pp::Instance {
     pp::Var path = dict.Get("path");
     if (!path.is_string())
       return;
+    pp::Var depth = dict.Get("depth");
+    if (!depth.is_number())
+      return;
     pp::Var timeout = dict.Get("timeout");
     if (!timeout.is_number())
       return;
 
     pp::VarDictionary reply;
-    reply.Set("move", hm5move(path.AsString().c_str(), timeout.AsInt()));
+    reply.Set("move", hm5move(path.AsString().c_str(), depth.AsInt(), timeout.AsInt()));
     reply.Set("visited_nodes", visited_nodes);
     PostMessage(reply);
   }
