@@ -9,11 +9,12 @@ CGIBackend.prototype.request = function(path, level) {
   request.onreadystatechange = function() {
     if (request.readyState != 4)
       return;
-    if (request.status != 200)
-      throw new Error('status: ' + request.status);
-    var move = new Move(request.responseText);
+    var move;
+    if (request.status == 200)
+      move = new Move(request.responseText);
     self.handler(move);
   };
+  request.timeout = 15 * 1000;
   request.send(null);
 };
 
@@ -54,13 +55,35 @@ PNaClBackend.prototype.request = function(path, level) {
 }
 
 PNaClBackend.moduleDidLoad = function() {
-  PNaClBackend.module = document.getElementById('hm5move_pnacl');
+  var module = document.getElementById('hm5move_pnacl');
+  if (module.postMessage)
+    PNaClBackend.module = module;
 }
 
+
+function FallbackBackend(remoteBackendFactory, localBackendFactory, handler) {
+  var self = this;
+  this.remote = new remoteBackendFactory(function(move) { self.handleRemote(move); });
+  this.local = new localBackendFactory(handler);
+  this.handler = handler;
+}
+
+FallbackBackend.prototype.request = function(path, level) {
+  this.path = path;
+  this.level = level;
+  this.remote.request(path, level);
+}
+
+FallbackBackend.prototype.handleRemote = function(move) {
+  if (move)
+    this.handler(move);
+  else
+    this.local.request(this.path, this.level);
+}
 
 function createBackend(handler) {
   if (PNaClBackend.module)
     return new PNaClBackend(handler);
   else
-    return new WorkerBackend(handler);
+    return new FallbackBackend(CGIBackend, WorkerBackend, handler);
 }
