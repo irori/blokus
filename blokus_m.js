@@ -211,7 +211,16 @@ function onOpponentMove(move) {
 }
 
 function gameEnd() {
-  msg = 'Violet:' + Blokus.board.score(0) + ' Orange:' + Blokus.board.score(1);
+  var msg = '<span style="color:#63d">' + Blokus.board.score(0) + '</span> - <span style="color:#f72">' + Blokus.board.score(1) + '</span> ';
+  var myScore = Blokus.board.score(Blokus.player);
+  var yourScore = Blokus.board.score(Blokus.player ^ 1);
+  if (myScore > yourScore) {
+    msg += 'You win!';
+  } else if (myScore < yourScore) {
+    msg += 'You lose...';
+  } else {
+    msg += 'Draw';
+  }
   showMessage(msg);
 }
 
