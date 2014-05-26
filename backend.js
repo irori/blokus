@@ -82,8 +82,14 @@ FallbackBackend.prototype.handleRemote = function(move) {
 }
 
 function createBackend(handler) {
+  var localOnly = Blokus.level == 1;
+
   if (PNaClBackend.module)
     return new PNaClBackend(handler);
+  else if (!Worker)
+    return new CGIBackend(handler);
+  else if (localOnly)
+    return new WorkerBackend(handler);
   else
     return new FallbackBackend(CGIBackend, WorkerBackend, handler);
 }

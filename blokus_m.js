@@ -258,6 +258,8 @@ function setLevel(lv) {
 // event handlers
 
 function select(e) {
+  if (Blokus.board.player() != Blokus.player)
+    return;
   if (Blokus.selected && Blokus.selected !== this) {
     unselect();
   }
