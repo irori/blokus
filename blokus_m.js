@@ -222,6 +222,7 @@ function gameEnd() {
     msg += 'Draw';
   }
   showMessage(msg);
+  Blokus.player = null;
 }
 
 function startGame() {
