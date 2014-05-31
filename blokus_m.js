@@ -375,7 +375,7 @@ function drag(e) {
     } else if (e.clientX && e.clientY) {
       var x = e.clientX - deltaX;
       var y = e.clientY - deltaY;
-      if (x < 20 || x > 280 || y < 20 || y > 360)
+      if (x < 20 || x > 280 || y < 10 || y > 340)
         unselect();
     }
   }
