@@ -22,6 +22,7 @@ using namespace std;
 int visited_nodes;
 static int check_point;
 static clock_t expire_clock;
+static bool enable_timeout;
 bool quiet = false;
 static bool timed_out;
 
@@ -89,7 +90,7 @@ int negascout(Board* node, int depth, int alpha, int beta,
 {
     assert(alpha <= beta);
 
-    if (++visited_nodes >= check_point) {
+    if (++visited_nodes >= check_point && enable_timeout) {
 	if ((int)(expire_clock - clock()) < 0) {
 	    timed_out = true;
 	    return 0;
@@ -239,6 +240,7 @@ SearchResult search_negascout(Board* node, int max_depth,
     expire_clock = start + timeout_ms * (CLOCKS_PER_SEC / 1000);
     check_point = visited_nodes + CHECKPOINT_INTERVAL;
     timed_out = false;
+    enable_timeout = false;
 
 #ifdef PROBSTAT
     score = negascout(node, 1, -INT_MAX, INT_MAX, NULL, NULL, NULL, 0);
@@ -262,6 +264,7 @@ SearchResult search_negascout(Board* node, int max_depth,
 	delete[] prev_hash;
 	prev_hash = hash;
 	best_move = move;
+	enable_timeout = true;
 	if (sec * 1000 > stop_ms)
 	    break;
     }
