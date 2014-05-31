@@ -110,28 +110,34 @@
      transform: scale(0.5, 0.5);
    }
    .piece {
-     -webkit-transition: -webkit-transform 0.1s linear, left 0.1s linear, top 0.1s linear;
-     transition: transform 0.1s linear, left 0.1s linear, top 0.1s linear;
+     -webkit-transition-property: -webkit-transform, left, top;
+     transition-property: transform, left, top;
+     transition-duration: 0.1s;
+     transition-timing-function: linear;
      -webkit-transform-origin: 10px 10px;
      transform-origin: 10px 10px;
    }
    .rotate-left {
-     -webkit-transition: initial;
+     -webkit-transition-property: none;
+     transition-property: none;
      -webkit-transform: rotate(90deg);
      transform: rotate(90deg);
    }
    .rotate-right {
-     -webkit-transition: initial;
+     -webkit-transition-property: none;
+     transition-property: none;
      -webkit-transform: rotate(-90deg);
      transform: rotate(-90deg);
    }
    .rotate-flip {
-     -webkit-transition: initial;
+     -webkit-transition-property: none;
+     transition-property: none;
      -webkit-transform: rotateY(180deg);
      transform: rotateY(180deg);
    }
    .dragging {
-     -webkit-transition: -webkit-transform 0.1s linear;
+     -webkit-transition-property: -webkit-transform;
+     transition-property: transform;
    }
    #message {
      position: absolute;
@@ -187,7 +193,6 @@
      height: 40px;
      z-index: 100;
      background: rgba(0,0,0, 0.85);
-     -webkit-transition: top 0.4s ease;
      transition: top 0.4s ease;
    }
    #toolbar.closed {
