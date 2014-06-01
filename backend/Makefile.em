@@ -8,7 +8,7 @@ CXXFLAGS = -Wall
 EMFLAGS = -O2 \
 	  -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']"
 
-../hm5move.js: hm5move.bc hm5move_post.js
+../js/hm5move.js: hm5move.bc hm5move_post.js
 	emcc $(EMFLAGS) --post-js hm5move_post.js hm5move.bc -o $@
 
 hm5move.bc: hm5move.o search.o board.o opening.o piece.o
@@ -24,4 +24,4 @@ opening.o: opening.cpp opening.h
 piece.o: piece.cpp piece.h
 
 clean:
-	rm -f *.o hm5move.bc ../hm5move.js
+	rm -f *.o hm5move.bc ../js/hm5move.js

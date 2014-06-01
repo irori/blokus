@@ -21,7 +21,7 @@ CGIBackend.prototype.request = function(path, level) {
 
 function WorkerBackend(handler) {
   var self = this;
-  this.worker = new Worker('hm5move.js');
+  this.worker = new Worker('js/hm5move.js');
   this.worker.addEventListener('message', function(e) {
     var move = new Move(e.data.move);
     console.log(e.data.nps + ' nps');
