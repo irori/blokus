@@ -1,4 +1,4 @@
 *.o
 *.bc
-cgi/piece.cpp
-cgi/pnacl/
+backend/piece.cpp
+backend/pnacl/

@@ -4,7 +4,7 @@ Blokus Duo
 Setup
 -----
 
-    $ make -C cgi
+    $ make -C backend
     $ ruby blokus_server.rb
 
 Then access http://localhost:8880/ in your browser.
