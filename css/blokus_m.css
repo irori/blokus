@@ -1,0 +1,147 @@
+body {
+    background-color: #ffe;
+    font-family: sans-serif;
+}
+#board {
+    position: absolute;
+    background-color: #ccc;
+    border: solid black;
+    border-width: 1px;
+    left: 19px;
+    top: 10px;
+    width: 280px;
+    height: 280px;
+}
+#piece-area {
+    position: absolute;
+    left: 20px;
+    top: 340px;
+    width: 260px;
+    height: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #eee;
+}
+.vgrid {
+    position: absolute;
+    top: 0px;
+    width: 1px;
+    height: 280px;
+    border: solid #eee;
+    border-width: 0px 0px 0px 1px;
+}
+.hgrid {
+    position: absolute;
+    left: 0px;
+    width: 280px;
+    height: 1px;
+    border: solid #eee;
+    border-width: 1px 0px 0px 0px;
+}
+.marker {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 17px;
+}
+.block0 {
+    background-color: #63d;
+}
+.block1 {
+    background-color: #f72;
+}
+.block0highlight {
+    animation-duration: 2s;
+    animation-iteration-count: 5;
+    animation-name: animation0;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: animation0;
+    background-color: #63d;
+}
+@keyframes animation0 {
+    0%   { background-color: #63d; }
+    50%  { background-color: #a9e; }
+    100% { background-color: #63d; }
+}
+@-webkit-keyframes animation0 {
+    0%   { background-color: #63d; }
+    50%  { background-color: #a9e; }
+    100% { background-color: #63d; }
+}
+.block1highlight {
+    animation-duration: 2s;
+    animation-iteration-count: 5;
+    animation-name: animation1;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: animation1;
+    background-color: #f72;
+}
+@keyframes animation1 {
+    0%   { background-color: #f72; }
+    50%  { background-color: #fb8; }
+    100% { background-color: #f72; }
+}
+@-webkit-keyframes animation1 {
+    0%   { background-color: #f72; }
+    50%  { background-color: #fb8; }
+    100% { background-color: #f72; }
+}
+.unselected {
+    -webkit-transform: scale(0.5, 0.5);
+    transform: scale(0.5, 0.5);
+}
+.piece {
+    -webkit-transition-property: -webkit-transform, left, top;
+    transition-property: transform, left, top;
+    transition-duration: 0.1s;
+    transition-timing-function: linear;
+    -webkit-transform-origin: 10px 10px;
+    transform-origin: 10px 10px;
+}
+.rotate-left {
+    -webkit-transition-property: none;
+    transition-property: none;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.rotate-right {
+    -webkit-transition-property: none;
+    transition-property: none;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+.rotate-flip {
+    -webkit-transition-property: none;
+    transition-property: none;
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+.dragging {
+    -webkit-transition-property: -webkit-transform;
+    transition-property: transform;
+}
+#message {
+    position: absolute;
+    left: 20px;
+    top: 300px;
+    width: 270px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #bdf;
+    visibility: hidden;
+}
+#start-game {
+    position: absolute;
+    left: 20px;
+    top: 340px;
+    width: 280px;
+    text-align: center;
+}
+.start-button {
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+    font-size: large;
+}

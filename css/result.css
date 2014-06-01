@@ -1,0 +1,138 @@
+body {
+    background-color: #ffe;
+    font-family: sans-serif;
+}
+#board {
+    position: absolute;
+    background-color: #ccc;
+    border: solid black;
+    border-width: 1px;
+    left: 159px;
+    top: 19px;
+    width: 280px;
+    height: 280px;
+}
+#piece-area {
+    position: absolute;
+    left: 20px;
+    top: 360px;
+    width: 520px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ccc;
+}
+#opponents-piece-area {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 100px;
+    height: 260px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ccc;
+}
+#opponents-pieces {
+    position: relative;
+}
+.logo {
+    position: absolute;
+    left: 450px;
+    top: 20px;
+    width: 110px;
+    text-align: right;
+    font: 28px 'Black Ops One', sans-serif;
+    line-height: 120%
+}
+.violet-scoreboard {
+    position: absolute;
+    left: 460px;
+    top: 150px;
+    width: 100px;
+    color: #63d;
+    font-weight: bold;
+}
+.orange-scoreboard {
+    position: absolute;
+    left: 460px;
+    top: 230px;
+    width: 100px;
+    color: #f72;
+    font-weight: bold;
+}
+.scoreboard-score {
+    text-align: right;
+}
+#record {
+    position: absolute;
+    left: 580px;
+    top: 20px;
+    font-family: monospace;
+}
+.record-violet {
+    color: #63d;
+}
+.record-orange {
+    color: #f72;
+}
+.record-highlight {
+    background-color: #eee;
+}
+.record-gray {
+    color: #aaa;
+}
+.vgrid {
+    position: absolute;
+    top: 0px;
+    width: 1px;
+    height: 280px;
+    border: solid #eee;
+    border-width: 0px 0px 0px 1px;
+}
+.hgrid {
+    position: absolute;
+    left: 0px;
+    width: 280px;
+    height: 1px;
+    border: solid #eee;
+    border-width: 1px 0px 0px 0px;
+}
+.marker {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 17px;
+}
+.block0 {
+    background-color: #63d;
+}
+.block1 {
+    background-color: #f72;
+}
+.block0highlight {
+    background-color: #97d;
+}
+.block1highlight {
+    background-color: #f96;
+}
+#back-button {
+    position: absolute;
+    top: 300px;
+    left: 460px;
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+}
+#forward-button {
+    position: absolute;
+    top: 300px;
+    left: 510px;
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+}
+#new-game {
+    position: absolute;
+    left: 20px;
+    top: 580px;
+    width: 520px;
+    text-align: center;
+}

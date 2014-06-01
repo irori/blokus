@@ -1,0 +1,198 @@
+body {
+    background-color: #ffe;
+    font-family: sans-serif;
+}
+#board {
+    position: absolute;
+    background-color: #ccc;
+    border: solid black;
+    border-width: 1px;
+    left: 159px;
+    top: 19px;
+    width: 280px;
+    height: 280px;
+}
+#piece-area {
+    position: absolute;
+    left: 20px;
+    top: 360px;
+    width: 520px;
+    height: 200px;
+    padding: 10px;
+    border-radius: 5px;
+}
+#opponents-piece-area {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 100px;
+    height: 260px;
+    padding: 10px;
+    border-radius: 5px;
+}
+#opponents-pieces {
+    position: relative;
+}
+.active-area {
+    background-color: #eee;
+}
+.inactive-area {
+    background-color: #ccc;
+}
+.active .block0, .active .block1 {
+    cursor: pointer;
+}
+.logo {
+    position: absolute;
+    left: 450px;
+    top: 20px;
+    width: 110px;
+    text-align: right;
+    font: 28px 'Black Ops One', sans-serif;
+    line-height: 120%
+}
+.violet-scoreboard {
+    position: absolute;
+    left: 460px;
+    top: 110px;
+    width: 100px;
+    color: #63d;
+    border-spacing: 0px;
+}
+.orange-scoreboard {
+    position: absolute;
+    left: 460px;
+    top: 200px;
+    width: 100px;
+    color: #f72;
+    border-spacing: 0px;
+}
+.usage {
+    position: absolute;
+    left: 460px;
+    top: 285px;
+    width: 100px;
+    text-align: right;
+    font-size: small;
+}
+.scoreboard-name {
+    font-weight: bold;
+}
+.scoreboard-time {
+    font-weight: bold;
+    text-align: right;
+}
+.scoreboard-score {
+    font-weight: bold;
+    text-align: right;
+}
+.vgrid {
+    position: absolute;
+    top: 0px;
+    width: 1px;
+    height: 280px;
+    border: solid #eee;
+    border-width: 0px 0px 0px 1px;
+}
+.hgrid {
+    position: absolute;
+    left: 0px;
+    width: 280px;
+    height: 1px;
+    border: solid #eee;
+    border-width: 1px 0px 0px 0px;
+}
+.marker {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 17px;
+}
+.block0 {
+    background-color: #63d;
+}
+.block1 {
+    background-color: #f72;
+}
+.block0highlight {
+    animation-duration: 2s;
+    animation-iteration-count: 5;
+    animation-name: animation0;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: animation0;
+    background-color: #63d;
+}
+@keyframes animation0 {
+    0%   { background-color: #63d; }
+    50%  { background-color: #a9e; }
+    100% { background-color: #63d; }
+}
+@-webkit-keyframes animation0 {
+    0%   { background-color: #63d; }
+    50%  { background-color: #a9e; }
+    100% { background-color: #63d; }
+}
+.block1highlight {
+    animation-duration: 2s;
+    animation-iteration-count: 5;
+    animation-name: animation1;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: animation1;
+    background-color: #f72;
+}
+@keyframes animation1 {
+    0%   { background-color: #f72; }
+    50%  { background-color: #fb8; }
+    100% { background-color: #f72; }
+}
+@-webkit-keyframes animation1 {
+    0%   { background-color: #f72; }
+    50%  { background-color: #fb8; }
+    100% { background-color: #f72; }
+}
+.piece {
+    -webkit-transform-origin: 10px 10px;
+    transform-origin: 10px 10px;
+}
+.rotate-left {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.rotate-right {
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+.rotate-flip {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+.rotating {
+    -webkit-transition: -webkit-transform 0.1s linear;
+    -webkit-transform: rotate(0deg);
+    transition: transform 0.1s linear;
+    transform: rotate(0deg);
+}
+#message {
+    position: absolute;
+    left: 100px;
+    top: 315px;
+    width: 360px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #bdf;
+    visibility: hidden;
+}
+#start-game {
+    position: absolute;
+    left: 160px;
+    top: 330px;
+    width: 280px;
+    text-align: center;
+}
+.start-button {
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+}

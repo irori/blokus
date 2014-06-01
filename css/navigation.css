@@ -1,0 +1,87 @@
+/* Font Awesome by Dave Gandy - http://fontawesome.io */
+@font-face {
+    font-family: FontAwesome;
+    src: url('http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.woff?v=4.1.0');
+}
+#handler {
+    position: absolute;
+    left: 270px;
+    top: 0px;
+    width: 50px;
+    height: 10px;
+    background-color: #ccc;
+}
+#handlerDownIcon {
+    width: 5px;
+    height: 5px;
+    margin-left: 21px;
+    border: solid #333;
+    border-width: 2px 2px 0 0;
+    -webkit-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+#toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 40px;
+    z-index: 100;
+    background: rgba(0,0,0, 0.85);
+    transition: top 0.4s ease;
+}
+#toolbar.closed {
+    top: -40px;
+}
+#toolbar ul {
+    float: left;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#toolbar ul:last-child {
+    float: right;
+}
+#toolbar li {
+    float: left;
+}
+#toolbar button {
+    width: 80px;
+    height: 40px;
+    border: none;
+    color: white;
+    background: transparent;
+    font-family: FontAwesome;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0;
+}
+#toolbar button:active {
+    background-color: #008aaa;
+}
+
+#help {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    width: 280px;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    border-radius: 10px;
+    z-index: 50;
+}
+#help.closed {
+    display: none;
+}
+#help button {
+    width: 180px;
+    height: 40px;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+}
+#help .buttons {
+    bottom: 1rem;
+    text-align: center;
+}

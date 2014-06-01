@@ -2,6 +2,8 @@ CACHE MANIFEST
 # 0fa3cba07985c27eeaf605c24ca654796673fc82
 
 CACHE:
+css/blokus_m.css
+css/navigation.css
 js/piece.js
 js/board.js
 js/backend.js
