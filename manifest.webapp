@@ -1,0 +1,16 @@
+{
+  "name": "Duokus",
+  "description": "An implementation of the board game Blokus Duo.",
+  "launch_path": "/blokus_m.html",
+  "icons": {
+    "60": "/icon/60x60.png",
+    "128": "/icon/128x128.png"
+  },
+  "developer": {
+    "name": "irori",
+    "url": "http://irorin.org"
+  },
+  "installs_allowed_from": ["*"],
+  "default_locale": "en",
+  "orientation": ["portrait"]
+}
