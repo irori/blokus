@@ -77,7 +77,8 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     map<string, string> params = parse_query();
-    cout << "Content-Type: text/plain\r\n\r\n";
+    cout << "Content-Type: text/plain\r\n"
+	 << "Access-Control-Allow-Origin: *\r\n\r\n";
 
     int max_depth;
     int time_limit;

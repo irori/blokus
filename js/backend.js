@@ -1,11 +1,12 @@
 function CGIBackend(handler) {
+  this.url = '/b/hm5move'
   this.handler = handler;
 }
 
 CGIBackend.prototype.request = function(path, level) {
   var self = this;
   var request = new window.XMLHttpRequest();
-  request.open('GET', '/b/hm5move?l=' + level + '&b=' + path);
+  request.open('GET', this.url + '?l=' + level + '&b=' + path);
   request.onreadystatechange = function() {
     if (request.readyState != 4)
       return;
