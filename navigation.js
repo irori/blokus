@@ -21,7 +21,7 @@ function help() {
 }
 
 function reload() {
-  window.location.replace(window.location);
+  window.location.reload();
 }
 
 function closeHelp() {
