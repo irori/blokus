@@ -165,14 +165,14 @@ body {
     transform: rotate(-90deg);
 }
 .rotate-flip {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
+    -webkit-transform: perspective(100px) rotateY(180deg);
+    transform: perspective(100px) rotateY(180deg);
 }
 .rotating {
     -webkit-transition: -webkit-transform 0.1s linear;
-    -webkit-transform: rotate(0deg);
+    -webkit-transform: none;
     transition: transform 0.1s linear;
-    transform: rotate(0deg);
+    transform: none;
 }
 #message {
     position: absolute;

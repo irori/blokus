@@ -52,6 +52,7 @@ function rotate(elem, dir, x, y) {
   for (var i = 0; i < rot.size; i++) {
     elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
     elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
+    elem.childNodes[i].style.zIndex = 3 + rot.coords[i].x + rot.coords[i].y;
   }
   if (x != undefined) {
     elem.style.left = x - SCALE / 2 + 'px';
@@ -106,6 +107,7 @@ function createPiece(x, y, id, dir) {
                       'position:absolute;' +
                       'left:' + piece.coords[i].x * SCALE + 'px;' +
                       'top:' + piece.coords[i].y * SCALE + 'px;' +
+                      'z-index:' + (3 + piece.coords[i].x + piece.coords[i].y) + ';' +
                       'width:' + SCALE + 'px;' +
                       'height:' + SCALE + 'px;');
     cell.className = 'block' + Blokus.player;
@@ -266,6 +268,7 @@ function select(e) {
   }
   Blokus.selected = this;
   this.classList.remove('unselected');
+  this.classList.add('selected');
   this.style.left = '155px';
   this.style.top = '305px';
   this.onclick = click;
@@ -275,6 +278,7 @@ function select(e) {
 function unselect(e) {
   if (!Blokus.selected)
     return;
+  Blokus.selected.classList.remove('selected');
   Blokus.selected.classList.add('unselected');
   Blokus.selected.classList.remove('rotating');
   Blokus.selected.onclick = select;

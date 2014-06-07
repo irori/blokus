@@ -92,6 +92,12 @@ body {
     -webkit-transform: scale(0.5, 0.5);
     transform: scale(0.5, 0.5);
 }
+.selected .block0 {
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+}
+.selected .block1 {
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+}
 .piece {
     -webkit-transition-property: -webkit-transform, left, top;
     transition-property: transform, left, top;
@@ -115,8 +121,8 @@ body {
 .rotate-flip {
     -webkit-transition-property: none;
     transition-property: none;
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
+    -webkit-transform: perspective(100px) rotateY(180deg);
+    transform: perspective(100px) rotateY(180deg);
 }
 .dragging {
     -webkit-transition-property: -webkit-transform;
