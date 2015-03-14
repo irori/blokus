@@ -1,3 +1,5 @@
+'use strict';
+
 function CGIBackend(handler) {
   this.url = '/b/hm5move'
   this.handler = handler;

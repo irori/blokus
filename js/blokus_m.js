@@ -1,3 +1,5 @@
+'use strict;'
+
 var Blokus = { level: 1 };
 var SCALE = 20;
 

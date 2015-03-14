@@ -1,3 +1,4 @@
+'use strict';
 
 function Piece(id, coords) {
   this.id = id;
@@ -27,7 +28,7 @@ function Block(id, size, rotations) {
     this.rotations[i] = new Rotation(rotations[i]);
 }
 
-pieceSet = {
+var pieceSet = {
   u0: new Piece(0x00, [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1]]),
   t0: new Piece(0x08, [[-1, -1], [-1, 0], [0, 0], [1, 0], [0, 1]]),
   t1: new Piece(0x09, [[1, -1], [1, 0], [0, 0], [-1, 0], [0, 1]]),
@@ -121,7 +122,7 @@ pieceSet = {
   a0: new Piece(0xa0, [[0, 0]])
 };
 
-blockSet = [
+var blockSet = [
   new Block(0x00, 5, [[0, 0, pieceSet.u0], [0, 0, pieceSet.u0],
                       [0, 0, pieceSet.u0], [0, 0, pieceSet.u0],
                       [0, 0, pieceSet.u0], [0, 0, pieceSet.u0],

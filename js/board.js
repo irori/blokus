@@ -1,3 +1,4 @@
+'use strict';
 
 function Move(x, y, piece_id) {
   if (arguments.length == 3)

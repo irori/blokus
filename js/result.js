@@ -1,3 +1,5 @@
+'use strict'
+
 var Blokus = { level: 1 };
 var SCALE = 20;
 
@@ -57,7 +59,7 @@ function createPiece(x, y, id, dir) {
                     'left:' + x + 'px;' +
                     'top:' + y + 'px;' +
                     'position:absolute;');
-  piece = blockSet[id].rotations[dir].piece;
+  var piece = blockSet[id].rotations[dir].piece;
   for (var i = 0; i < piece.size; i++) {
     var cell = document.createElement('div');
     cell.setAttribute('style',
@@ -153,7 +155,7 @@ function updateBoardView() {
     for (var j = 0; j < coords.length; j++) {
       var x = coords[j].x;
       var y = coords[j].y;
-      cell = document.createElement('div');
+      var cell = document.createElement('div');
       cell.id = i + '_' + j;
       cell.setAttribute('style',
                         'position:absolute;' +
