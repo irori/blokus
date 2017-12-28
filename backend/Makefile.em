@@ -6,7 +6,9 @@ CXXFLAGS = -Wall
 #CXXFLAGS = -pg -O -g
 
 EMFLAGS = -O2 \
-	  -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']"
+	  -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
+	  -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']" \
+	  -s LEGACY_VM_SUPPORT=1
 
 ../js/hm5move.js: hm5move.bc hm5move_post.js
 	emcc $(EMFLAGS) --post-js hm5move_post.js hm5move.bc -o $@
