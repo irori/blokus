@@ -38,32 +38,6 @@ WorkerBackend.prototype.request = function(path, level) {
 }
 
 
-function PNaClBackend(handler) {
-  var self = this;
-  PNaClBackend.module.addEventListener('message', function(message_event) {
-    var msg = message_event.data;
-    var move = new Move(msg.move);
-    self.handler(move);
-    var elapsed = (Date.now() - self.startTime) / 1000;
-    console.log(msg.visited_nodes / elapsed + ' nps');
-  });
-  this.handler = handler;
-}
-
-PNaClBackend.prototype.request = function(path, level) {
-  var depth = [3, 10, 10][level - 1];
-  var timeout = [1000, 1000, 10000][level - 1];
-  PNaClBackend.module.postMessage({'path': path, 'depth': depth, 'timeout': timeout});
-  this.startTime = Date.now();
-}
-
-PNaClBackend.moduleDidLoad = function() {
-  var module = document.getElementById('hm5move_pnacl');
-  if (module.postMessage)
-    PNaClBackend.module = module;
-}
-
-
 function FallbackBackend(remoteBackendFactory, localBackendFactory, handler) {
   var self = this;
   this.remote = new remoteBackendFactory(function(move) { self.handleRemote(move); });
@@ -87,9 +61,7 @@ FallbackBackend.prototype.handleRemote = function(move) {
 function createBackend(handler) {
   var localOnly = Blokus.level == 1;
 
-  if (PNaClBackend.module)
-    return new PNaClBackend(handler);
-  else if (!Worker)
+  if (!Worker)
     return new CGIBackend(handler);
   else if (localOnly)
     return new WorkerBackend(handler);

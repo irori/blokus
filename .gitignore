@@ -1,4 +1,3 @@
 *.o
 *.bc
 backend/piece.cpp
-backend/pnacl/
