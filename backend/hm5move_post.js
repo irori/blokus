@@ -25,9 +25,9 @@ function limit(level) {
   return 1000;
 }  
 
-addEventListener('message', function(e) {
-  var path = e.data.path;
-  var level = e.data.level;
+function handle(data) {
+  var path = data.path;
+  var level = data.level;
 
   if (isValidPath(path)) {
     var start = Date.now();
@@ -37,4 +37,20 @@ addEventListener('message', function(e) {
   } else {
     postMessage({'move': "XXXX invalid path"});
   }
+}
+
+var ready = false;
+var onReady;
+
+addEventListener('message', function(e) {
+  if (ready)
+    handle(e.data);
+  else
+    onReady = function() { handle(e.data) };
+});
+
+Module['preRun'].push(function() {
+  ready = true;
+  if (onReady)
+    onReady();
 });
