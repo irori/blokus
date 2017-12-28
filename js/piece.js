@@ -1,34 +1,38 @@
-'use strict';
-
-function Piece(id, coords) {
-  this.id = id;
-  this.size = coords.length;
-  this.coords = [];
-  for (var i = 0; i < coords.length; i++)
-    this.coords[i] = { x: coords[i][0], y: coords[i][1] };
-}
-
-function Rotation(config) {
-  this.offsetX = config[0];
-  this.offsetY = config[1];
-  this.piece = config[2];
-  this.size = this.piece.size;
-  this.coords = [];
-  for (var i = 0; i < this.piece.size; i++) {
-    this.coords[i] = { x: this.piece.coords[i].x + this.offsetX,
-                       y: this.piece.coords[i].y + this.offsetY };
+class Piece {
+  constructor(id, coords) {
+    this.id = id;
+    this.size = coords.length;
+    this.coords = [];
+    for (var i = 0; i < coords.length; i++)
+      this.coords[i] = { x: coords[i][0], y: coords[i][1] };
   }
 }
 
-function Block(id, size, rotations) {
-  this.id = id;
-  this.size = size;
-  this.rotations = [];
-  for (var i = 0; i < 8; i++)
-    this.rotations[i] = new Rotation(rotations[i]);
+class Rotation {
+  constructor(config) {
+    this.offsetX = config[0];
+    this.offsetY = config[1];
+    this.piece = config[2];
+    this.size = this.piece.size;
+    this.coords = [];
+    for (var i = 0; i < this.piece.size; i++) {
+      this.coords[i] = { x: this.piece.coords[i].x + this.offsetX,
+                        y: this.piece.coords[i].y + this.offsetY };
+    }
+  }
 }
 
-var pieceSet = {
+class Block {
+  constructor(id, size, rotations) {
+    this.id = id;
+    this.size = size;
+    this.rotations = [];
+    for (var i = 0; i < 8; i++)
+      this.rotations[i] = new Rotation(rotations[i]);
+  }
+}
+
+export var pieceSet = {
   u0: new Piece(0x00, [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1]]),
   t0: new Piece(0x08, [[-1, -1], [-1, 0], [0, 0], [1, 0], [0, 1]]),
   t1: new Piece(0x09, [[1, -1], [1, 0], [0, 0], [-1, 0], [0, 1]]),
@@ -122,7 +126,7 @@ var pieceSet = {
   a0: new Piece(0xa0, [[0, 0]])
 };
 
-var blockSet = [
+export var blockSet = [
   new Block(0x00, 5, [[0, 0, pieceSet.u0], [0, 0, pieceSet.u0],
                       [0, 0, pieceSet.u0], [0, 0, pieceSet.u0],
                       [0, 0, pieceSet.u0], [0, 0, pieceSet.u0],

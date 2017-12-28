@@ -1,4 +1,6 @@
-'use strict;'
+import { blockSet } from './piece.js'
+import { Move, Board } from './board.js'
+import Backend from './backend.js'
 
 var Blokus = { level: 1 };
 var SCALE = 20;
@@ -102,7 +104,7 @@ function createPiece(x, y, id, dir) {
                     'left:' + x + 'px;' +
                     'top:' + y + 'px;' +
                     'position:absolute;');
-  piece = blockSet[id].rotations[dir].piece;
+  var piece = blockSet[id].rotations[dir].piece;
   for (var i = 0; i < piece.size; i++) {
     var cell = document.createElement('div');
     cell.setAttribute('style',
@@ -235,30 +237,35 @@ function startGame() {
   updateBoardView();
 }
 
-// functions called from blokus.html
+// Event handlers
 
-function init() {
+window.addEventListener('load', () => {
   var path = window.location.hash.substring(1);
   if (path) {
     Blokus.board = new Board(path);
     Blokus.player = Blokus.board.player();
-    Blokus.backend = createBackend(onOpponentMove);
+    Blokus.backend = new Backend(onOpponentMove);
     startGame(path);
   }
-}
+});
 
 function startButton(player) {
   Blokus.board = new Board();
   Blokus.player = player;
-  Blokus.backend = createBackend(onOpponentMove);
+  Blokus.backend = new Backend(onOpponentMove);
   startGame();
   if (player == 1)
     opponentMove();
 }
+document.getElementById('start-violet').addEventListener('click', () => startButton(0));
+document.getElementById('start-orange').addEventListener('click', () => startButton(1));
 
 function setLevel(lv) {
   Blokus.level = lv;
 }
+document.getElementById('level1').addEventListener('click', () => setLevel(1));
+document.getElementById('level2').addEventListener('click', () => setLevel(2));
+document.getElementById('level3').addEventListener('click', () => setLevel(3));
 
 // event handlers
 

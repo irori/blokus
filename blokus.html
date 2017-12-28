@@ -15,7 +15,7 @@
  <title>Blokus Duo</title>
 </head>
 
-<body onload="init()">
+<body>
   <div id="board">
     <div class="vgrid" style="left: 20px"></div>
     <div class="vgrid" style="left: 40px"></div>
@@ -71,20 +71,17 @@
       <p>Sorry, IE 8 or older is not supported.</p>
     <![endif]-->
     <p>
-      <input type="radio" name="level" id="level1" value="1" onclick="setLevel(1)" checked><label for="level1">Easy</label>
-      <input type="radio" name="level" id="level2" value="2" onclick="setLevel(2)"><label for="level2">Normal</label>
-      <input type="radio" name="level" id="level3" value="3" onclick="setLevel(3)"><label for="level3">Hard</label>
+      <input type="radio" name="level" id="level1" value="1" checked><label for="level1">Easy</label>
+      <input type="radio" name="level" id="level2" value="2"><label for="level2">Normal</label>
+      <input type="radio" name="level" id="level3" value="3"><label for="level3">Hard</label>
     </p>
     <p>
-      <button class="start-button" onclick="startButton(0)">Violet</button>
-      <button class="start-button" onclick="startButton(1)">Orange</button>
+      <button class="start-button" id="start-violet">Violet</button>
+      <button class="start-button" id="start-orange">Orange</button>
     </p>
     <p style="font-size:small"><a href="blokus_m.html">mobile version</a></p>
   </div>
 
-  <script type="text/javascript" src="js/piece.js"></script>
-  <script type="text/javascript" src="js/board.js"></script>
-  <script type="text/javascript" src="js/backend.js"></script>
-  <script type="text/javascript" src="js/blokus.js"></script>
+  <script type="module" src="js/blokus.js"></script>
 </body>
 </html>

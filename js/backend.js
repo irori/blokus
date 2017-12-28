@@ -1,20 +1,17 @@
-'use strict';
+import { Move } from './board.js'
 
-function WorkerBackend(handler) {
-  var self = this;
-  this.worker = new Worker('js/hm5move.js');
-  this.worker.addEventListener('message', function(e) {
-    var move = new Move(e.data.move);
-    console.log(e.data.nps + ' nps');
-    self.handler(move);
-  });
-  this.handler = handler;
-}
+export default class WorkerBackend {
+  constructor(handler) {
+    this.worker = new Worker('js/hm5move.js');
+    this.worker.addEventListener('message', (e) => {
+      var move = new Move(e.data.move);
+      console.log(e.data.nps + ' nps');
+      this.handler(move);
+    });
+    this.handler = handler;
+  }
 
-WorkerBackend.prototype.request = function(path, level) {
-  this.worker.postMessage({'path': path, 'level': level});
-}
-
-function createBackend(handler) {
-  return new WorkerBackend(handler);
+  request(path, level) {
+    this.worker.postMessage({path, level});
+  }
 }
