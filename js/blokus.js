@@ -4,6 +4,7 @@ import Backend from './backend.js'
 
 var Blokus = { level: 1 };
 var SCALE = 20;
+var mqFullsize = window.matchMedia('(min-width: 580px)');
 
 function showMessage(msg) {
   var elem = document.getElementById('message');
@@ -21,6 +22,8 @@ function hideMessage() {
 }
 
 function setActiveArea() {
+  if (!mqFullsize.matches)
+    return;
   var p = Blokus.board.player() ^ Blokus.player;
   var classes = ['active-area', 'inactive-area'];
   document.getElementById('piece-area').className = classes[p];
@@ -54,7 +57,7 @@ function rotate(elem, dir, x, y) {
       dir = elem.direction + (elem.direction & 1 ? -2 : 2);
       elem.className = 'piece rotate-right';
     }
-    setTimeout(function() {elem.className = 'piece rotating'}, 0);
+    setTimeout(function() {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
     break;
   }
   window.getComputedStyle(elem).transform;  // force style update
@@ -64,6 +67,8 @@ function rotate(elem, dir, x, y) {
   for (var i = 0; i < rot.size; i++) {
     elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
     elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
+    if (!mqFullsize.matches)
+      elem.childNodes[i].style.zIndex = 3 + rot.coords[i].x + rot.coords[i].y;
   }
   if (x != undefined) {
     elem.style.left = x - SCALE / 2 + 'px';
@@ -118,23 +123,29 @@ function createPiece(x, y, id, dir) {
                       'position:absolute;' +
                       'left:' + piece.coords[i].x * SCALE + 'px;' +
                       'top:' + piece.coords[i].y * SCALE + 'px;' +
+                      (mqFullsize.matches ? '' : 'z-index:' + (3 + piece.coords[i].x + piece.coords[i].y) + ';') +
                       'width:' + SCALE + 'px;' +
                       'height:' + SCALE + 'px;');
     cell.className = 'block' + Blokus.player;
     elem.appendChild(cell);
   }
 
-  // set event handlers
-  elem.onmousedown = drag;
-  if (elem.addEventListener)
-    elem.addEventListener('touchstart', drag, false);
+  if (mqFullsize.matches) {
+    // set event handlers
+    elem.onmousedown = drag;
+    if (elem.addEventListener)
+      elem.addEventListener('touchstart', drag, false);
 
-  elem.onclick = click;
-  elem.ondblclick = dblclick;
-  elem.onmousewheel = wheel;
-  if (elem.addEventListener)
-    elem.addEventListener('DOMMouseScroll', wheel, false);  // for FF
-
+    elem.onclick = click;
+    elem.ondblclick = dblclick;
+    elem.onmousewheel = wheel;
+    if (elem.addEventListener)
+      elem.addEventListener('DOMMouseScroll', wheel, false);  // for FF
+  } else {
+    elem.classList.add('piece');
+    elem.classList.add('unselected');
+    elem.onclick = select;
+  }
   document.getElementById('pieces').appendChild(elem);
 }
 
@@ -168,12 +179,18 @@ function createPieces() {
   var top = parseInt(area.top) + parseInt(area.paddingTop);
   for (var i = 0; i < piecePositionTable.length; i++) {
     var a = piecePositionTable[i];
-    if (!Blokus.board.isUsed(Blokus.player, i))
-      createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
+    if (!Blokus.board.isUsed(Blokus.player, i)) {
+      if (mqFullsize.matches)
+        createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
+      else
+        createPiece(left + a[0] * SCALE/2 - SCALE/4, top + a[1] * SCALE/2 - SCALE/4, i, a[2]);
+    }
   }
 }
 
 function createOpponentsPieces() {
+  if (!mqFullsize.matches)
+    return;
   var area = document.getElementById('opponents-pieces');
   for (var id = 0; id < piecePositionTable.length; id++) {
     var a = piecePositionTable[id];
@@ -242,6 +259,8 @@ function updateBoardView(moveToHighlight) {
 }
 
 function updateScore() {
+  if (!mqFullsize.matches)
+    return;
   document.getElementById('violet-score').innerHTML =
     Blokus.board.score(0) + ' points';
   document.getElementById('orange-score').innerHTML =
@@ -256,7 +275,7 @@ function opponentMove() {
 
 function onOpponentMove(move) {
   Blokus.board.doMove(move);
-  if (!move.isPass())
+  if (mqFullsize.matches && !move.isPass())
     document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
   hideMessage();
   updateBoardView(move);
@@ -276,28 +295,36 @@ function onOpponentMove(move) {
 }
 
 function gameEnd() {
+  var msg = '';
+  if (!mqFullsize.match)
+    msg = '<span style="color:#63d">' + Blokus.board.score(0) + '</span> - <span style="color:#f72">' + Blokus.board.score(1) + '</span> ';
   var myScore = Blokus.board.score(Blokus.player);
   var yourScore = Blokus.board.score(Blokus.player ^ 1);
-  var msg;
   if (myScore > yourScore) {
-    msg = 'You win!';
+    msg += 'You win!';
   } else if (myScore < yourScore) {
-    msg = 'You lose...';
+    msg += 'You lose...';
   } else {
-    msg = 'Draw';
+    msg += 'Draw';
   }
-  clearInterval(Blokus.timer);
 
-  var recordLink = document.createElement('a');
-  recordLink.href = [window.location.protocol, '//',
-                     window.location.host,
-                     window.location.pathname.replace(/[^\/]*$/, 'result.html'),
-                     '#',
-                     Blokus.player, '/',
-                     Blokus.board.getPath()
-                    ].join('');
-  recordLink.innerHTML = msg;
-  showMessage(recordLink);
+  if (mqFullsize.match) {
+    clearInterval(Blokus.timer);
+
+    var recordLink = document.createElement('a');
+    recordLink.href = [window.location.protocol, '//',
+                      window.location.host,
+                      window.location.pathname.replace(/[^\/]*$/, 'result.html'),
+                      '#',
+                      Blokus.player, '/',
+                      Blokus.board.getPath()
+                      ].join('');
+    recordLink.innerHTML = msg;
+    showMessage(recordLink);
+  } else {
+    showMessage(msg);
+    Blokus.player = null;
+  }
 }
 
 function timerHandler() {
@@ -314,18 +341,21 @@ function timerHandler() {
 }
 
 function startGame() {
-  var names = ['You', 'Computer'];
-  document.getElementById('violet-name').innerHTML = names[Blokus.player];
-  document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
-
+  if (mqFullsize.matches) {
+    var names = ['You', 'Computer'];
+    document.getElementById('violet-name').innerHTML = names[Blokus.player];
+    document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
+  }
   document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
   createOpponentsPieces();
   updateBoardView();
   updateScore();
   setActiveArea();
-  Blokus.elapsed = [0, 0];
-  Blokus.timer = setInterval(timerHandler, 1000);
+  if (mqFullsize.matches) {
+    Blokus.elapsed = [0, 0];
+    Blokus.timer = setInterval(timerHandler, 1000);
+  }
 }
 
 // Event handlers
@@ -360,6 +390,7 @@ document.getElementById('level3').addEventListener('click', () => setLevel(3));
 
 // event handlers
 
+// For full-size mode
 function wheel(e) {
   e.stopPropagation();
   e.preventDefault();
@@ -380,8 +411,37 @@ function wheel(e) {
     rotate(this, 'right', x, y);
 }
 
+// For compact mode
+function select(e) {
+  if (Blokus.board.player() != Blokus.player)
+    return;
+  if (Blokus.selected && Blokus.selected !== this) {
+    unselect();
+  }
+  Blokus.selected = this;
+  this.classList.remove('unselected');
+  this.classList.add('selected');
+  this.style.left = '155px';
+  this.style.top = '305px';
+  this.onclick = click;
+  this.addEventListener('touchstart', drag, false);
+}
+
+// For compact mode
+function unselect(e) {
+  if (!Blokus.selected)
+    return;
+  Blokus.selected.classList.remove('selected');
+  Blokus.selected.classList.add('unselected');
+  Blokus.selected.classList.remove('rotating');
+  Blokus.selected.onclick = select;
+  Blokus.selected.removeEventListener('touchstart', drag, false);
+  Blokus.selected = null;
+  createPieces();
+}
+
 function click(e) {
-  if (!e.shiftKey) // handle only shift+click
+  if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
     return;
 
   if (Blokus.board.player() != Blokus.player)
@@ -389,9 +449,10 @@ function click(e) {
 
   var x = e.clientX + window.pageXOffset;
   var y = e.clientY + window.pageYOffset;
-  rotate(this, 'right', x, y);
+  rotate(this, mqFullsize.match ? 'right' : 'cyclic', x, y);
 }
 
+// For full-size mode
 function dblclick(e) {
   if (e.shiftKey) // do not handle shift+dblclick
     return;
@@ -420,10 +481,18 @@ function drag(e) {
   var deltaY = e.clientY - this.offsetTop;
   var touchClick = true;
 
-  document.addEventListener('mousemove', moveHandler, true);
-  document.addEventListener('mouseup', upHandler, true);
+  if (mqFullsize.matches) {
+    document.addEventListener('mousemove', moveHandler, true);
+    document.addEventListener('mouseup', upHandler, true);
+  } else {
+    var touchTime = new Date().getTime();
+    elem.lastClientX = elem.lastClientY = null;
+  }
+
   elem.addEventListener('touchmove', moveHandler, false);
   elem.addEventListener('touchend', upHandler, false);
+  if (!mqFullsize.matches)
+    elem.classList.add('dragging');
 
   e.stopPropagation();
   e.preventDefault();
@@ -463,16 +532,24 @@ function drag(e) {
       e.clientX = this.lastClientX;
       e.clientY = this.lastClientY;
 
-      var now = new Date().getTime();
-      if (touchClick)
+      if (touchClick) {
         rotate(elem, 'cyclic');
+      } else if (!mqFullsize.matches) {
+        var elapsed = new Date().getTime() - touchTime;
+        if (elapsed < 100)
+          rotate(elem, 'cyclic');
+      }
     }
 
-    document.removeEventListener('mouseup', upHandler, true);
-    document.removeEventListener('mousemove', moveHandler, true);
+    if (mqFullsize.matches) {
+      document.removeEventListener('mouseup', upHandler, true);
+      document.removeEventListener('mousemove', moveHandler, true);
+    }
     elem.removeEventListener('touchend', upHandler, false);
     elem.removeEventListener('touchmove', moveHandler, false);
     e.stopPropagation();
+    if (!mqFullsize.matches)
+      elem.classList.remove('dragging');
 
     var bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
     if (bpos) {
@@ -485,6 +562,11 @@ function drag(e) {
         updateBoardView();
         updateScore();
       }
+    } else if (!mqFullsize.matches && e.clientX && e.clientY) {
+      var x = e.clientX - deltaX;
+      var y = e.clientY - deltaY;
+      if (x < 20 || x > 280 || y < 10 || y > 340)
+        unselect();
     }
   }
 }
