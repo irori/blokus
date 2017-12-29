@@ -1,3 +1,5 @@
 *.o
 *.bc
+*.css.map
+.sass-cache
 backend/piece.cpp
