@@ -15,9 +15,9 @@ body {
 	background-color: #ffe;
 	font-family: sans-serif;
 }
+
 #board {
 	position: absolute;
-	background-color: #ccc;
 	border: solid black;
 	border-width: 1px;
 	@include full-size {
@@ -30,7 +30,31 @@ body {
 	}
 	width: 280px;
 	height: 280px;
+	background-color: #ccc;
+	background-image: linear-gradient(#eee 1px, transparent 1px),
+					  linear-gradient(90deg, #eee 1px, transparent 1px);
+	background-size: 20px 20px;
+	background-position: -1px -1px;
 }
+.marker {
+	position: absolute;
+	width: 17px;
+	height: 17px;
+	border-radius: 17px;
+}
+.violet-marker {
+	@extend .marker;
+	left: 81px;
+	top: 81px;
+	background-color:#a8f;
+}
+.orange-marker {
+	@extend .marker;
+	left: 181px;
+	top: 181px;
+	background-color:#fb6;
+}
+
 #piece-area {
 	position: absolute;
 	left: 20px;
@@ -123,28 +147,6 @@ body {
 		text-align: right;
 	}
 } // full-size
-.vgrid {
-	position: absolute;
-	top: 0px;
-	width: 1px;
-	height: 280px;
-	border: solid #eee;
-	border-width: 0px 0px 0px 1px;
-}
-.hgrid {
-	position: absolute;
-	left: 0px;
-	width: 280px;
-	height: 1px;
-	border: solid #eee;
-	border-width: 1px 0px 0px 0px;
-}
-.marker {
-	position: absolute;
-	width: 17px;
-	height: 17px;
-	border-radius: 17px;
-}
 .block0 {
 	background-color: #63d;
 }
