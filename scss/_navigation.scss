@@ -29,36 +29,37 @@
     z-index: 100;
     background: rgba(0,0,0, 0.85);
     transition: top 0.4s ease;
-}
-#toolbar.closed {
-    top: -40px;
-}
-#toolbar ul {
-    float: left;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-#toolbar ul:last-child {
-    float: right;
-}
-#toolbar li {
-    float: left;
-}
-#toolbar button {
-    width: 80px;
-    height: 40px;
-    border: none;
-    color: white;
-    background: transparent;
-    font-family: FontAwesome;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 0;
-}
-#toolbar button:active {
-    background-color: #008aaa;
+
+    &.closed {
+        top: -40px;
+    }
+    ul {
+        float: left;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    ul:last-child {
+        float: right;
+    }
+    li {
+        float: left;
+    }
+    button {
+        width: 80px;
+        height: 40px;
+        border: none;
+        color: white;
+        background: transparent;
+        font-family: FontAwesome;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 0;
+    }
+    button:active {
+        background-color: #008aaa;
+    }
 }
 
 #help {
@@ -71,17 +72,17 @@
     color: white;
     border-radius: 10px;
     z-index: 50;
-}
-#help.closed {
-    display: none;
-}
-#help button {
-    width: 180px;
-    height: 40px;
-    font-family: sans-serif;
-    font-size: 1.2rem;
-}
-#help .buttons {
-    bottom: 1rem;
-    text-align: center;
+    &.closed {
+        display: none;
+    }
+    button {
+        width: 180px;
+        height: 40px;
+        font-family: sans-serif;
+        font-size: 1.2rem;
+    }
+    .buttons {
+        bottom: 1rem;
+        text-align: center;
+    }
 }

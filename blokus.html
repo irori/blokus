@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html>
-
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <meta http-equiv="Content-Script-Type" content="text/javascript">
- <meta http-equiv="Content-Style-Type" content="text/css">
- <meta name="viewport" content="width=580">
- <meta name="description" content="Blokus Duo is a board game for two players. You can play against the computer in three levels of difficulty.">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta id="viewport" name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Blokus Duo is a board game for two players. You can play against the computer in three levels of difficulty.">
+  <meta name="mobile-web-app-capable" content="yes">
 
- <link rel="icon" href="icon/blokus-120x120.png" type="image/png">
- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Black+Ops+One" type="text/css">
- <link rel="stylesheet" href="css/blokus.css" type="text/css">
+  <link rel="apple-touch-icon" href="icon/blokus-120x120.png" type="image/png">
+  <link rel="icon" href="icon/blokus-120x120.png" type="image/png">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Black+Ops+One" type="text/css">
+  <link rel="stylesheet" href="css/blokus.css" type="text/css">
 
- <title>Blokus Duo</title>
+  <title>Blokus Duo</title>
+
+  <script>
+    const contentWidth = window.matchMedia('(min-width: 580px)').matches ? 580 : 320;
+    document.getElementById('viewport').setAttribute('content', 'width=' + contentWidth);
+  </script>
 </head>
 
 <body>
+  <div id="handler">
+    <div id="handlerDownIcon"></div>
+  </div>
+  <div id="toolbar" class="closed">
+    <ul>
+      <li><button id="reloadButton">&#xf021;</button></li>
+      <li><button id="helpButton">&#xf059;</button></li>
+    </ul>
+    <ul>
+      <li><button id="closeButton">&#xf106;</button></li>
+    </ul>
+  </div>
   <div id="board">
     <div class="vgrid" style="left: 20px"></div>
     <div class="vgrid" style="left: 40px"></div>
@@ -53,23 +69,22 @@
   <div id="opponents-piece-area"><div id="opponents-pieces"></div></div>
   <div id="piece-area"></div>
   <div id="pieces"></div>
-  <div class="logo">Blokus Duo</div>
-  <table class="violet-scoreboard">
-    <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>
-    <tr><td id="violet-time" class="scoreboard-time">00:00</td></tr>
-    <tr><td id="violet-score" class="scoreboard-score">0 points</td></tr>
-  </table>
-  <table class="orange-scoreboard">
-    <tr><td id="orange-name" class="scoreboard-name">Orange</td></tr>
-    <tr><td id="orange-time" class="scoreboard-time">00:00</td></tr>
-    <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
-  </table>
-  <div class="usage"><a href="https://github.com/irori/blokus#readme" target="_blank">[?]</a></div>
+  <div class="right-pane">
+    <div class="logo">Blokus Duo</div>
+    <table class="violet-scoreboard">
+      <tr><td id="violet-name" class="scoreboard-name">Violet</td></tr>
+      <tr><td id="violet-time" class="scoreboard-time">00:00</td></tr>
+      <tr><td id="violet-score" class="scoreboard-score">0 points</td></tr>
+    </table>
+    <table class="orange-scoreboard">
+      <tr><td id="orange-name" class="scoreboard-name">Orange</td></tr>
+      <tr><td id="orange-time" class="scoreboard-time">00:00</td></tr>
+      <tr><td id="orange-score" class="scoreboard-score">0 points</td></tr>
+    </table>
+    <div class="usage"><a href="https://github.com/irori/blokus#readme" target="_blank">[?]</a></div>
+  </div>
   <div id="message"></div>
   <div id="start-game">
-    <!--[if lt IE 9]>
-      <p>Sorry, IE 8 or older is not supported.</p>
-    <![endif]-->
     <p>
       <input type="radio" name="level" id="level1" value="1" checked><label for="level1">Easy</label>
       <input type="radio" name="level" id="level2" value="2"><label for="level2">Normal</label>
@@ -79,9 +94,22 @@
       <button class="start-button" id="start-violet">Violet</button>
       <button class="start-button" id="start-orange">Orange</button>
     </p>
-    <p style="font-size:small"><a href="blokus_m.html">mobile version</a></p>
   </div>
+  <div id="help" class="closed">
+    <h3>Goal of the game</h3>
 
+    <p>Put the maximum number of your squares on the board.</p>
+
+    <h3>Rules</h3>
+
+    <p>The first piece must cover the starting point (marked with a circle).
+    <p>Each new piece must touch at least one piece of the same color on the corners of any square. No two sides of the same color can touch. Different colors can touch in any way.
+    <p>The game ends when both players are blocked from placing any more pieces.
+    <div class="buttons">
+      <button id="closeHelp">OK</button>
+    </div>
+  </div>
   <script type="module" src="js/blokus.js"></script>
+  <script type="text/javascript" src="js/navigation.js"></script>
 </body>
 </html>

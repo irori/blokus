@@ -9,6 +9,8 @@
 	}
 }
 
+@import 'navigation';
+
 body {
 	background-color: #ffe;
 	font-family: sans-serif;
@@ -46,19 +48,60 @@ body {
 	padding: 10px;
 	border-radius: 5px;
 }
+#opponents-piece-area {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	width: 100px;
+	height: 260px;
+	padding: 10px;
+	border-radius: 5px;
+	@include compact {
+		display: none;
+	}
+}
+#opponents-pieces {
+	position: relative;
+}
+.right-pane {
+	@include compact {
+		display: none;
+	}
+}
+.logo {
+	position: absolute;
+	left: 450px;
+	top: 20px;
+	width: 110px;
+	text-align: right;
+	font: 28px 'Black Ops One', sans-serif;
+	line-height: 120%
+}
+.violet-scoreboard {
+	position: absolute;
+	left: 460px;
+	top: 110px;
+	width: 100px;
+	color: #63d;
+	border-spacing: 0px;
+}
+.orange-scoreboard {
+	position: absolute;
+	left: 460px;
+	top: 200px;
+	width: 100px;
+	color: #f72;
+	border-spacing: 0px;
+}
+.usage {
+	position: absolute;
+	left: 460px;
+	top: 285px;
+	width: 100px;
+	text-align: right;
+	font-size: small;
+}
 @include full-size {
-	#opponents-piece-area {
-		position: absolute;
-		left: 20px;
-		top: 20px;
-		width: 100px;
-		height: 260px;
-		padding: 10px;
-		border-radius: 5px;
-	}
-	#opponents-pieces {
-		position: relative;
-	}
 	.active-area {
 		background-color: #eee;
 	}
@@ -67,39 +110,6 @@ body {
 	}
 	.active .block0, .active .block1 {
 		cursor: pointer;
-	}
-	.logo {
-		position: absolute;
-		left: 450px;
-		top: 20px;
-		width: 110px;
-		text-align: right;
-		font: 28px 'Black Ops One', sans-serif;
-		line-height: 120%
-	}
-	.violet-scoreboard {
-		position: absolute;
-		left: 460px;
-		top: 110px;
-		width: 100px;
-		color: #63d;
-		border-spacing: 0px;
-	}
-	.orange-scoreboard {
-		position: absolute;
-		left: 460px;
-		top: 200px;
-		width: 100px;
-		color: #f72;
-		border-spacing: 0px;
-	}
-	.usage {
-		position: absolute;
-		left: 460px;
-		top: 285px;
-		width: 100px;
-		text-align: right;
-		font-size: small;
 	}
 	.scoreboard-name {
 		font-weight: bold;
