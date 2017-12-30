@@ -9,9 +9,9 @@ export class Move {
     else if (x == '----')
       this.m = 0xffff;
     else {
-      var xy = parseInt(x.substring(0, 2), 16);
-      var blk = 117 - x.charCodeAt(2); // 117 is 'u'
-      var dir = parseInt(x.substring(3));
+      let xy = parseInt(x.substring(0, 2), 16);
+      let blk = 117 - x.charCodeAt(2); // 117 is 'u'
+      let dir = parseInt(x.substring(3));
       this.m = xy - 0x11 | blk << 11 | dir << 8;
     }
   }
@@ -35,9 +35,9 @@ export class Move {
   coords() {
     if (this.isPass())
       return [];
-    var rot = blockSet[this.blockId()].rotations[this.direction()];
-    var coords = [];
-    for (var i = 0; i < rot.size; i++)
+    let rot = blockSet[this.blockId()].rotations[this.direction()];
+    let coords = [];
+    for (let i = 0; i < rot.size; i++)
       coords[i] = { x: this.x() + rot.coords[i].x,
                     y: this.y() + rot.coords[i].y };
     return coords;
@@ -49,9 +49,9 @@ Move.PASS = new Move(0xffff);
 export class Board {
   constructor(path) {
     this.square = [];
-    for (var y = 0; y < 14; y++) {
+    for (let y = 0; y < 14; y++) {
       this.square[y] = [];
-      for (var x = 0; x < 14; x++)
+      for (let x = 0; x < 14; x++)
         this.square[y][x] = 0;
     }
     this.square[4][4] = Board.VIOLET_EDGE;
@@ -60,11 +60,11 @@ export class Board {
     this.used = new Array(21 * 2);
 
     if (path) {
-      var moves = path.split('/');
-      for (var i = 0; i < moves.length; i++) {
+      let moves = path.split('/');
+      for (let i = 0; i < moves.length; i++) {
         if (!moves[i])
           continue;
-        var move = new Move(moves[i]);
+        let move = new Move(moves[i]);
         if (this.isValidMove(move))
           this.doMove(move);
         else
@@ -85,12 +85,12 @@ export class Board {
     if (this.used[move.blockId() + this.player() * 21])
       return false;
 
-    var coords = move.coords();
+    let coords = move.coords();
 
     if (!this._isMovable(coords))
       return false;
 
-    for (var i = 0; i < coords.length; i++) {
+    for (let i = 0; i < coords.length; i++) {
       if (this.square[coords[i].y][coords[i].x] &
           [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
         return true;
@@ -104,14 +104,14 @@ export class Board {
       return;
     }
 
-    var coords = move.coords();
+    let coords = move.coords();
 
-    var block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
-    var side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
-    var edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
+    let block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
+    let side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
+    let edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
 
-    for (var i = 0; i < coords.length; i++) {
-      var x = coords[i].x, y = coords[i].y;
+    for (let i = 0; i < coords.length; i++) {
+      let {x, y} = coords[i];
       this.square[y][x] |= block;
       if (this.inBounds(x - 1, y)) this.square[y][x - 1] |= side_bit;
       if (this.inBounds(x, y - 1)) this.square[y - 1][x] |= side_bit;
@@ -130,8 +130,8 @@ export class Board {
   doPass() { this.history.push(Move.PASS); }
 
   score(player) {
-    var score = 0;
-    for (var i = 0; i < 21; i++) {
+    let score = 0;
+    for (let i = 0; i < 21; i++) {
       if (this.used[i + player * 21])
         score += blockSet[i].size;
     }
@@ -139,11 +139,11 @@ export class Board {
   }
 
   _isMovable(coords) {
-    var mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
+    let mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
       [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
 
-    for (var i = 0; i < coords.length; i++) {
-      var x = coords[i].x, y = coords[i].y;
+    for (let i = 0; i < coords.length; i++) {
+      let {x, y} = coords[i];
       if (x < 0 || x >= 14 || y < 0 || y >= 14 || this.square[y][x] & mask)
         return false;
     }
@@ -155,12 +155,12 @@ export class Board {
   }
 
   canMove() {
-    for (var p in pieceSet) {
-      var id = pieceSet[p].id;
+    for (let p in pieceSet) {
+      let id = pieceSet[p].id;
       if (this.used[(id >> 3) + this.player() * 21])
         continue;
-      for (var y = 0; y < 14; y++) {
-        for (var x = 0; x < 14; x++) {
+      for (let y = 0; y < 14; y++) {
+        for (let x = 0; x < 14; x++) {
           if (this.isValidMove(new Move(x, y, id)))
             return true;
         }

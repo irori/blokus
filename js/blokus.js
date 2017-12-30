@@ -2,12 +2,12 @@ import { blockSet } from './piece.js'
 import { Move, Board } from './board.js'
 import Backend from './backend.js'
 
-var Blokus = { level: 1 };
-var SCALE = 20;
-var mqFullsize = window.matchMedia('(min-width: 580px)');
+let Blokus = { level: 1 };
+const SCALE = 20;
+const mqFullsize = window.matchMedia('(min-width: 580px)');
 
 function showMessage(msg) {
-  var elem = document.getElementById('message');
+  let elem = document.getElementById('message');
   if (typeof msg == 'string')
     elem.innerHTML = msg;
   else {
@@ -24,8 +24,8 @@ function hideMessage() {
 function setActiveArea() {
   if (!mqFullsize.matches)
     return;
-  var p = Blokus.board.player() ^ Blokus.player;
-  var classes = ['active-area', 'inactive-area'];
+  let p = Blokus.board.player() ^ Blokus.player;
+  let classes = ['active-area', 'inactive-area'];
   document.getElementById('piece-area').className = classes[p];
   document.getElementById('opponents-piece-area').className = classes[1 - p];
 
@@ -37,17 +37,17 @@ function rotate(elem, dir, x, y) {
   case 'left':
     dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
     elem.className = 'piece rotate-left';
-    setTimeout(function() {elem.className = 'piece rotating'}, 0);
+    setTimeout(() => {elem.className = 'piece rotating'}, 0);
     break;
   case 'right':
     dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
     elem.className = 'piece rotate-right';
-    setTimeout(function() {elem.className = 'piece rotating'}, 0);
+    setTimeout(() => {elem.className = 'piece rotating'}, 0);
     break;
   case 'flip':
     dir = elem.direction ^ 1;
     elem.className = 'piece rotate-flip';
-    setTimeout(function() {elem.className = 'piece rotating'}, 0);
+    setTimeout(() => {elem.className = 'piece rotating'}, 0);
     break;
   case 'cyclic':
     if (elem.direction == 1 || elem.direction == 6) {
@@ -57,14 +57,14 @@ function rotate(elem, dir, x, y) {
       dir = elem.direction + (elem.direction & 1 ? -2 : 2);
       elem.className = 'piece rotate-right';
     }
-    setTimeout(function() {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
+    setTimeout(() => {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
     break;
   }
   window.getComputedStyle(elem).transform;  // force style update
 
   elem.direction = dir;
-  var rot = blockSet[elem.blockId].rotations[dir];
-  for (var i = 0; i < rot.size; i++) {
+  let rot = blockSet[elem.blockId].rotations[dir];
+  for (let i = 0; i < rot.size; i++) {
     elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
     elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
     if (!mqFullsize.matches)
@@ -77,19 +77,19 @@ function rotate(elem, dir, x, y) {
 }
 
 function toBoardPosition(x, y) {
-  var boardStyle = window.getComputedStyle(document.getElementById('board'));
+  let boardStyle = window.getComputedStyle(document.getElementById('board'));
   x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
   y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
   x = Math.round(x / SCALE);
   y = Math.round(y / SCALE);
   if (Blokus.board.inBounds(x, y))
-    return {x: x, y: y};
+    return {x, y};
   else
     return null;
 }
 
 function fromBoardPosition(pos) {
-  var boardStyle = window.getComputedStyle(document.getElementById('board'));
+  let boardStyle = window.getComputedStyle(document.getElementById('board'));
   return {
     x: pos.x * SCALE + parseInt(boardStyle.left) +
       parseInt(boardStyle.borderLeftWidth),
@@ -99,7 +99,7 @@ function fromBoardPosition(pos) {
 }
 
 function createPiece(x, y, id, dir) {
-  var elem = document.getElementById('b' + id);
+  let elem = document.getElementById('b' + id);
   if (elem) {
     elem.style.left = x + 'px';
     elem.style.top = y + 'px';
@@ -116,9 +116,9 @@ function createPiece(x, y, id, dir) {
                     'left:' + x + 'px;' +
                     'top:' + y + 'px;' +
                     'position:absolute;');
-  var piece = blockSet[id].rotations[dir].piece;
-  for (var i = 0; i < piece.size; i++) {
-    var cell = document.createElement('div');
+  let piece = blockSet[id].rotations[dir].piece;
+  for (let i = 0; i < piece.size; i++) {
+    let cell = document.createElement('div');
     cell.setAttribute('style',
                       'position:absolute;' +
                       'left:' + piece.coords[i].x * SCALE + 'px;' +
@@ -149,7 +149,7 @@ function createPiece(x, y, id, dir) {
   document.getElementById('pieces').appendChild(elem);
 }
 
-var piecePositionTable = [ // x, y, dir
+let piecePositionTable = [ // x, y, dir
   [1, 1, 0], // u
   [5, 1, 0], // t
   [9, 1, 0], // s
@@ -174,11 +174,11 @@ var piecePositionTable = [ // x, y, dir
 ];
 
 function createPieces() {
-  var area = window.getComputedStyle(document.getElementById('piece-area'));
-  var left = parseInt(area.left) + parseInt(area.paddingLeft);
-  var top = parseInt(area.top) + parseInt(area.paddingTop);
-  for (var i = 0; i < piecePositionTable.length; i++) {
-    var a = piecePositionTable[i];
+  let area = window.getComputedStyle(document.getElementById('piece-area'));
+  let left = parseInt(area.left) + parseInt(area.paddingLeft);
+  let top = parseInt(area.top) + parseInt(area.paddingTop);
+  for (let i = 0; i < piecePositionTable.length; i++) {
+    let a = piecePositionTable[i];
     if (!Blokus.board.isUsed(Blokus.player, i)) {
       if (mqFullsize.matches)
         createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
@@ -191,26 +191,26 @@ function createPieces() {
 function createOpponentsPieces() {
   if (!mqFullsize.matches)
     return;
-  var area = document.getElementById('opponents-pieces');
-  for (var id = 0; id < piecePositionTable.length; id++) {
-    var a = piecePositionTable[id];
+  let area = document.getElementById('opponents-pieces');
+  for (let id = 0; id < piecePositionTable.length; id++) {
+    let a = piecePositionTable[id];
     if (Blokus.board.isUsed(1 - Blokus.player, id))
       continue;
 
-    var x = 9 - a[1];
-    var y = a[0];
-    var dir = (a[2] + 2) & 7;
-    var s = SCALE >> 1;
-    var piece = blockSet[id].rotations[dir];
+    let x = 9 - a[1];
+    let y = a[0];
+    let dir = (a[2] + 2) & 7;
+    let s = SCALE >> 1;
+    let piece = blockSet[id].rotations[dir];
 
-    var elem = document.createElement('div');
+    let elem = document.createElement('div');
     elem.id = 'o' + id;
     elem.setAttribute('style',
                       'left:' + x * s + 'px;' +
                       'top:' + y * s + 'px;' +
                       'position:absolute;');
-    for (var i = 0; i < piece.size; i++) {
-      var cell = document.createElement('div');
+    for (let i = 0; i < piece.size; i++) {
+      let cell = document.createElement('div');
       cell.setAttribute('style',
                         'position:absolute;' +
                         'left:' + piece.coords[i].x * s + 'px;' +
@@ -225,16 +225,16 @@ function createOpponentsPieces() {
 }
 
 function updateBoardView(moveToHighlight) {
-  var boardElem = document.getElementById('board');
-  var coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
-  for (var y = 0; y < 14; y++) {
-    for (var x = 0; x < 14; x++) {
-      var sq = Blokus.board.at(x, y);
+  let boardElem = document.getElementById('board');
+  let coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
+  for (let y = 0; y < 14; y++) {
+    for (let x = 0; x < 14; x++) {
+      let sq = Blokus.board.at(x, y);
       if ((sq & (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK)) == 0)
         continue;
-      var id = 'board_' + x.toString(16) + y.toString(16);
+      let id = 'board_' + x.toString(16) + y.toString(16);
 
-      var cell = document.getElementById(id);
+      let cell = document.getElementById(id);
       if (!cell) {
         cell = document.createElement('div');
         cell.id = id;
@@ -246,8 +246,8 @@ function updateBoardView(moveToHighlight) {
                           'height:' + SCALE + 'px;');
         boardElem.appendChild(cell);
       }
-      var cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
-      for (var i = 0; i < coordsToHighlight.length; i++) {
+      let cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
+      for (let i = 0; i < coordsToHighlight.length; i++) {
         if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
           cls += 'highlight';
           break;
@@ -295,11 +295,11 @@ function onOpponentMove(move) {
 }
 
 function gameEnd() {
-  var msg = '';
+  let msg = '';
   if (!mqFullsize.match)
     msg = '<span style="color:#63d">' + Blokus.board.score(0) + '</span> - <span style="color:#f72">' + Blokus.board.score(1) + '</span> ';
-  var myScore = Blokus.board.score(Blokus.player);
-  var yourScore = Blokus.board.score(Blokus.player ^ 1);
+  let myScore = Blokus.board.score(Blokus.player);
+  let yourScore = Blokus.board.score(Blokus.player ^ 1);
   if (myScore > yourScore) {
     msg += 'You win!';
   } else if (myScore < yourScore) {
@@ -311,10 +311,10 @@ function gameEnd() {
   if (mqFullsize.match) {
     clearInterval(Blokus.timer);
 
-    var recordLink = document.createElement('a');
+    let recordLink = document.createElement('a');
     recordLink.href = [window.location.protocol, '//',
                       window.location.host,
-                      window.location.pathname.replace(/[^\/]*$/, 'result.html'),
+                      window.location.pathname.replace(/[^/]*$/, 'result.html'),
                       '#',
                       Blokus.player, '/',
                       Blokus.board.getPath()
@@ -329,7 +329,7 @@ function gameEnd() {
 
 function timerHandler() {
   function formatTime(t) {
-    var m = Math.floor(t / 60), s = t % 60;
+    let m = Math.floor(t / 60), s = t % 60;
     return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
   }
 
@@ -342,7 +342,7 @@ function timerHandler() {
 
 function startGame() {
   if (mqFullsize.matches) {
-    var names = ['You', 'Computer'];
+    let names = ['You', 'Computer'];
     document.getElementById('violet-name').innerHTML = names[Blokus.player];
     document.getElementById('orange-name').innerHTML = names[Blokus.player ^ 1];
   }
@@ -361,7 +361,7 @@ function startGame() {
 // Event handlers
 
 window.addEventListener('load', () => {
-  var path = window.location.hash.substring(1);
+  let path = window.location.hash.substring(1);
   if (path) {
     Blokus.board = new Board(path);
     Blokus.player = Blokus.board.player();
@@ -398,13 +398,13 @@ function wheel(e) {
   if (wheel.lock)
     return;
   wheel.lock = true;
-  setTimeout(function() {wheel.lock = false}, 50);
+  setTimeout(() => {wheel.lock = false}, 50);
 
   if (Blokus.board.player() != Blokus.player)
     return;
-  var raw = e.detail ? e.detail : -e.wheelDelta;
-  var x = e.clientX + window.pageXOffset;
-  var y = e.clientY + window.pageYOffset;
+  let raw = e.detail ? e.detail : -e.wheelDelta;
+  let x = e.clientX + window.pageXOffset;
+  let y = e.clientY + window.pageYOffset;
   if (raw < 0)
     rotate(this, 'left', x, y);
   else
@@ -412,7 +412,7 @@ function wheel(e) {
 }
 
 // For compact mode
-function select(e) {
+function select() {
   if (Blokus.board.player() != Blokus.player)
     return;
   if (Blokus.selected && Blokus.selected !== this) {
@@ -428,7 +428,7 @@ function select(e) {
 }
 
 // For compact mode
-function unselect(e) {
+function unselect() {
   if (!Blokus.selected)
     return;
   Blokus.selected.classList.remove('selected');
@@ -447,8 +447,8 @@ function click(e) {
   if (Blokus.board.player() != Blokus.player)
     return;
 
-  var x = e.clientX + window.pageXOffset;
-  var y = e.clientY + window.pageYOffset;
+  let x = e.clientX + window.pageXOffset;
+  let y = e.clientY + window.pageYOffset;
   rotate(this, mqFullsize.match ? 'right' : 'cyclic', x, y);
 }
 
@@ -460,8 +460,8 @@ function dblclick(e) {
   if (Blokus.board.player() != Blokus.player)
     return;
 
-  var x = e.clientX + window.pageXOffset;
-  var y = e.clientY + window.pageYOffset;
+  let x = e.clientX + window.pageXOffset;
+  let y = e.clientY + window.pageYOffset;
   rotate(this, 'flip', x, y);
 }
 
@@ -476,10 +476,10 @@ function drag(e) {
     e.clientY = e.targetTouches[0].clientY;
   }
 
-  var elem = this;
-  var deltaX = e.clientX - this.offsetLeft;
-  var deltaY = e.clientY - this.offsetTop;
-  var touchClick = true;
+  let elem = this;
+  let deltaX = e.clientX - this.offsetLeft;
+  let deltaY = e.clientY - this.offsetTop;
+  let touchClick = true;
 
   if (mqFullsize.matches) {
     document.addEventListener('mousemove', moveHandler, true);
@@ -509,13 +509,13 @@ function drag(e) {
     }
 
     e.stopPropagation();
-    var x = e.clientX - deltaX;
-    var y = e.clientY - deltaY;
-    var bpos = toBoardPosition(x, y);
-    var pieceId = elem.blockId << 3 | elem.direction;
+    let x = e.clientX - deltaX;
+    let y = e.clientY - deltaY;
+    let bpos = toBoardPosition(x, y);
+    let pieceId = elem.blockId << 3 | elem.direction;
     if (bpos &&
         Blokus.board.isValidMove(new Move(bpos.x, bpos.y, pieceId))) {
-      var epos = fromBoardPosition(bpos);
+      let epos = fromBoardPosition(bpos);
       elem.style.left = epos.x + 'px';
       elem.style.top = epos.y + 'px';
     }
@@ -535,7 +535,7 @@ function drag(e) {
       if (touchClick) {
         rotate(elem, 'cyclic');
       } else if (!mqFullsize.matches) {
-        var elapsed = new Date().getTime() - touchTime;
+        let elapsed = new Date().getTime() - touchTime;
         if (elapsed < 100)
           rotate(elem, 'cyclic');
       }
@@ -551,9 +551,9 @@ function drag(e) {
     if (!mqFullsize.matches)
       elem.classList.remove('dragging');
 
-    var bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
+    let bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
     if (bpos) {
-      var move = new Move(bpos.x, bpos.y,
+      let move = new Move(bpos.x, bpos.y,
                           elem.blockId << 3 | elem.direction);
       if (Blokus.board.isValidMove(move)) {
         Blokus.board.doMove(move);
@@ -563,8 +563,8 @@ function drag(e) {
         updateScore();
       }
     } else if (!mqFullsize.matches && e.clientX && e.clientY) {
-      var x = e.clientX - deltaX;
-      var y = e.clientY - deltaY;
+      let x = e.clientX - deltaX;
+      let y = e.clientY - deltaY;
       if (x < 20 || x > 280 || y < 10 || y > 340)
         unselect();
     }

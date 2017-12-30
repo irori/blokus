@@ -1,24 +1,24 @@
 'use strict';
 
-var toolBarClosingTimer;
+let toolBarClosingTimer;
 
 function openToolBar() {
-  var toolbar = document.getElementById('toolbar');
+  let toolbar = document.getElementById('toolbar');
   toolbar.classList.remove('closed');
   toolBarClosingTimer = setTimeout(closeToolBar, 5000);
 }
 
 function closeToolBar() {
-  var toolbar = document.getElementById('toolbar');
+  let toolbar = document.getElementById('toolbar');
   toolbar.classList.add('closed');
   clearTimeout(toolBarClosingTimer);
   toolBarClosingTimer = null;
 }
 
 function help() {
-  var help = document.getElementById('help');
+  let help = document.getElementById('help');
   help.classList.remove('closed');
-  var toolbar = document.getElementById('toolbar');
+  let toolbar = document.getElementById('toolbar');
   toolbar.classList.add('closed');
 }
 
@@ -27,12 +27,12 @@ function reload() {
 }
 
 function closeHelp() {
-  var help = document.getElementById('help');
+  let help = document.getElementById('help');
   help.classList.add('closed');
 }
 
-window.addEventListener('load', function() {
-  var handler = document.getElementById('handler');
+window.addEventListener('load', () => {
+  let handler = document.getElementById('handler');
   handler.addEventListener('click', openToolBar);
   document.getElementById('reloadButton').addEventListener('click', reload);
   document.getElementById('helpButton').addEventListener('click', help);
