@@ -1,5 +1,14 @@
 import { pieceSet, blockSet } from './piece.js'
 
+const VIOLET_MASK = 0x07;
+const ORANGE_MASK = 0x70;
+const VIOLET_EDGE = 0x01;
+const ORANGE_EDGE = 0x10;
+const VIOLET_SIDE = 0x02;
+const ORANGE_SIDE = 0x20;
+const VIOLET_BLOCK = 0x04;
+const ORANGE_BLOCK = 0x40;
+
 export class Move {
   constructor(x, y, piece_id) {
     if (arguments.length == 3)
@@ -54,8 +63,8 @@ export class Board {
       for (let x = 0; x < 14; x++)
         this.square[y][x] = 0;
     }
-    this.square[4][4] = Board.VIOLET_EDGE;
-    this.square[9][9] = Board.ORANGE_EDGE;
+    this.square[4][4] = VIOLET_EDGE;
+    this.square[9][9] = ORANGE_EDGE;
     this.history = [];
     this.used = new Array(21 * 2);
 
@@ -74,9 +83,15 @@ export class Board {
   }
 
   inBounds(x, y) { return (x >= 0 && y >= 0 && x < 14 && y < 14); }
-  at(x, y) { return this.square[y][x]; }
   turn() { return this.history.length; }
   player() { return this.turn() % 2; }
+  colorAt(x, y) {
+    if (this.square[y][x] & VIOLET_BLOCK)
+      return 'violet';
+    if (this.square[y][x] & ORANGE_BLOCK)
+      return 'orange';
+    return null;
+  }
 
   isValidMove(move) {
     if (move.isPass())
@@ -92,7 +107,7 @@ export class Board {
 
     for (let i = 0; i < coords.length; i++) {
       if (this.square[coords[i].y][coords[i].x] &
-          [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()])
+          [VIOLET_EDGE, ORANGE_EDGE][this.player()])
         return true;
     }
     return false;
@@ -106,9 +121,9 @@ export class Board {
 
     let coords = move.coords();
 
-    let block = [Board.VIOLET_BLOCK, Board.ORANGE_BLOCK][this.player()];
-    let side_bit = [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
-    let edge_bit = [Board.VIOLET_EDGE, Board.ORANGE_EDGE][this.player()];
+    let block = [VIOLET_BLOCK, ORANGE_BLOCK][this.player()];
+    let side_bit = [VIOLET_SIDE, ORANGE_SIDE][this.player()];
+    let edge_bit = [VIOLET_EDGE, ORANGE_EDGE][this.player()];
 
     for (let i = 0; i < coords.length; i++) {
       let {x, y} = coords[i];
@@ -139,8 +154,8 @@ export class Board {
   }
 
   _isMovable(coords) {
-    let mask = (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK) |
-      [Board.VIOLET_SIDE, Board.ORANGE_SIDE][this.player()];
+    let mask = (VIOLET_BLOCK | ORANGE_BLOCK) |
+      [VIOLET_SIDE, ORANGE_SIDE][this.player()];
 
     for (let i = 0; i < coords.length; i++) {
       let {x, y} = coords[i];
@@ -171,11 +186,3 @@ export class Board {
 
   getPath() { return this.history.join('/'); }
 }
-Board.VIOLET_MASK = 0x07;
-Board.ORANGE_MASK = 0x70;
-Board.VIOLET_EDGE = 0x01;
-Board.ORANGE_EDGE = 0x10;
-Board.VIOLET_SIDE = 0x02;
-Board.ORANGE_SIDE = 0x20;
-Board.VIOLET_BLOCK = 0x04;
-Board.ORANGE_BLOCK = 0x40;

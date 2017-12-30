@@ -229,8 +229,8 @@ function updateBoardView(moveToHighlight) {
   let coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
   for (let y = 0; y < 14; y++) {
     for (let x = 0; x < 14; x++) {
-      let sq = Blokus.board.at(x, y);
-      if ((sq & (Board.VIOLET_BLOCK | Board.ORANGE_BLOCK)) == 0)
+      let col = Blokus.board.colorAt(x, y);
+      if (!col)
         continue;
       let id = 'board_' + x.toString(16) + y.toString(16);
 
@@ -246,7 +246,7 @@ function updateBoardView(moveToHighlight) {
                           'height:' + SCALE + 'px;');
         boardElem.appendChild(cell);
       }
-      let cls = (sq & Board.VIOLET_BLOCK) ? 'block0' : 'block1';
+      let cls = {violet: 'block0', orange: 'block1'}[col];
       for (let i = 0; i < coordsToHighlight.length; i++) {
         if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
           cls += 'highlight';
