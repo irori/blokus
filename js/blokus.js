@@ -8,12 +8,7 @@ const mqFullsize = window.matchMedia('(min-width: 580px)');
 
 function showMessage(msg) {
   let elem = document.getElementById('message');
-  if (typeof msg == 'string')
-    elem.innerHTML = msg;
-  else {
-    elem.innerHTML = '';
-    elem.appendChild(msg);
-  }
+  elem.innerHTML = msg;
   elem.style.visibility = 'visible';
 }
 
@@ -307,22 +302,11 @@ function gameEnd() {
   } else {
     msg += 'Draw';
   }
+  showMessage(msg);
 
   if (mqFullsize.match) {
     clearInterval(Blokus.timer);
-
-    let recordLink = document.createElement('a');
-    recordLink.href = [window.location.protocol, '//',
-                      window.location.host,
-                      window.location.pathname.replace(/[^/]*$/, 'result.html'),
-                      '#',
-                      Blokus.player, '/',
-                      Blokus.board.getPath()
-                      ].join('');
-    recordLink.innerHTML = msg;
-    showMessage(recordLink);
   } else {
-    showMessage(msg);
     Blokus.player = null;
   }
 }
