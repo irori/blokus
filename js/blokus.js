@@ -1,20 +1,11 @@
 import { blockSet } from './piece.js'
 import { Move, Board } from './board.js'
+import { View } from './view.js'
 import Backend from './backend.js'
 
 let Blokus = { level: 1 };
-const SCALE = 20;
+const SCALE = 20;  // TODO: Remove this
 const mqFullsize = window.matchMedia('(min-width: 580px)');
-
-function showMessage(msg) {
-  let elem = document.getElementById('message');
-  elem.innerHTML = msg;
-  elem.style.visibility = 'visible';
-}
-
-function hideMessage() {
-  document.getElementById('message').style.visibility = 'hidden';
-}
 
 function setActiveArea() {
   if (!mqFullsize.matches)
@@ -219,52 +210,9 @@ function createOpponentsPieces() {
   }
 }
 
-function updateBoardView(moveToHighlight) {
-  let boardElem = document.getElementById('board');
-  let coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
-  for (let y = 0; y < 14; y++) {
-    for (let x = 0; x < 14; x++) {
-      let col = Blokus.board.colorAt(x, y);
-      if (!col)
-        continue;
-      let id = 'board_' + x.toString(16) + y.toString(16);
-
-      let cell = document.getElementById(id);
-      if (!cell) {
-        cell = document.createElement('div');
-        cell.id = id;
-        cell.setAttribute('style',
-                          'position:absolute;' +
-                          'left:' + x * SCALE + 'px;' +
-                          'top:' + y * SCALE + 'px;' +
-                          'width:' + SCALE + 'px;' +
-                          'height:' + SCALE + 'px;');
-        boardElem.appendChild(cell);
-      }
-      let cls = {violet: 'block0', orange: 'block1'}[col];
-      for (let i = 0; i < coordsToHighlight.length; i++) {
-        if (coordsToHighlight[i].x == x && coordsToHighlight[i].y == y) {
-          cls += 'highlight';
-          break;
-        }
-      }
-      cell.className = cls;
-    }
-  }
-}
-
-function updateScore() {
-  if (!mqFullsize.matches)
-    return;
-  document.getElementById('violet-score').innerHTML =
-    Blokus.board.score(0) + ' points';
-  document.getElementById('orange-score').innerHTML =
-    Blokus.board.score(1) + ' points';
-}
-
 function opponentMove() {
   setActiveArea();
-  showMessage(['Orange', 'Violet'][Blokus.player] + ' plays');
+  Blokus.view.showOpponentsPlaying(true);
   Blokus.backend.request(Blokus.board.getPath(), Blokus.level);
 }
 
@@ -272,9 +220,8 @@ function onOpponentMove(move) {
   Blokus.board.doMove(move);
   if (mqFullsize.matches && !move.isPass())
     document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
-  hideMessage();
-  updateBoardView(move);
-  updateScore();
+  Blokus.view.showOpponentsPlaying(false);
+  Blokus.view.update(move);
   createPieces();
   setActiveArea();
   // window.location.replace('#' + Blokus.board.getPath());
@@ -290,21 +237,8 @@ function onOpponentMove(move) {
 }
 
 function gameEnd() {
-  let msg = '';
-  if (!mqFullsize.match)
-    msg = '<span style="color:#63d">' + Blokus.board.score(0) + '</span> - <span style="color:#f72">' + Blokus.board.score(1) + '</span> ';
-  let myScore = Blokus.board.score(Blokus.player);
-  let yourScore = Blokus.board.score(Blokus.player ^ 1);
-  if (myScore > yourScore) {
-    msg += 'You win!';
-  } else if (myScore < yourScore) {
-    msg += 'You lose...';
-  } else {
-    msg += 'Draw';
-  }
-  showMessage(msg);
-
-  if (mqFullsize.match) {
+  Blokus.view.showEndMessage(!mqFullsize.matches);
+  if (mqFullsize.matches) {
     clearInterval(Blokus.timer);
   } else {
     Blokus.player = null;
@@ -333,8 +267,7 @@ function startGame() {
   document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
   createOpponentsPieces();
-  updateBoardView();
-  updateScore();
+  Blokus.view.update();
   setActiveArea();
   if (mqFullsize.matches) {
     Blokus.elapsed = [0, 0];
@@ -349,6 +282,7 @@ window.addEventListener('load', () => {
   if (path) {
     Blokus.board = new Board(path);
     Blokus.player = Blokus.board.player();
+    Blokus.view = new View(Blokus.board, Blokus.player);
     Blokus.backend = new Backend(onOpponentMove);
     startGame(path);
   }
@@ -357,6 +291,7 @@ window.addEventListener('load', () => {
 function startButton(player) {
   Blokus.board = new Board();
   Blokus.player = player;
+  Blokus.view = new View(Blokus.board, player);
   Blokus.backend = new Backend(onOpponentMove);
   startGame();
   if (player == 1)
@@ -543,8 +478,7 @@ function drag(e) {
         Blokus.board.doMove(move);
         opponentMove();
         elem.style.visibility = 'hidden';
-        updateBoardView();
-        updateScore();
+        Blokus.view.update();
       }
     } else if (!mqFullsize.matches && e.clientX && e.clientY) {
       let x = e.clientX - deltaX;
