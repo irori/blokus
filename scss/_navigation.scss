@@ -4,6 +4,9 @@
     src: url('http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.woff?v=4.1.0');
 }
 #handler {
+    @include full-size {
+        display: none;
+    }
     position: absolute;
     left: 270px;
     top: 0px;
@@ -21,6 +24,9 @@
     transform: rotate(135deg);
 }
 #toolbar {
+    @include full-size {
+        display: none;
+    }
     position: absolute;
     top: 0;
     left: 0;
