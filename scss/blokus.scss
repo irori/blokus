@@ -67,11 +67,17 @@ body {
 		top: 340px;
 		width: 260px;
 		height: 100px;
-		background-color: #eee;  // TODO: use .active-area
 	}
 	padding: 10px;
 	border-radius: 5px;
 }
+.active-area {
+	background-color: #eee;
+}
+.inactive-area {
+	background-color: #ddd;
+}
+
 #opponents-piece-area {
 	position: absolute;
 	left: 20px;
@@ -126,12 +132,6 @@ body {
 	font-size: small;
 }
 @include full-size {
-	.active-area {
-		background-color: #eee;
-	}
-	.inactive-area {
-		background-color: #ccc;
-	}
 	.active .block0, .active .block1 {
 		cursor: pointer;
 	}

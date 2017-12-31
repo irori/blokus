@@ -52,6 +52,15 @@ export class View {
     this.updateScore();
   }
 
+  setActiveArea() {
+    let p = this.board.player() ^ this.player;
+    let classes = ['active-area', 'inactive-area'];
+    document.getElementById('piece-area').className = classes[p];
+    document.getElementById('opponents-piece-area').className = classes[1 - p];
+
+    document.getElementById('pieces').className = (p == 0) ? 'active' : '';
+  }
+
   showOpponentsPlaying(show) {
     if (show)
       this.showMessage(['Orange', 'Violet'][this.player] + ' plays');

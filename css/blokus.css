@@ -127,8 +127,13 @@ body {
     #piece-area {
       top: 340px;
       width: 260px;
-      height: 100px;
-      background-color: #eee; } }
+      height: 100px; } }
+
+.active-area {
+  background-color: #eee; }
+
+.inactive-area {
+  background-color: #ddd; }
 
 #opponents-piece-area {
   position: absolute;
@@ -183,12 +188,6 @@ body {
   font-size: small; }
 
 @media all and (min-width: 580px) {
-  .active-area {
-    background-color: #eee; }
-
-  .inactive-area {
-    background-color: #ccc; }
-
   .active .block0, .active .block1 {
     cursor: pointer; }
 

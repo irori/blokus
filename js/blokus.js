@@ -7,17 +7,6 @@ let Blokus = { level: 1 };
 const SCALE = 20;  // TODO: Remove this
 const mqFullsize = window.matchMedia('(min-width: 580px)');
 
-function setActiveArea() {
-  if (!mqFullsize.matches)
-    return;
-  let p = Blokus.board.player() ^ Blokus.player;
-  let classes = ['active-area', 'inactive-area'];
-  document.getElementById('piece-area').className = classes[p];
-  document.getElementById('opponents-piece-area').className = classes[1 - p];
-
-  document.getElementById('pieces').className = (p == 0) ? 'active' : '';
-}
-
 function rotate(elem, dir, x, y) {
   switch (dir) {
   case 'left':
@@ -211,7 +200,7 @@ function createOpponentsPieces() {
 }
 
 function opponentMove() {
-  setActiveArea();
+  Blokus.view.setActiveArea();
   Blokus.view.showOpponentsPlaying(true);
   Blokus.backend.request(Blokus.board.getPath(), Blokus.level);
 }
@@ -223,7 +212,7 @@ function onOpponentMove(move) {
   Blokus.view.showOpponentsPlaying(false);
   Blokus.view.update(move);
   createPieces();
-  setActiveArea();
+  Blokus.view.setActiveArea();
   // window.location.replace('#' + Blokus.board.getPath());
   if (!Blokus.board.canMove()) {
     if (move.isPass())
@@ -268,7 +257,7 @@ function startGame() {
   createPieces();
   createOpponentsPieces();
   Blokus.view.update();
-  setActiveArea();
+  Blokus.view.setActiveArea();
   if (mqFullsize.matches) {
     Blokus.elapsed = [0, 0];
     Blokus.timer = setInterval(timerHandler, 1000);
