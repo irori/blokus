@@ -1,4 +1,4 @@
-import { Move } from './board.js'
+import { Move } from './move.js'
 import { blockSet } from './piece.js'
 import { SCALE, piecePositionTable } from './view.js'
 

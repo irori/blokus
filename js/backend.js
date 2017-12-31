@@ -1,4 +1,4 @@
-import { Move } from './board.js'
+import { Move } from './move.js'
 
 export default class WorkerBackend {
   constructor(handler) {
