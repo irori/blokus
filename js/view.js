@@ -32,6 +32,9 @@ export class View {
   }
 
   startGame() {
+    const names = ['You', 'Computer'];
+    document.getElementById('violet-name').innerHTML = names[this.player];
+    document.getElementById('orange-name').innerHTML = names[this.player ^ 1];
     this.createOpponentsPieces();
     this.update();
     this.setActiveArea();
