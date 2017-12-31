@@ -161,24 +161,8 @@ function onOpponentMove(move) {
 
 function gameEnd() {
   Blokus.view.gameEnd(!mqFullsize.matches);
-  if (mqFullsize.matches) {
-    clearInterval(Blokus.timer);
-  } else {
+  if (!mqFullsize.matches)
     Blokus.player = null;
-  }
-}
-
-function timerHandler() {
-  function formatTime(t) {
-    let m = Math.floor(t / 60), s = t % 60;
-    return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
-  }
-
-  Blokus.elapsed[Blokus.board.player()]++;
-  document.getElementById('violet-time').innerHTML =
-    formatTime(Blokus.elapsed[0]);
-  document.getElementById('orange-time').innerHTML =
-    formatTime(Blokus.elapsed[1]);
 }
 
 function startGame() {
@@ -190,10 +174,6 @@ function startGame() {
   document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
   Blokus.view.startGame();
-  if (mqFullsize.matches) {
-    Blokus.elapsed = [0, 0];
-    Blokus.timer = setInterval(timerHandler, 1000);
-  }
 }
 
 // Event handlers

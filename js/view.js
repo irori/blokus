@@ -35,6 +35,13 @@ export class View {
     this.createOpponentsPieces();
     this.update();
     this.setActiveArea();
+    this.elapsed = [0, 0];
+    this.timer = setInterval(this.timerHandler.bind(this), 1000);
+  }
+
+  gameEnd(shouldShowScore) {
+    this.showGameEndMessage(shouldShowScore);
+    clearInterval(this.timer);
   }
 
   onPlayerMove() {
@@ -51,6 +58,17 @@ export class View {
     this.showOpponentsPlaying(false);
     this.update(move);
     this.setActiveArea();
+  }
+
+  timerHandler() {
+    function formatTime(t) {
+      let m = Math.floor(t / 60), s = t % 60;
+      return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    }
+
+    this.elapsed[this.board.player()]++;
+    document.getElementById('violet-time').innerHTML = formatTime(this.elapsed[0]);
+    document.getElementById('orange-time').innerHTML = formatTime(this.elapsed[1]);
   }
 
   createOpponentsPieces() {
@@ -154,7 +172,7 @@ export class View {
       this.hideMessage();
   }
 
-  gameEnd(shouldShowScore) {
+  showGameEndMessage(shouldShowScore) {
     let msg = '';
     if (shouldShowScore)
       msg = '<span style="color:#63d">' + this.board.score(0) + '</span> - <span style="color:#f72">' + this.board.score(1) + '</span> ';
