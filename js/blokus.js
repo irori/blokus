@@ -1,6 +1,6 @@
 import { Board } from './board.js'
 import { View } from './view.js'
-import { initInput, createPieces, mqFullsize } from './input.js'
+import { Input, mqFullsize } from './input.js'
 import Backend from './backend.js'
 
 class Blokus {
@@ -12,7 +12,7 @@ class Blokus {
     this.board = new Board();
     this.player = player;
     this.view = new View(this.board, player);
-    initInput(this.board, this.player, this.onPlayerMove.bind(this));
+    this.input = new Input(this.board, this.player, this.onPlayerMove.bind(this));
     this.backend = new Backend(this.onOpponentMove.bind(this));
     this.startGame();
     if (player == 1)
@@ -23,7 +23,7 @@ class Blokus {
     this.board = new Board(path);
     this.player = this.board.player();
     this.view = new View(this.board, this.player);
-    initInput(this.board, this.player, this.onPlayerMove.bind(this));
+    this.input = new Input(this.board, this.player, this.onPlayerMove.bind(this));
     this.backend = new Backend(this.onOpponentMove.bind(this));
     this.startGame(path);
   }
@@ -42,7 +42,7 @@ class Blokus {
   onOpponentMove(move) {
     this.board.doMove(move);
     this.view.onOpponentMove(move);
-    createPieces();
+    this.input.createPieces();
     // window.location.replace('#' + this.board.getPath());
     if (!this.board.canMove()) {
       if (move.isPass())
@@ -62,7 +62,7 @@ class Blokus {
 
   startGame() {
     document.getElementById('start-game').style.visibility = 'hidden';
-    createPieces();
+    this.input.createPieces();
     this.view.startGame();
   }
 }

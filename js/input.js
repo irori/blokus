@@ -4,317 +4,319 @@ import { SCALE, piecePositionTable } from './view.js'
 
 export const mqFullsize = window.matchMedia('(min-width: 580px)');
 
-let Blokus = null;  // TODO: remove
-export function initInput(board, player, onPlayerMove) {
-  Blokus = { board, player, onPlayerMove };
-}
+export class Input {
+  constructor(board, player, onPlayerMove) {
+    this.board = board;
+    this.player = player;
+    this.onPlayerMove = onPlayerMove;
+    this.dragHandler = this.drag.bind(this);
+  }
 
-function rotate(elem, dir, x, y) {
-  switch (dir) {
-  case 'left':
-    dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
-    elem.className = 'piece rotate-left';
-    setTimeout(() => {elem.className = 'piece rotating'}, 0);
-    break;
-  case 'right':
-    dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
-    elem.className = 'piece rotate-right';
-    setTimeout(() => {elem.className = 'piece rotating'}, 0);
-    break;
-  case 'flip':
-    dir = elem.direction ^ 1;
-    elem.className = 'piece rotate-flip';
-    setTimeout(() => {elem.className = 'piece rotating'}, 0);
-    break;
-  case 'cyclic':
-    if (elem.direction == 1 || elem.direction == 6) {
+  rotate(elem, dir, x, y) {
+    switch (dir) {
+    case 'left':
+      dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
+      elem.className = 'piece rotate-left';
+      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      break;
+    case 'right':
+      dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
+      elem.className = 'piece rotate-right';
+      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      break;
+    case 'flip':
       dir = elem.direction ^ 1;
       elem.className = 'piece rotate-flip';
-    } else {
-      dir = elem.direction + (elem.direction & 1 ? -2 : 2);
-      elem.className = 'piece rotate-right';
+      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      break;
+    case 'cyclic':
+      if (elem.direction == 1 || elem.direction == 6) {
+        dir = elem.direction ^ 1;
+        elem.className = 'piece rotate-flip';
+      } else {
+        dir = elem.direction + (elem.direction & 1 ? -2 : 2);
+        elem.className = 'piece rotate-right';
+      }
+      setTimeout(() => {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
+      break;
     }
-    setTimeout(() => {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
-    break;
-  }
-  window.getComputedStyle(elem).transform;  // force style update
+    window.getComputedStyle(elem).transform;  // force style update
 
-  elem.direction = dir;
-  let rot = blockSet[elem.blockId].rotations[dir];
-  for (let i = 0; i < rot.size; i++) {
-    elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
-    elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
-    if (!mqFullsize.matches)
-      elem.childNodes[i].style.zIndex = 3 + rot.coords[i].x + rot.coords[i].y;
-  }
-  if (x != undefined) {
-    elem.style.left = x - SCALE / 2 + 'px';
-    elem.style.top = y - SCALE / 2 + 'px';
-  }
-}
-
-function toBoardPosition(x, y) {
-  let boardStyle = window.getComputedStyle(document.getElementById('board'));
-  x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
-  y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
-  x = Math.round(x / SCALE);
-  y = Math.round(y / SCALE);
-  if (Blokus.board.inBounds(x, y))
-    return {x, y};
-  else
-    return null;
-}
-
-function fromBoardPosition(pos) {
-  let boardStyle = window.getComputedStyle(document.getElementById('board'));
-  return {
-    x: pos.x * SCALE + parseInt(boardStyle.left) +
-      parseInt(boardStyle.borderLeftWidth),
-    y: pos.y * SCALE + parseInt(boardStyle.top) +
-      parseInt(boardStyle.borderTopWidth)
-  };
-}
-
-function createPiece(x, y, id, dir) {
-  let elem = document.getElementById('b' + id);
-  if (elem) {
-    elem.style.left = x + 'px';
-    elem.style.top = y + 'px';
-    rotate(elem, dir);
-    return;
-  }
-
-  // create a new piece
-  elem = document.createElement('div');
-  elem.id = 'b' + id;
-  elem.blockId = id;
-  elem.direction = dir;
-  elem.setAttribute('style',
-                    'left:' + x + 'px;' +
-                    'top:' + y + 'px;' +
-                    'position:absolute;');
-  let piece = blockSet[id].rotations[dir].piece;
-  for (let i = 0; i < piece.size; i++) {
-    let cell = document.createElement('div');
-    cell.setAttribute('style',
-                      'position:absolute;' +
-                      'left:' + piece.coords[i].x * SCALE + 'px;' +
-                      'top:' + piece.coords[i].y * SCALE + 'px;' +
-                      (mqFullsize.matches ? '' : 'z-index:' + (3 + piece.coords[i].x + piece.coords[i].y) + ';') +
-                      'width:' + SCALE + 'px;' +
-                      'height:' + SCALE + 'px;');
-    cell.className = 'block' + Blokus.player;
-    elem.appendChild(cell);
-  }
-
-  if (mqFullsize.matches) {
-    // set event handlers
-    elem.onmousedown = drag;
-    if (elem.addEventListener)
-      elem.addEventListener('touchstart', drag, false);
-
-    elem.onclick = click;
-    elem.ondblclick = dblclick;
-    elem.onmousewheel = wheel;
-    if (elem.addEventListener)
-      elem.addEventListener('DOMMouseScroll', wheel, false);  // for FF
-  } else {
-    elem.classList.add('piece');
-    elem.classList.add('unselected');
-    elem.onclick = select;
-  }
-  document.getElementById('pieces').appendChild(elem);
-}
-
-export function createPieces() {
-  let area = window.getComputedStyle(document.getElementById('piece-area'));
-  let left = parseInt(area.left) + parseInt(area.paddingLeft);
-  let top = parseInt(area.top) + parseInt(area.paddingTop);
-  for (let i = 0; i < piecePositionTable.length; i++) {
-    let a = piecePositionTable[i];
-    if (!Blokus.board.isUsed(Blokus.player, i)) {
-      if (mqFullsize.matches)
-        createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
-      else
-        createPiece(left + a[0] * SCALE/2 - SCALE/4, top + a[1] * SCALE/2 - SCALE/4, i, a[2]);
+    elem.direction = dir;
+    let rot = blockSet[elem.blockId].rotations[dir];
+    for (let i = 0; i < rot.size; i++) {
+      elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
+      elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
+      if (!mqFullsize.matches)
+        elem.childNodes[i].style.zIndex = 3 + rot.coords[i].x + rot.coords[i].y;
+    }
+    if (x != undefined) {
+      elem.style.left = x - SCALE / 2 + 'px';
+      elem.style.top = y - SCALE / 2 + 'px';
     }
   }
-}
 
-// For full-size mode
-function wheel(e) {
-  e.stopPropagation();
-  e.preventDefault();
-
-  if (wheel.lock)
-    return;
-  wheel.lock = true;
-  setTimeout(() => {wheel.lock = false}, 50);
-
-  if (Blokus.board.player() != Blokus.player)
-    return;
-  let raw = e.detail ? e.detail : -e.wheelDelta;
-  let x = e.clientX + window.pageXOffset;
-  let y = e.clientY + window.pageYOffset;
-  if (raw < 0)
-    rotate(this, 'left', x, y);
-  else
-    rotate(this, 'right', x, y);
-}
-
-// For compact mode
-function select() {
-  if (Blokus.board.player() != Blokus.player)
-    return;
-  if (Blokus.selected && Blokus.selected !== this) {
-    unselect();
+  toBoardPosition(x, y) {
+    let boardStyle = window.getComputedStyle(document.getElementById('board'));
+    x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
+    y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
+    x = Math.round(x / SCALE);
+    y = Math.round(y / SCALE);
+    if (this.board.inBounds(x, y))
+      return {x, y};
+    else
+      return null;
   }
-  Blokus.selected = this;
-  this.classList.remove('unselected');
-  this.classList.add('selected');
-  this.style.left = '155px';
-  this.style.top = '305px';
-  this.onclick = click;
-  this.addEventListener('touchstart', drag, false);
-}
 
-// For compact mode
-function unselect() {
-  if (!Blokus.selected)
-    return;
-  Blokus.selected.classList.remove('selected');
-  Blokus.selected.classList.add('unselected');
-  Blokus.selected.classList.remove('rotating');
-  Blokus.selected.onclick = select;
-  Blokus.selected.removeEventListener('touchstart', drag, false);
-  Blokus.selected = null;
-  createPieces();
-}
+  fromBoardPosition(pos) {
+    let boardStyle = window.getComputedStyle(document.getElementById('board'));
+    return {
+      x: pos.x * SCALE + parseInt(boardStyle.left) +
+        parseInt(boardStyle.borderLeftWidth),
+      y: pos.y * SCALE + parseInt(boardStyle.top) +
+        parseInt(boardStyle.borderTopWidth)
+    };
+  }
 
-function click(e) {
-  if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
-    return;
-
-  if (Blokus.board.player() != Blokus.player)
-    return;
-
-  let x = e.clientX + window.pageXOffset;
-  let y = e.clientY + window.pageYOffset;
-  rotate(this, mqFullsize.match ? 'right' : 'cyclic', x, y);
-}
-
-// For full-size mode
-function dblclick(e) {
-  if (e.shiftKey) // do not handle shift+dblclick
-    return;
-
-  if (Blokus.board.player() != Blokus.player)
-    return;
-
-  let x = e.clientX + window.pageXOffset;
-  let y = e.clientY + window.pageYOffset;
-  rotate(this, 'flip', x, y);
-}
-
-function drag(e) {
-  if (Blokus.board.player() != Blokus.player)
-    return;
-
-  if (e.targetTouches) {
-    if (e.targetTouches.length != 1)
+  createPiece(x, y, id, dir) {
+    let elem = document.getElementById('b' + id);
+    if (elem) {
+      elem.style.left = x + 'px';
+      elem.style.top = y + 'px';
+      this.rotate(elem, dir);
       return;
-    e.clientX = e.targetTouches[0].clientX;
-    e.clientY = e.targetTouches[0].clientY;
+    }
+
+    // create a new piece
+    elem = document.createElement('div');
+    elem.id = 'b' + id;
+    elem.blockId = id;
+    elem.direction = dir;
+    elem.setAttribute('style',
+                      'left:' + x + 'px;' +
+                      'top:' + y + 'px;' +
+                      'position:absolute;');
+    let piece = blockSet[id].rotations[dir].piece;
+    for (let i = 0; i < piece.size; i++) {
+      let cell = document.createElement('div');
+      cell.setAttribute('style',
+                        'position:absolute;' +
+                        'left:' + piece.coords[i].x * SCALE + 'px;' +
+                        'top:' + piece.coords[i].y * SCALE + 'px;' +
+                        (mqFullsize.matches ? '' : 'z-index:' + (3 + piece.coords[i].x + piece.coords[i].y) + ';') +
+                        'width:' + SCALE + 'px;' +
+                        'height:' + SCALE + 'px;');
+      cell.className = 'block' + this.player;
+      elem.appendChild(cell);
+    }
+
+    if (mqFullsize.matches) {
+      // set event handlers
+      elem.onmousedown = this.drag.bind(this);
+      if (elem.addEventListener)
+        elem.addEventListener('touchstart', this.drag.bind(this), false);
+
+      elem.onclick = this.click.bind(this);
+      elem.ondblclick = this.dblclick.bind(this);
+      elem.onmousewheel = this.wheel.bind(this);
+      if (elem.addEventListener)
+        elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false);  // for FF
+    } else {
+      elem.classList.add('piece');
+      elem.classList.add('unselected');
+      elem.onclick = this.select.bind(this);
+    }
+    document.getElementById('pieces').appendChild(elem);
   }
 
-  let elem = this;
-  let deltaX = e.clientX - this.offsetLeft;
-  let deltaY = e.clientY - this.offsetTop;
-  let touchClick = true;
-
-  if (mqFullsize.matches) {
-    document.addEventListener('mousemove', moveHandler, true);
-    document.addEventListener('mouseup', upHandler, true);
-  } else {
-    var touchTime = new Date().getTime();
-    elem.lastClientX = elem.lastClientY = null;
+  createPieces() {
+    let area = window.getComputedStyle(document.getElementById('piece-area'));
+    let left = parseInt(area.left) + parseInt(area.paddingLeft);
+    let top = parseInt(area.top) + parseInt(area.paddingTop);
+    for (let i = 0; i < piecePositionTable.length; i++) {
+      let a = piecePositionTable[i];
+      if (!this.board.isUsed(this.player, i)) {
+        if (mqFullsize.matches)
+          this.createPiece(left + a[0] * SCALE, top + a[1] * SCALE, i, a[2]);
+        else
+          this.createPiece(left + a[0] * SCALE/2 - SCALE/4, top + a[1] * SCALE/2 - SCALE/4, i, a[2]);
+      }
+    }
   }
 
-  elem.addEventListener('touchmove', moveHandler, false);
-  elem.addEventListener('touchend', upHandler, false);
-  if (!mqFullsize.matches)
-    elem.classList.add('dragging');
+  // For full-size mode
+  wheel(e) {
+    e.stopPropagation();
+    e.preventDefault();
 
-  e.stopPropagation();
-  e.preventDefault();
+    if (this.wheel_lock)
+      return;
+    this.wheel_lock = true;
+    setTimeout(() => {this.wheel_lock = false}, 50);
 
-  function moveHandler(e) {
+    if (this.board.player() != this.player)
+      return;
+    let raw = e.detail ? e.detail : -e.wheelDelta;
+    let x = e.clientX + window.pageXOffset;
+    let y = e.clientY + window.pageYOffset;
+    if (raw < 0)
+      this.rotate(e.currentTarget, 'left', x, y);
+    else
+      this.rotate(e.currentTarget, 'right', x, y);
+  }
+
+  // For compact mode
+  select(e) {
+    if (this.board.player() != this.player)
+      return;
+    if (this.selected && this.selected !== this) {
+      this.unselect();
+    }
+    let elem = e.currentTarget;
+    this.selected = elem;
+    elem.classList.remove('unselected');
+    elem.classList.add('selected');
+    elem.style.left = '155px';
+    elem.style.top = '305px';
+    elem.onclick = this.click.bind(this);
+    elem.addEventListener('touchstart', this.dragHandler, false);
+  }
+
+  // For compact mode
+  unselect() {
+    if (!this.selected)
+      return;
+    this.selected.classList.remove('selected');
+    this.selected.classList.add('unselected');
+    this.selected.classList.remove('rotating');
+    this.selected.onclick = this.select.bind(this);
+    this.selected.removeEventListener('touchstart', this.dragHandler, false);
+    this.selected = null;
+    this.createPieces();
+  }
+
+  click(e) {
+    if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
+      return;
+
+    if (this.board.player() != this.player)
+      return;
+
+    let x = e.clientX + window.pageXOffset;
+    let y = e.clientY + window.pageYOffset;
+    this.rotate(e.currentTarget, mqFullsize.match ? 'right' : 'cyclic', x, y);
+  }
+
+  // For full-size mode
+  dblclick(e) {
+    if (e.shiftKey) // do not handle shift+dblclick
+      return;
+
+    if (this.board.player() != this.player)
+      return;
+
+    let x = e.clientX + window.pageXOffset;
+    let y = e.clientY + window.pageYOffset;
+    this.rotate(e.currentTarget, 'flip', x, y);
+  }
+
+  drag(e) {
+    if (this.board.player() != this.player)
+      return;
+
     if (e.targetTouches) {
       if (e.targetTouches.length != 1)
         return;
       e.clientX = e.targetTouches[0].clientX;
       e.clientY = e.targetTouches[0].clientY;
-      this.lastClientX = e.clientX;
-      this.lastClientY = e.clientY;
-      touchClick = false;
     }
 
-    e.stopPropagation();
-    let x = e.clientX - deltaX;
-    let y = e.clientY - deltaY;
-    let bpos = toBoardPosition(x, y);
-    let pieceId = elem.blockId << 3 | elem.direction;
-    if (bpos &&
-        Blokus.board.isValidMove(new Move(bpos.x, bpos.y, pieceId))) {
-      let epos = fromBoardPosition(bpos);
-      elem.style.left = epos.x + 'px';
-      elem.style.top = epos.y + 'px';
-    }
-    else {
-      elem.style.left = x + 'px';
-      elem.style.top = y + 'px';
-    }
-  }
+    let elem = e.currentTarget;
+    let deltaX = e.clientX - elem.offsetLeft;
+    let deltaY = e.clientY - elem.offsetTop;
+    let touchClick = true;
 
-  function upHandler(e) {
-    if (e.targetTouches) {
-      if (e.targetTouches.length > 0)
-        return;
-      e.clientX = this.lastClientX;
-      e.clientY = this.lastClientY;
-
-      if (touchClick) {
-        rotate(elem, 'cyclic');
-      } else if (!mqFullsize.matches) {
-        let elapsed = new Date().getTime() - touchTime;
-        if (elapsed < 100)
-          rotate(elem, 'cyclic');
-      }
+    if (!mqFullsize.matches) {
+      var touchTime = new Date().getTime();
+      elem.lastClientX = elem.lastClientY = null;
     }
 
-    if (mqFullsize.matches) {
-      document.removeEventListener('mouseup', upHandler, true);
-      document.removeEventListener('mousemove', moveHandler, true);
-    }
-    elem.removeEventListener('touchend', upHandler, false);
-    elem.removeEventListener('touchmove', moveHandler, false);
-    e.stopPropagation();
     if (!mqFullsize.matches)
-      elem.classList.remove('dragging');
+      elem.classList.add('dragging');
 
-    let bpos = toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
-    if (bpos) {
-      let move = new Move(bpos.x, bpos.y,
-                          elem.blockId << 3 | elem.direction);
-      if (Blokus.board.isValidMove(move)) {
-        elem.style.visibility = 'hidden';
-        Blokus.onPlayerMove(move);
+    e.stopPropagation();
+    e.preventDefault();
+
+    let moveHandler = (e) => {
+      if (e.targetTouches) {
+        if (e.targetTouches.length != 1)
+          return;
+        e.clientX = e.targetTouches[0].clientX;
+        e.clientY = e.targetTouches[0].clientY;
+        elem.lastClientX = e.clientX;
+        elem.lastClientY = e.clientY;
+        touchClick = false;
       }
-    } else if (!mqFullsize.matches && e.clientX && e.clientY) {
+
+      e.stopPropagation();
       let x = e.clientX - deltaX;
       let y = e.clientY - deltaY;
-      if (x < 20 || x > 280 || y < 10 || y > 340)
-        unselect();
-    }
+      let bpos = this.toBoardPosition(x, y);
+      let pieceId = elem.blockId << 3 | elem.direction;
+      if (bpos &&
+          this.board.isValidMove(new Move(bpos.x, bpos.y, pieceId))) {
+        let epos = this.fromBoardPosition(bpos);
+        elem.style.left = epos.x + 'px';
+        elem.style.top = epos.y + 'px';
+      }
+      else {
+        elem.style.left = x + 'px';
+        elem.style.top = y + 'px';
+      }
+    };
+
+    let upHandler = (e) => {
+      if (e.targetTouches) {
+        if (e.targetTouches.length > 0)
+          return;
+        e.clientX = elem.lastClientX;
+        e.clientY = elem.lastClientY;
+
+        if (touchClick) {
+          this.rotate(elem, 'cyclic');
+        } else if (!mqFullsize.matches) {
+          let elapsed = new Date().getTime() - touchTime;
+          if (elapsed < 100)
+            this.rotate(elem, 'cyclic');
+        }
+      }
+
+      document.removeEventListener('mouseup', upHandler, true);
+      document.removeEventListener('mousemove', moveHandler, true);
+      elem.removeEventListener('touchend', upHandler, false);
+      elem.removeEventListener('touchmove', moveHandler, false);
+      e.stopPropagation();
+      if (!mqFullsize.matches)
+        elem.classList.remove('dragging');
+
+      let bpos = this.toBoardPosition(e.clientX - deltaX, e.clientY - deltaY);
+      if (bpos) {
+        let move = new Move(bpos.x, bpos.y,
+                            elem.blockId << 3 | elem.direction);
+        if (this.board.isValidMove(move)) {
+          elem.style.visibility = 'hidden';
+          this.onPlayerMove(move);
+        }
+      } else if (!mqFullsize.matches && e.clientX && e.clientY) {
+        let x = e.clientX - deltaX;
+        let y = e.clientY - deltaY;
+        if (x < 20 || x > 280 || y < 10 || y > 340)
+          this.unselect();
+      }
+    };
+    document.addEventListener('mousemove', moveHandler, true);
+    document.addEventListener('mouseup', upHandler, true);
+    elem.addEventListener('touchmove', moveHandler, false);
+    elem.addEventListener('touchend', upHandler, false);
   }
 }
