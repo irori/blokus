@@ -31,6 +31,28 @@ export class View {
     this.player = player;
   }
 
+  startGame() {
+    this.createOpponentsPieces();
+    this.update();
+    this.setActiveArea();
+  }
+
+  onPlayerMove() {
+    this.update();
+  }
+
+  startOpponentMove() {
+    this.setActiveArea();
+    this.showOpponentsPlaying(true);
+  }
+
+  onOpponentMove(move) {
+    this.hideOpponentsPiece(move);
+    this.showOpponentsPlaying(false);
+    this.update(move);
+    this.setActiveArea();
+  }
+
   createOpponentsPieces() {
     let area = document.getElementById('opponents-pieces');
     for (let id = 0; id < piecePositionTable.length; id++) {
@@ -132,7 +154,7 @@ export class View {
       this.hideMessage();
   }
 
-  showEndMessage(shouldShowScore) {
+  gameEnd(shouldShowScore) {
     let msg = '';
     if (shouldShowScore)
       msg = '<span style="color:#63d">' + this.board.score(0) + '</span> - <span style="color:#f72">' + this.board.score(1) + '</span> ';

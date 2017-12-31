@@ -139,18 +139,14 @@ function createPieces() {
 }
 
 function opponentMove() {
-  Blokus.view.setActiveArea();
-  Blokus.view.showOpponentsPlaying(true);
+  Blokus.view.startOpponentMove();
   Blokus.backend.request(Blokus.board.getPath(), Blokus.level);
 }
 
 function onOpponentMove(move) {
   Blokus.board.doMove(move);
-  Blokus.view.hideOpponentsPiece(move);
-  Blokus.view.showOpponentsPlaying(false);
-  Blokus.view.update(move);
+  Blokus.view.onOpponentMove(move);
   createPieces();
-  Blokus.view.setActiveArea();
   // window.location.replace('#' + Blokus.board.getPath());
   if (!Blokus.board.canMove()) {
     if (move.isPass())
@@ -164,7 +160,7 @@ function onOpponentMove(move) {
 }
 
 function gameEnd() {
-  Blokus.view.showEndMessage(!mqFullsize.matches);
+  Blokus.view.gameEnd(!mqFullsize.matches);
   if (mqFullsize.matches) {
     clearInterval(Blokus.timer);
   } else {
@@ -193,9 +189,7 @@ function startGame() {
   }
   document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
-  Blokus.view.createOpponentsPieces();
-  Blokus.view.update();
-  Blokus.view.setActiveArea();
+  Blokus.view.startGame();
   if (mqFullsize.matches) {
     Blokus.elapsed = [0, 0];
     Blokus.timer = setInterval(timerHandler, 1000);
@@ -405,7 +399,7 @@ function drag(e) {
         Blokus.board.doMove(move);
         opponentMove();
         elem.style.visibility = 'hidden';
-        Blokus.view.update();
+        Blokus.view.onPlayerMove();
       }
     } else if (!mqFullsize.matches && e.clientX && e.clientY) {
       let x = e.clientX - deltaX;
