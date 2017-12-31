@@ -1,10 +1,9 @@
 import { blockSet } from './piece.js'
 import { Move, Board } from './board.js'
-import { View } from './view.js'
+import { View, SCALE, piecePositionTable } from './view.js'
 import Backend from './backend.js'
 
 let Blokus = { level: 1 };
-const SCALE = 20;  // TODO: Remove this
 const mqFullsize = window.matchMedia('(min-width: 580px)');
 
 function rotate(elem, dir, x, y) {
@@ -124,30 +123,6 @@ function createPiece(x, y, id, dir) {
   document.getElementById('pieces').appendChild(elem);
 }
 
-let piecePositionTable = [ // x, y, dir
-  [1, 1, 0], // u
-  [5, 1, 0], // t
-  [9, 1, 0], // s
-  [13, 1, 0], // r
-  [16, 2, 0], // q
-  [21, 1, 0], // p
-  [24, 1, 0], // o
-  [1, 5, 0], // n
-  [4, 5, 0], // m
-  [7, 5, 2], // l
-  [12, 5, 2], // k
-  [18, 5, 2], // j
-  [23, 5, 0], // i
-  [0, 8, 0], // h
-  [4, 8, 2], // g
-  [8, 9, 2], // f
-  [13, 8, 2], // e
-  [16, 9, 0], // d
-  [20, 9, 2], // c
-  [23, 8, 0], // b
-  [25, 9, 0]  // a
-];
-
 function createPieces() {
   let area = window.getComputedStyle(document.getElementById('piece-area'));
   let left = parseInt(area.left) + parseInt(area.paddingLeft);
@@ -163,42 +138,6 @@ function createPieces() {
   }
 }
 
-function createOpponentsPieces() {
-  if (!mqFullsize.matches)
-    return;
-  let area = document.getElementById('opponents-pieces');
-  for (let id = 0; id < piecePositionTable.length; id++) {
-    let a = piecePositionTable[id];
-    if (Blokus.board.isUsed(1 - Blokus.player, id))
-      continue;
-
-    let x = 9 - a[1];
-    let y = a[0];
-    let dir = (a[2] + 2) & 7;
-    let s = SCALE >> 1;
-    let piece = blockSet[id].rotations[dir];
-
-    let elem = document.createElement('div');
-    elem.id = 'o' + id;
-    elem.setAttribute('style',
-                      'left:' + x * s + 'px;' +
-                      'top:' + y * s + 'px;' +
-                      'position:absolute;');
-    for (let i = 0; i < piece.size; i++) {
-      let cell = document.createElement('div');
-      cell.setAttribute('style',
-                        'position:absolute;' +
-                        'left:' + piece.coords[i].x * s + 'px;' +
-                        'top:' + piece.coords[i].y * s + 'px;' +
-                        'width:' + s + 'px;' +
-                        'height:' + s + 'px;');
-      cell.className = 'block' + (1 - Blokus.player);
-      elem.appendChild(cell);
-    }
-    area.appendChild(elem);
-  }
-}
-
 function opponentMove() {
   Blokus.view.setActiveArea();
   Blokus.view.showOpponentsPlaying(true);
@@ -207,8 +146,7 @@ function opponentMove() {
 
 function onOpponentMove(move) {
   Blokus.board.doMove(move);
-  if (mqFullsize.matches && !move.isPass())
-    document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
+  Blokus.view.hideOpponentsPiece(move);
   Blokus.view.showOpponentsPlaying(false);
   Blokus.view.update(move);
   createPieces();
@@ -255,7 +193,7 @@ function startGame() {
   }
   document.getElementById('start-game').style.visibility = 'hidden';
   createPieces();
-  createOpponentsPieces();
+  Blokus.view.createOpponentsPieces();
   Blokus.view.update();
   Blokus.view.setActiveArea();
   if (mqFullsize.matches) {
