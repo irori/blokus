@@ -2,6 +2,7 @@ import { Board } from './board.js'
 import { View } from './view.js'
 import { Input, mqFullsize } from './input.js'
 import Backend from './backend.js'
+import './toolbar.js'
 
 class Blokus {
   constructor() {

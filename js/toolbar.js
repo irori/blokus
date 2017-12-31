@@ -1,5 +1,3 @@
-'use strict';
-
 let toolBarClosingTimer;
 
 function openToolBar() {
@@ -31,11 +29,9 @@ function closeHelp() {
   help.classList.add('closed');
 }
 
-window.addEventListener('load', () => {
-  let handler = document.getElementById('handler');
-  handler.addEventListener('click', openToolBar);
-  document.getElementById('reloadButton').addEventListener('click', reload);
-  document.getElementById('helpButton').addEventListener('click', help);
-  document.getElementById('closeButton').addEventListener('click', closeToolBar);
-  document.getElementById('closeHelp').addEventListener('click', closeHelp);
-}, false);
+let handler = document.getElementById('handler');
+handler.addEventListener('click', openToolBar);
+document.getElementById('reloadButton').addEventListener('click', reload);
+document.getElementById('helpButton').addEventListener('click', help);
+document.getElementById('closeButton').addEventListener('click', closeToolBar);
+document.getElementById('closeHelp').addEventListener('click', closeHelp);
