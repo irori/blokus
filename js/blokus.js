@@ -3,75 +3,87 @@ import { View } from './view.js'
 import { initInput, createPieces, mqFullsize } from './input.js'
 import Backend from './backend.js'
 
-let Blokus = { level: 1 };
+class Blokus {
+  constructor() {
+    this.level = 1;
+  }
 
-function onPlayerMove(move) {
-  Blokus.board.doMove(move);
-  opponentMove();
-  Blokus.view.onPlayerMove();
-}
+  start(player) {
+    this.board = new Board();
+    this.player = player;
+    this.view = new View(this.board, player);
+    initInput(this.board, this.player, this.onPlayerMove.bind(this));
+    this.backend = new Backend(this.onOpponentMove.bind(this));
+    this.startGame();
+    if (player == 1)
+      this.opponentMove();
+  }
 
-function opponentMove() {
-  Blokus.view.startOpponentMove();
-  Blokus.backend.request(Blokus.board.getPath(), Blokus.level);
-}
+  resume(path) {
+    this.board = new Board(path);
+    this.player = this.board.player();
+    this.view = new View(this.board, this.player);
+    initInput(this.board, this.player, this.onPlayerMove.bind(this));
+    this.backend = new Backend(this.onOpponentMove.bind(this));
+    this.startGame(path);
+  }
 
-function onOpponentMove(move) {
-  Blokus.board.doMove(move);
-  Blokus.view.onOpponentMove(move);
-  createPieces();
-  // window.location.replace('#' + Blokus.board.getPath());
-  if (!Blokus.board.canMove()) {
-    if (move.isPass())
-      gameEnd();
-    else {
-      Blokus.board.doPass();
-      opponentMove();
+  onPlayerMove(move) {
+    this.board.doMove(move);
+    this.opponentMove();
+    this.view.onPlayerMove();
+  }
+
+  opponentMove() {
+    this.view.startOpponentMove();
+    this.backend.request(this.board.getPath(), this.level);
+  }
+
+  onOpponentMove(move) {
+    this.board.doMove(move);
+    this.view.onOpponentMove(move);
+    createPieces();
+    // window.location.replace('#' + this.board.getPath());
+    if (!this.board.canMove()) {
+      if (move.isPass())
+        this.gameEnd();
+      else {
+        this.board.doPass();
+        this.opponentMove();
+      }
     }
+  }
+
+  gameEnd() {
+    this.view.gameEnd(!mqFullsize.matches);
+    if (!mqFullsize.matches)
+      this.player = null;
+  }
+
+  startGame() {
+    document.getElementById('start-game').style.visibility = 'hidden';
+    createPieces();
+    this.view.startGame();
   }
 }
 
-function gameEnd() {
-  Blokus.view.gameEnd(!mqFullsize.matches);
-  if (!mqFullsize.matches)
-    Blokus.player = null;
-}
-
-function startGame() {
-  document.getElementById('start-game').style.visibility = 'hidden';
-  createPieces();
-  Blokus.view.startGame();
-}
-
-// Event handlers
+const blokus = new Blokus();
+export default blokus;
 
 window.addEventListener('load', () => {
   let path = window.location.hash.substring(1);
-  if (path) {
-    Blokus.board = new Board(path);
-    Blokus.player = Blokus.board.player();
-    Blokus.view = new View(Blokus.board, Blokus.player);
-    initInput(Blokus.board, Blokus.player, onPlayerMove);
-    Blokus.backend = new Backend(onOpponentMove);
-    startGame(path);
-  }
+  if (path)
+    blokus.resume(path);
 });
 
 function startButton(player) {
-  Blokus.board = new Board();
-  Blokus.player = player;
-  Blokus.view = new View(Blokus.board, player);
-  initInput(Blokus.board, Blokus.player, onPlayerMove);
-  Blokus.backend = new Backend(onOpponentMove);
-  startGame();
-  if (player == 1)
-    opponentMove();
+  blokus.start(player);
 }
 document.getElementById('start-violet').addEventListener('click', () => startButton(0));
 document.getElementById('start-orange').addEventListener('click', () => startButton(1));
 
 function setLevel(lv) {
-  Blokus.level = lv;
+  blokus.level = lv;
 }
 document.getElementById('level1').addEventListener('click', () => setLevel(1));
 document.getElementById('level2').addEventListener('click', () => setLevel(2));
