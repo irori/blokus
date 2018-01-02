@@ -1,7 +1,8 @@
 /* Font Awesome by Dave Gandy - http://fontawesome.io */
 @font-face {
     font-family: FontAwesome;
-    src: url('http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.woff?v=4.1.0');
+    src: url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'),
+         url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff');
 }
 #handler {
     @include full-size {
