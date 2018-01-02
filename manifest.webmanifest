@@ -1,0 +1,16 @@
+{
+  "name": "Blokus Duo",
+  "short_name": "BlokusDuo",
+  "description": "HTML5 implementation of the board game Blokus Duo.",
+  "start_url": "./?utm_source=web_app_manifest",
+  "display": "minimal-ui",
+  "background_color": "#ffe",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon/144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ]
+}

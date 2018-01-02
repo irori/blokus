@@ -6,6 +6,7 @@
   <meta name="description" content="Blokus Duo is a board game for two players. You can play against the computer in three levels of difficulty.">
   <meta name="mobile-web-app-capable" content="yes">
 
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon/blokus-120x120.png" type="image/png">
   <link rel="icon" href="icon/blokus-120x120.png" type="image/png">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Black+Ops+One" type="text/css">
@@ -81,5 +82,9 @@
   </div>
   <script type="module" src="js/blokus.js"></script>
   <script nomodule type="text/javascript" src="dist/bundle.js" async></script>
+  <script>
+    if ('serviceWorker' in navigator)
+      navigator.serviceWorker.register('service-worker.js');
+  </script>
 </body>
 </html>
