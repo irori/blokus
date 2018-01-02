@@ -204,53 +204,36 @@ body {
 	}
 } // compact
 .piece {
-	@include compact {
-		-webkit-transition-property: -webkit-transform, left, top;
-		transition-property: transform, left, top;
-		transition-duration: 0.1s;
-		transition-timing-function: linear;
-	}
+	-webkit-transition-property: -webkit-transform, left, top;
+	transition-property: transform, left, top;
+	transition-duration: 0.1s;
+	transition-timing-function: linear;
 	-webkit-transform-origin: 10px 10px;
 	transform-origin: 10px 10px;
 }
+.dragging {
+	// Can be overridden by .rotate-*
+	-webkit-transition-property: -webkit-transform;
+	transition-property: transform;
+}
 .rotate-left {
-	@include compact {
-		-webkit-transition-property: none;
-		transition-property: none;
-	}
+	-webkit-transition-property: none;
+	transition-property: none;
 	-webkit-transform: rotate(90deg);
 	transform: rotate(90deg);
 }
 .rotate-right {
-	@include compact {
-		-webkit-transition-property: none;
-		transition-property: none;
-	}
+	-webkit-transition-property: none;
+	transition-property: none;
 	-webkit-transform: rotate(-90deg);
 	transform: rotate(-90deg);
 }
 .rotate-flip {
-	@include compact {
-		-webkit-transition-property: none;
-		transition-property: none;
-	}
+	-webkit-transition-property: none;
+	transition-property: none;
 	-webkit-transform: perspective(100px) rotateY(180deg);
 	transform: perspective(100px) rotateY(180deg);
 }
-@include full-size {
-	.rotating {
-		-webkit-transition: -webkit-transform 0.1s linear;
-		-webkit-transform: none;
-		transition: transform 0.1s linear;
-		transform: none;
-	}
-} // full-size
-@include compact {
-	.dragging {
-		-webkit-transition-property: -webkit-transform;
-		transition-property: transform;
-	}
-} // compact
 #message {
 	position: absolute;
 	@include full-size {

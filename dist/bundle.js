@@ -604,42 +604,35 @@ var Input = function () {
   createClass(Input, [{
     key: 'rotate',
     value: function rotate(elem, dir, x, y) {
+      function setClass(name) {
+        elem.classList.add(name);
+        setTimeout(function () {
+          return elem.classList.remove(name);
+        }, 16);
+      }
       switch (dir) {
         case 'left':
           dir = elem.direction + [6, 2][elem.direction & 1] & 7;
-          elem.className = 'piece rotate-left';
-          setTimeout(function () {
-            elem.className = 'piece rotating';
-          }, 0);
+          setClass('rotate-left');
           break;
         case 'right':
           dir = elem.direction + [2, 6][elem.direction & 1] & 7;
-          elem.className = 'piece rotate-right';
-          setTimeout(function () {
-            elem.className = 'piece rotating';
-          }, 0);
+          setClass('rotate-right');
           break;
         case 'flip':
           dir = elem.direction ^ 1;
-          elem.className = 'piece rotate-flip';
-          setTimeout(function () {
-            elem.className = 'piece rotating';
-          }, 0);
+          setClass('rotate-flip');
           break;
         case 'cyclic':
           if (elem.direction == 1 || elem.direction == 6) {
             dir = elem.direction ^ 1;
-            elem.className = 'piece rotate-flip';
+            setClass('rotate-flip');
           } else {
             dir = elem.direction + (elem.direction & 1 ? -2 : 2);
-            elem.className = 'piece rotate-right';
+            setClass('rotate-right');
           }
-          setTimeout(function () {
-            elem.className = 'piece rotating';
-          }, mqFullsize.matches ? 0 : 16);
           break;
       }
-      window.getComputedStyle(elem).transform; // force style update
 
       elem.direction = dir;
       var rot = blockSet[elem.blockId].rotations[dir];
@@ -688,6 +681,7 @@ var Input = function () {
       elem.id = 'b' + id;
       elem.blockId = id;
       elem.direction = dir;
+      elem.classList.add('piece');
       elem.setAttribute('style', 'left:' + x + 'px;' + 'top:' + y + 'px;' + 'position:absolute;');
       var piece = blockSet[id].rotations[dir].piece;
       for (var i = 0; i < piece.size; i++) {
@@ -707,7 +701,6 @@ var Input = function () {
         elem.onmousewheel = this.wheel.bind(this);
         if (elem.addEventListener) elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false); // for FF
       } else {
-        elem.classList.add('piece');
         elem.classList.add('unselected');
         elem.onclick = this.select.bind(this);
       }
@@ -777,7 +770,6 @@ var Input = function () {
       if (!this.selected) return;
       this.selected.classList.remove('selected');
       this.selected.classList.add('unselected');
-      this.selected.classList.remove('rotating');
       this.selected.onclick = this.select.bind(this);
       this.selected.removeEventListener('touchstart', this.dragHandler, false);
       this.selected = null;
@@ -833,7 +825,7 @@ var Input = function () {
         elem.lastClientX = elem.lastClientY = null;
       }
 
-      if (!mqFullsize.matches) elem.classList.add('dragging');
+      elem.classList.add('dragging');
 
       e.stopPropagation();
       e.preventDefault();

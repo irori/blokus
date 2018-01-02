@@ -13,34 +13,33 @@ export class Input {
   }
 
   rotate(elem, dir, x, y) {
+    function setClass(name) {
+      elem.classList.add(name);
+      setTimeout(() => elem.classList.remove(name), 16);
+    }
     switch (dir) {
     case 'left':
       dir = (elem.direction + [6, 2][elem.direction & 1]) & 7;
-      elem.className = 'piece rotate-left';
-      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      setClass('rotate-left');
       break;
     case 'right':
       dir = (elem.direction + [2, 6][elem.direction & 1]) & 7;
-      elem.className = 'piece rotate-right';
-      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      setClass('rotate-right');
       break;
     case 'flip':
       dir = elem.direction ^ 1;
-      elem.className = 'piece rotate-flip';
-      setTimeout(() => {elem.className = 'piece rotating'}, 0);
+      setClass('rotate-flip');
       break;
     case 'cyclic':
       if (elem.direction == 1 || elem.direction == 6) {
         dir = elem.direction ^ 1;
-        elem.className = 'piece rotate-flip';
+        setClass('rotate-flip');
       } else {
         dir = elem.direction + (elem.direction & 1 ? -2 : 2);
-        elem.className = 'piece rotate-right';
+        setClass('rotate-right');
       }
-      setTimeout(() => {elem.className = 'piece rotating'}, mqFullsize.matches ? 0 : 16);
       break;
     }
-    window.getComputedStyle(elem).transform;  // force style update
 
     elem.direction = dir;
     let rot = blockSet[elem.blockId].rotations[dir];
@@ -92,6 +91,7 @@ export class Input {
     elem.id = 'b' + id;
     elem.blockId = id;
     elem.direction = dir;
+    elem.classList.add('piece');
     elem.setAttribute('style',
                       'left:' + x + 'px;' +
                       'top:' + y + 'px;' +
@@ -122,7 +122,6 @@ export class Input {
       if (elem.addEventListener)
         elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false);  // for FF
     } else {
-      elem.classList.add('piece');
       elem.classList.add('unselected');
       elem.onclick = this.select.bind(this);
     }
@@ -188,7 +187,6 @@ export class Input {
       return;
     this.selected.classList.remove('selected');
     this.selected.classList.add('unselected');
-    this.selected.classList.remove('rotating');
     this.selected.onclick = this.select.bind(this);
     this.selected.removeEventListener('touchstart', this.dragHandler, false);
     this.selected = null;
@@ -241,8 +239,7 @@ export class Input {
       elem.lastClientX = elem.lastClientY = null;
     }
 
-    if (!mqFullsize.matches)
-      elem.classList.add('dragging');
+    elem.classList.add('dragging');
 
     e.stopPropagation();
     e.preventDefault();
