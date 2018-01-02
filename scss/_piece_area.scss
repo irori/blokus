@@ -1,0 +1,38 @@
+#piece-area {
+	position: absolute;
+	left: 20px;
+	@include full-size {
+		top: 360px;
+		width: 520px;
+		height: 200px;
+	}
+	@include compact {
+		top: 340px;
+		width: 260px;
+		height: 100px;
+	}
+	padding: 10px;
+	border-radius: 5px;
+}
+.active-area {
+	background-color: #eee;
+}
+.inactive-area {
+	background-color: #ddd;
+}
+
+#opponents-piece-area {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	width: 100px;
+	height: 260px;
+	padding: 10px;
+	border-radius: 5px;
+	@include compact {
+		display: none;
+	}
+}
+#opponents-pieces {
+	position: relative;
+}

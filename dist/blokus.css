@@ -1,3 +1,205 @@
+#board {
+  position: absolute;
+  border: solid black;
+  border-width: 1px;
+  width: 280px;
+  height: 280px;
+  background-color: #ccc;
+  background-image: linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px; }
+  @media all and (min-width: 580px) {
+    #board {
+      left: 159px;
+      top: 19px; } }
+  @media not all and (min-width: 580px) {
+    #board {
+      left: 19px;
+      top: 10px; } }
+
+.marker, .violet-marker, .orange-marker {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  border-radius: 17px; }
+
+.violet-marker {
+  left: 81px;
+  top: 81px;
+  background-color: #a385eb; }
+
+.orange-marker {
+  left: 181px;
+  top: 181px;
+  background-color: #ffad7a; }
+
+.block0highlight {
+  animation-duration: 2s;
+  animation-iteration-count: 5;
+  animation-name: animation0;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: 5;
+  -webkit-animation-name: animation0;
+  background-color: #63d; }
+
+@keyframes animation0 {
+  0% {
+    background-color: #63d; }
+  50% {
+    background-color: #a385eb; }
+  100% {
+    background-color: #63d; } }
+@-webkit-keyframes animation0 {
+  0% {
+    background-color: #63d; }
+  50% {
+    background-color: #a385eb; }
+  100% {
+    background-color: #63d; } }
+.block1highlight {
+  animation-duration: 2s;
+  animation-iteration-count: 5;
+  animation-name: animation1;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: 5;
+  -webkit-animation-name: animation1;
+  background-color: #f72; }
+
+@keyframes animation1 {
+  0% {
+    background-color: #f72; }
+  50% {
+    background-color: #ffad7a; }
+  100% {
+    background-color: #f72; } }
+@-webkit-keyframes animation1 {
+  0% {
+    background-color: #f72; }
+  50% {
+    background-color: #ffad7a; }
+  100% {
+    background-color: #f72; } }
+.piece {
+  -webkit-transition-property: -webkit-transform, left, top;
+  transition-property: transform, left, top;
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+  -webkit-transform-origin: 10px 10px;
+  transform-origin: 10px 10px; }
+
+.dragging {
+  -webkit-transition-property: -webkit-transform;
+  transition-property: transform; }
+
+.rotate-left {
+  -webkit-transition-property: none;
+  transition-property: none;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg); }
+
+.rotate-right {
+  -webkit-transition-property: none;
+  transition-property: none;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg); }
+
+.rotate-flip {
+  -webkit-transition-property: none;
+  transition-property: none;
+  -webkit-transform: perspective(100px) rotateY(180deg);
+  transform: perspective(100px) rotateY(180deg); }
+
+@media all and (min-width: 580px) {
+  .active .block0, .active .block1 {
+    cursor: pointer; } }
+@media not all and (min-width: 580px) {
+  .unselected {
+    -webkit-transform: scale(0.5, 0.5);
+    transform: scale(0.5, 0.5); }
+
+  .selected .block0 {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); }
+
+  .selected .block1 {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); } }
+#piece-area {
+  position: absolute;
+  left: 20px;
+  padding: 10px;
+  border-radius: 5px; }
+  @media all and (min-width: 580px) {
+    #piece-area {
+      top: 360px;
+      width: 520px;
+      height: 200px; } }
+  @media not all and (min-width: 580px) {
+    #piece-area {
+      top: 340px;
+      width: 260px;
+      height: 100px; } }
+
+.active-area {
+  background-color: #eee; }
+
+.inactive-area {
+  background-color: #ddd; }
+
+#opponents-piece-area {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 100px;
+  height: 260px;
+  padding: 10px;
+  border-radius: 5px; }
+  @media not all and (min-width: 580px) {
+    #opponents-piece-area {
+      display: none; } }
+
+#opponents-pieces {
+  position: relative; }
+
+@media not all and (min-width: 580px) {
+  .right-pane {
+    display: none; } }
+.right-pane .logo {
+  position: absolute;
+  left: 450px;
+  top: 20px;
+  width: 110px;
+  text-align: right;
+  font: 28px 'Black Ops One', sans-serif;
+  line-height: 120%; }
+.right-pane .violet-scoreboard {
+  position: absolute;
+  left: 460px;
+  top: 110px;
+  width: 100px;
+  color: #63d;
+  border-spacing: 0px; }
+.right-pane .orange-scoreboard {
+  position: absolute;
+  left: 460px;
+  top: 200px;
+  width: 100px;
+  color: #f72;
+  border-spacing: 0px; }
+.right-pane .scoreboard-name {
+  font-weight: bold; }
+.right-pane .scoreboard-time {
+  font-weight: bold;
+  text-align: right; }
+.right-pane .scoreboard-score {
+  font-weight: bold;
+  text-align: right; }
+.right-pane .usage {
+  position: absolute;
+  left: 460px;
+  top: 285px;
+  width: 100px;
+  text-align: right;
+  font-size: small; }
+
 /* Font Awesome by Dave Gandy - http://fontawesome.io */
 @font-face {
   font-family: FontAwesome;
@@ -84,220 +286,11 @@ body {
   background-color: #ffe;
   font-family: sans-serif; }
 
-#board {
-  position: absolute;
-  border: solid black;
-  border-width: 1px;
-  width: 280px;
-  height: 280px;
-  background-color: #ccc;
-  background-image: linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: -1px -1px; }
-  @media all and (min-width: 580px) {
-    #board {
-      left: 159px;
-      top: 19px; } }
-  @media not all and (min-width: 580px) {
-    #board {
-      left: 19px;
-      top: 10px; } }
-
-.marker, .violet-marker, .orange-marker {
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  border-radius: 17px; }
-
-.violet-marker {
-  left: 81px;
-  top: 81px;
-  background-color: #a8f; }
-
-.orange-marker {
-  left: 181px;
-  top: 181px;
-  background-color: #fb6; }
-
-#piece-area {
-  position: absolute;
-  left: 20px;
-  padding: 10px;
-  border-radius: 5px; }
-  @media all and (min-width: 580px) {
-    #piece-area {
-      top: 360px;
-      width: 520px;
-      height: 200px; } }
-  @media not all and (min-width: 580px) {
-    #piece-area {
-      top: 340px;
-      width: 260px;
-      height: 100px; } }
-
-.active-area {
-  background-color: #eee; }
-
-.inactive-area {
-  background-color: #ddd; }
-
-#opponents-piece-area {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  width: 100px;
-  height: 260px;
-  padding: 10px;
-  border-radius: 5px; }
-  @media not all and (min-width: 580px) {
-    #opponents-piece-area {
-      display: none; } }
-
-#opponents-pieces {
-  position: relative; }
-
-@media not all and (min-width: 580px) {
-  .right-pane {
-    display: none; } }
-
-.logo {
-  position: absolute;
-  left: 450px;
-  top: 20px;
-  width: 110px;
-  text-align: right;
-  font: 28px 'Black Ops One', sans-serif;
-  line-height: 120%; }
-
-.violet-scoreboard {
-  position: absolute;
-  left: 460px;
-  top: 110px;
-  width: 100px;
-  color: #63d;
-  border-spacing: 0px; }
-
-.orange-scoreboard {
-  position: absolute;
-  left: 460px;
-  top: 200px;
-  width: 100px;
-  color: #f72;
-  border-spacing: 0px; }
-
-.usage {
-  position: absolute;
-  left: 460px;
-  top: 285px;
-  width: 100px;
-  text-align: right;
-  font-size: small; }
-
-@media all and (min-width: 580px) {
-  .active .block0, .active .block1 {
-    cursor: pointer; }
-
-  .scoreboard-name {
-    font-weight: bold; }
-
-  .scoreboard-time {
-    font-weight: bold;
-    text-align: right; }
-
-  .scoreboard-score {
-    font-weight: bold;
-    text-align: right; } }
 .block0 {
   background-color: #63d; }
 
 .block1 {
   background-color: #f72; }
-
-.block0highlight {
-  animation-duration: 2s;
-  animation-iteration-count: 5;
-  animation-name: animation0;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: 5;
-  -webkit-animation-name: animation0;
-  background-color: #63d; }
-
-@keyframes animation0 {
-  0% {
-    background-color: #63d; }
-  50% {
-    background-color: #a9e; }
-  100% {
-    background-color: #63d; } }
-@-webkit-keyframes animation0 {
-  0% {
-    background-color: #63d; }
-  50% {
-    background-color: #a9e; }
-  100% {
-    background-color: #63d; } }
-.block1highlight {
-  animation-duration: 2s;
-  animation-iteration-count: 5;
-  animation-name: animation1;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: 5;
-  -webkit-animation-name: animation1;
-  background-color: #f72; }
-
-@keyframes animation1 {
-  0% {
-    background-color: #f72; }
-  50% {
-    background-color: #fb8; }
-  100% {
-    background-color: #f72; } }
-@-webkit-keyframes animation1 {
-  0% {
-    background-color: #f72; }
-  50% {
-    background-color: #fb8; }
-  100% {
-    background-color: #f72; } }
-@media not all and (min-width: 580px) {
-  .unselected {
-    -webkit-transform: scale(0.5, 0.5);
-    transform: scale(0.5, 0.5); }
-
-  .selected .block0 {
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); }
-
-  .selected .block1 {
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); } }
-.piece {
-  -webkit-transition-property: -webkit-transform, left, top;
-  transition-property: transform, left, top;
-  transition-duration: 0.1s;
-  transition-timing-function: linear;
-  -webkit-transform-origin: 10px 10px;
-  transform-origin: 10px 10px; }
-
-.dragging {
-  -webkit-transition-property: -webkit-transform;
-  transition-property: transform; }
-
-.rotate-left {
-  -webkit-transition-property: none;
-  transition-property: none;
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg); }
-
-.rotate-right {
-  -webkit-transition-property: none;
-  transition-property: none;
-  -webkit-transform: rotate(-90deg);
-  transform: rotate(-90deg); }
-
-.rotate-flip {
-  -webkit-transition-property: none;
-  transition-property: none;
-  -webkit-transform: perspective(100px) rotateY(180deg);
-  transform: perspective(100px) rotateY(180deg); }
 
 #message {
   position: absolute;

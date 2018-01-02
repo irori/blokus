@@ -1,0 +1,49 @@
+.right-pane {
+	@include compact {
+		display: none;
+	}
+    .logo {
+        position: absolute;
+        left: 450px;
+        top: 20px;
+        width: 110px;
+        text-align: right;
+        font: 28px 'Black Ops One', sans-serif;
+        line-height: 120%
+    }
+    .violet-scoreboard {
+        position: absolute;
+        left: 460px;
+        top: 110px;
+        width: 100px;
+        color: $violet;
+        border-spacing: 0px;
+    }
+    .orange-scoreboard {
+        position: absolute;
+        left: 460px;
+        top: 200px;
+        width: 100px;
+        color: $orange;
+        border-spacing: 0px;
+    }
+	.scoreboard-name {
+		font-weight: bold;
+	}
+	.scoreboard-time {
+		font-weight: bold;
+		text-align: right;
+	}
+	.scoreboard-score {
+		font-weight: bold;
+		text-align: right;
+	}
+    .usage {
+        position: absolute;
+        left: 460px;
+        top: 285px;
+        width: 100px;
+        text-align: right;
+        font-size: small;
+    }
+}
