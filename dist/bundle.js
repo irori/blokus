@@ -639,7 +639,6 @@ var Input = function () {
       for (var i = 0; i < rot.size; i++) {
         elem.childNodes[i].style.left = rot.coords[i].x * SCALE + 'px';
         elem.childNodes[i].style.top = rot.coords[i].y * SCALE + 'px';
-        if (!mqFullsize.matches) elem.childNodes[i].style.zIndex = 3 + rot.coords[i].x + rot.coords[i].y;
       }
       if (x != undefined) {
         elem.style.left = x - SCALE / 2 + 'px';
@@ -686,7 +685,7 @@ var Input = function () {
       var piece = blockSet[id].rotations[dir].piece;
       for (var i = 0; i < piece.size; i++) {
         var cell = document.createElement('div');
-        cell.setAttribute('style', 'position:absolute;' + 'left:' + piece.coords[i].x * SCALE + 'px;' + 'top:' + piece.coords[i].y * SCALE + 'px;' + (mqFullsize.matches ? '' : 'z-index:' + (3 + piece.coords[i].x + piece.coords[i].y) + ';') + 'width:' + SCALE + 'px;' + 'height:' + SCALE + 'px;');
+        cell.setAttribute('style', 'position:absolute;' + 'left:' + piece.coords[i].x * SCALE + 'px;' + 'top:' + piece.coords[i].y * SCALE + 'px;' + 'width:' + SCALE + 'px;' + 'height:' + SCALE + 'px;');
         cell.className = 'block' + this.player;
         elem.appendChild(cell);
       }
