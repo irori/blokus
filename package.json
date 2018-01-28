@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Browser-based Blokus Duo game",
   "scripts": {
-    "build": "cd js && rollup -c"
+    "scss": "node-sass scss/blokus.scss dist/blokus.css",
+    "rollup": "cd js && rollup -c"
   },
   "author": "irori",
   "license": "Unlicense",
+  "repository": "github:irori/blokus",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
+    "node-sass": "^4.7.2",
     "rollup": "^0.53.2",
     "rollup-plugin-babel": "^3.0.3"
   }

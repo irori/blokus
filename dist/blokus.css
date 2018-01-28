@@ -49,6 +49,7 @@
     background-color: #a385eb; }
   100% {
     background-color: #63d; } }
+
 @-webkit-keyframes animation0 {
   0% {
     background-color: #63d; }
@@ -56,6 +57,7 @@
     background-color: #a385eb; }
   100% {
     background-color: #63d; } }
+
 .block1highlight {
   animation-duration: 2s;
   animation-iteration-count: 5;
@@ -72,6 +74,7 @@
     background-color: #ffad7a; }
   100% {
     background-color: #f72; } }
+
 @-webkit-keyframes animation1 {
   0% {
     background-color: #f72; }
@@ -79,6 +82,7 @@
     background-color: #ffad7a; }
   100% {
     background-color: #f72; } }
+
 .piece {
   -webkit-transition-property: -webkit-transform, left, top;
   transition-property: transform, left, top;
@@ -112,13 +116,14 @@
 @media all and (min-width: 580px) {
   .active .block0, .active .block1 {
     cursor: pointer; } }
+
 @media not all and (min-width: 580px) {
   .unselected {
     -webkit-transform: scale(0.5, 0.5);
     transform: scale(0.5, 0.5); }
-
   .selected {
     filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.4)); } }
+
 #piece-area {
   position: absolute;
   left: 20px;
@@ -159,6 +164,7 @@
 @media not all and (min-width: 580px) {
   .right-pane {
     display: none; } }
+
 .right-pane .logo {
   position: absolute;
   left: 450px;
@@ -167,6 +173,7 @@
   text-align: right;
   font: 28px 'Black Ops One', sans-serif;
   line-height: 120%; }
+
 .right-pane .violet-scoreboard {
   position: absolute;
   left: 460px;
@@ -174,6 +181,7 @@
   width: 100px;
   color: #63d;
   border-spacing: 0px; }
+
 .right-pane .orange-scoreboard {
   position: absolute;
   left: 460px;
@@ -181,14 +189,18 @@
   width: 100px;
   color: #f72;
   border-spacing: 0px; }
+
 .right-pane .scoreboard-name {
   font-weight: bold; }
+
 .right-pane .scoreboard-time {
   font-weight: bold;
   text-align: right; }
+
 .right-pane .scoreboard-score {
   font-weight: bold;
   text-align: right; }
+
 .right-pane .usage {
   position: absolute;
   left: 460px;
@@ -201,6 +213,7 @@
 @font-face {
   font-family: FontAwesome;
   src: url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"); }
+
 #handler {
   position: absolute;
   left: 270px;
@@ -326,5 +339,3 @@ body {
   @media not all and (min-width: 580px) {
     .start-button {
       font-size: large; } }
-
-/*# sourceMappingURL=blokus.css.map */
