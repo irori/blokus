@@ -153,8 +153,7 @@ export class Input {
     if (this.board.player() != this.player)
       return;
     let raw = e.detail ? e.detail : -e.wheelDelta;
-    let x = e.clientX + window.pageXOffset;
-    let y = e.clientY + window.pageYOffset;
+    let {x, y} = containerOffset(e);
     if (raw < 0)
       this.rotate(e.currentTarget, 'left', x, y);
     else
@@ -197,8 +196,7 @@ export class Input {
     if (this.board.player() != this.player)
       return;
 
-    let x = e.clientX + window.pageXOffset;
-    let y = e.clientY + window.pageYOffset;
+    let {x, y} = containerOffset(e);
     this.rotate(e.currentTarget, mqFullsize.match ? 'right' : 'cyclic', x, y);
   }
 
@@ -210,8 +208,7 @@ export class Input {
     if (this.board.player() != this.player)
       return;
 
-    let x = e.clientX + window.pageXOffset;
-    let y = e.clientY + window.pageYOffset;
+    let {x, y} = containerOffset(e);
     this.rotate(e.currentTarget, 'flip', x, y);
   }
 
@@ -313,4 +310,10 @@ export class Input {
     elem.addEventListener('touchmove', moveHandler, false);
     elem.addEventListener('touchend', upHandler, false);
   }
+}
+
+function containerOffset(e) {
+  let x = e.pageX - e.currentTarget.offsetParent.offsetLeft;
+  let y = e.pageY - e.currentTarget.offsetParent.offsetTop;
+  return {x, y};
 }

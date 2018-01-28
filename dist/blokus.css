@@ -296,6 +296,16 @@ body {
   background-color: #ffe;
   font-family: sans-serif; }
 
+.container {
+  position: relative;
+  margin: 0 auto; }
+  @media all and (min-width: 580px) {
+    .container {
+      width: 580px; } }
+  @media not all and (min-width: 580px) {
+    .container {
+      width: 320px; } }
+
 .block0 {
   background-color: #63d; }
 

@@ -737,8 +737,11 @@ var Input = function () {
 
       if (this.board.player() != this.player) return;
       var raw = e.detail ? e.detail : -e.wheelDelta;
-      var x = e.clientX + window.pageXOffset;
-      var y = e.clientY + window.pageYOffset;
+
+      var _containerOffset = containerOffset(e),
+          x = _containerOffset.x,
+          y = _containerOffset.y;
+
       if (raw < 0) this.rotate(e.currentTarget, 'left', x, y);else this.rotate(e.currentTarget, 'right', x, y);
     }
 
@@ -782,8 +785,10 @@ var Input = function () {
 
       if (this.board.player() != this.player) return;
 
-      var x = e.clientX + window.pageXOffset;
-      var y = e.clientY + window.pageYOffset;
+      var _containerOffset2 = containerOffset(e),
+          x = _containerOffset2.x,
+          y = _containerOffset2.y;
+
       this.rotate(e.currentTarget, mqFullsize.match ? 'right' : 'cyclic', x, y);
     }
 
@@ -797,8 +802,10 @@ var Input = function () {
 
       if (this.board.player() != this.player) return;
 
-      var x = e.clientX + window.pageXOffset;
-      var y = e.clientY + window.pageYOffset;
+      var _containerOffset3 = containerOffset(e),
+          x = _containerOffset3.x,
+          y = _containerOffset3.y;
+
       this.rotate(e.currentTarget, 'flip', x, y);
     }
   }, {
@@ -896,6 +903,12 @@ var Input = function () {
   }]);
   return Input;
 }();
+
+function containerOffset(e) {
+  var x = e.pageX - e.currentTarget.offsetParent.offsetLeft;
+  var y = e.pageY - e.currentTarget.offsetParent.offsetTop;
+  return { x: x, y: y };
+}
 
 var WorkerBackend = function () {
   function WorkerBackend(handler) {

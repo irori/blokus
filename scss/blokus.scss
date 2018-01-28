@@ -21,6 +21,18 @@ body {
 	background-color: #ffe;
 	font-family: sans-serif;
 }
+
+.container {
+	@include full-size {
+		width: 580px;
+	}
+	@include compact {
+		width: 320px;
+	}
+	position: relative;
+	margin: 0 auto;
+}
+
 .block0 {
 	background-color: $violet;
 }
