@@ -1,10 +1,9 @@
 {
   "name": "blokus",
   "version": "1.0.0",
-  "description": "",
-  "main": "blokus.js",
+  "description": "Browser-based Blokus Duo game",
   "scripts": {
-    "build": "rollup -c"
+    "build": "cd js && rollup -c"
   },
   "author": "irori",
   "license": "Unlicense",
