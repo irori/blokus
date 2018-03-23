@@ -28,13 +28,13 @@
 	@extend .marker;
 	left: 81px;
 	top: 81px;
-	background-color: $violet * 0.6 + #fff * 0.4;
+	background-color: mix($violet, #fff, 60%);
 }
 .orange-marker {
 	@extend .marker;
 	left: 181px;
 	top: 181px;
-	background-color: $orange * 0.6 + #fff * 0.4;
+	background-color: mix($orange, #fff, 60%);
 }
 
 .block0highlight {
@@ -48,12 +48,12 @@
 }
 @keyframes animation0 {
 	0%   { background-color: $violet; }
-	50%  { background-color: $violet * 0.6 + #fff * 0.4; }
+	50%  { background-color: mix($violet, #fff, 60%); }
 	100% { background-color: $violet; }
 }
 @-webkit-keyframes animation0 {
 	0%   { background-color: $violet; }
-	50%  { background-color: $violet * 0.6 + #fff * 0.4; }
+	50%  { background-color: mix($violet, #fff, 60%); }
 	100% { background-color: $violet; }
 }
 .block1highlight {
@@ -67,11 +67,11 @@
 }
 @keyframes animation1 {
 	0%   { background-color: $orange; }
-	50%  { background-color: $orange * 0.6 + #fff * 0.4; }
+	50%  { background-color: mix($orange, #fff, 60%); }
 	100% { background-color: $orange; }
 }
 @-webkit-keyframes animation1 {
 	0%   { background-color: $orange; }
-	50%  { background-color: $orange * 0.6 + #fff * 0.4; }
+	50%  { background-color: mix($orange, #fff, 60%); }
 	100% { background-color: $orange; }
 }
