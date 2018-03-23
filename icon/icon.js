@@ -1,7 +1,7 @@
 //var params = [60, 8, 12, bg_circle];  // FxOS
 //var params = [128, 16, 28, bg_circle];  // Firefox marketplace
 //var params = [120, 18, 15, bg_square];  // apple-touch-icon
-var params = [144, 20, 22, bg_square];  // webapp
+var params = [192, 24, 42, bg_square];  // webapp
 
 SIZE = params[0];
 UNIT = params[1];
