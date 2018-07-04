@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "../js",
+        "newLine": "LF",
+        "noImplicitAny": true,
+        "sourceMap": false
+    }
+}

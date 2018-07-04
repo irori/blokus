@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Browser-based Blokus Duo game",
   "scripts": {
+    "tsc": "cd src && tsc",
     "scss": "sass scss/blokus.scss >dist/blokus.css",
     "rollup": "cd js && rollup -c"
   },
@@ -15,6 +16,7 @@
     "babel-preset-env": "^1.6.1",
     "rollup": "^0.53.2",
     "rollup-plugin-babel": "^3.0.3",
-    "sass": "^1.0.0-rc.1"
+    "sass": "^1.0.0-rc.1",
+    "typescript": "^2.9.2"
   }
 }
