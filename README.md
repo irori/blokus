@@ -18,4 +18,4 @@ How to Play
 - Double-click piece to flip.
 - Use mouse wheel or Shift+Click on a piece to rotate.
 
-See http://blokus.com/pdf/notice-blokus-duo-en.pdf for the rules of the game.
+See http://www.ultraboardgames.com/blokus/blokus-duo.php for the rules of the game.
