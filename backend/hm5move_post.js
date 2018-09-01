@@ -15,14 +15,17 @@ function depth(level) {
   return 3;
 }
 
-function limit(level) {
+function limit(level, player) {
+  // Give Orange more time than Violet
+  var mult = [0.9, 1.1][player];
+
   switch (level) {
   case 2:
-    return 1000;
+    return 1000 * mult;
   case 3:
-    return 10000;
+    return 10000 * mult;
   }
-  return 1000;
+  return 1000 * mult;
 }  
 
 function handle(data) {
@@ -31,7 +34,8 @@ function handle(data) {
 
   if (isValidPath(path)) {
     var start = Date.now();
-    var move = hm5move(path, depth(level), limit(level));
+    var player = path.split('/').length % 2;
+    var move = hm5move(path, depth(level), limit(level, player));
     var elapsed = (Date.now() - start) / 1000;
     postMessage({'move': move, 'nps': getVisitedNodes() / elapsed});
   } else {
