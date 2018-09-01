@@ -628,7 +628,7 @@ var Input = function () {
         this.board = board;
         this.player = player;
         this.onPlayerMove = onPlayerMove;
-        this.dragHandler = this.drag.bind(this);
+        this.touchDragHandler = this.touchDrag.bind(this);
     }
 
     createClass(Input, [{
@@ -720,8 +720,8 @@ var Input = function () {
             }
             if (mqFullsize.matches) {
                 // set event handlers
-                elem.onmousedown = this.drag.bind(this);
-                if (elem.addEventListener) elem.addEventListener('touchstart', this.drag.bind(this), false);
+                elem.onmousedown = this.mouseDrag.bind(this);
+                if (elem.addEventListener) elem.addEventListener('touchstart', this.touchDrag.bind(this), false);
                 elem.onclick = this.click.bind(this);
                 elem.ondblclick = this.dblclick.bind(this);
                 elem.onmousewheel = this.wheel.bind(this);
@@ -780,7 +780,7 @@ var Input = function () {
             elem.style.left = '155px';
             elem.style.top = '305px';
             elem.onclick = this.click.bind(this);
-            elem.addEventListener('touchstart', this.dragHandler, false);
+            elem.addEventListener('touchstart', this.touchDragHandler, false);
         }
         // For compact mode
 
@@ -791,7 +791,7 @@ var Input = function () {
             this.selected.classList.remove('selected');
             this.selected.classList.add('unselected');
             this.selected.onclick = this.select.bind(this);
-            this.selected.removeEventListener('touchstart', this.dragHandler, false);
+            this.selected.removeEventListener('touchstart', this.touchDragHandler, false);
             this.selected = null;
             this.createPieces();
         }
@@ -822,21 +822,25 @@ var Input = function () {
             this.rotate(e.currentTarget, 'flip', x, y);
         }
     }, {
-        key: 'drag',
-        value: function drag(e) {
+        key: 'mouseDrag',
+        value: function mouseDrag(e) {
+            if (this.board.player() != this.player) return;
+            this.dragCommon(e, e.clientX, e.clientY);
+        }
+    }, {
+        key: 'touchDrag',
+        value: function touchDrag(e) {
+            if (this.board.player() != this.player) return;
+            if (e.targetTouches.length != 1) return;
+            var clientX = e.targetTouches[0].clientX;
+            var clientY = e.targetTouches[0].clientY;
+            this.dragCommon(e, clientX, clientY);
+        }
+    }, {
+        key: 'dragCommon',
+        value: function dragCommon(e, clientX, clientY) {
             var _this2 = this;
 
-            if (this.board.player() != this.player) return;
-            var clientX = void 0,
-                clientY = void 0;
-            if (e instanceof TouchEvent) {
-                if (e.targetTouches.length != 1) return;
-                clientX = e.targetTouches[0].clientX;
-                clientY = e.targetTouches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
             var elem = e.currentTarget;
             var deltaX = clientX - elem.offsetLeft;
             var deltaY = clientY - elem.offsetTop;
@@ -848,20 +852,7 @@ var Input = function () {
             elem.classList.add('dragging');
             e.stopPropagation();
             e.preventDefault();
-            var moveHandler = function moveHandler(e) {
-                var clientX = void 0,
-                    clientY = void 0;
-                if (e instanceof TouchEvent) {
-                    if (e.targetTouches.length != 1) return;
-                    clientX = e.targetTouches[0].clientX;
-                    clientY = e.targetTouches[0].clientY;
-                    elem.lastClientX = clientX;
-                    elem.lastClientY = clientY;
-                    touchClick = false;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
+            var moveHandler = function moveHandler(e, clientX, clientY) {
                 e.stopPropagation();
                 var x = clientX - deltaX;
                 var y = clientY - deltaY;
@@ -876,27 +867,23 @@ var Input = function () {
                     elem.style.top = y + 'px';
                 }
             };
-            var upHandler = function upHandler(e) {
-                var clientX = void 0,
-                    clientY = void 0;
-                if (e instanceof TouchEvent) {
-                    if (e.targetTouches.length > 0) return;
-                    clientX = elem.lastClientX;
-                    clientY = elem.lastClientY;
-                    if (touchClick) {
-                        _this2.rotate(elem, 'cyclic');
-                    } else if (!mqFullsize.matches) {
-                        var elapsed = new Date().getTime() - touchTime;
-                        if (elapsed < 100) _this2.rotate(elem, 'cyclic');
-                    }
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
-                document.removeEventListener('mouseup', upHandler, true);
-                document.removeEventListener('mousemove', moveHandler, true);
-                elem.removeEventListener('touchend', upHandler, false);
-                elem.removeEventListener('touchmove', moveHandler, false);
+            var mouseMove = function mouseMove(e) {
+                moveHandler(e, e.clientX, e.clientY);
+            };
+            var touchMove = function touchMove(e) {
+                if (e.targetTouches.length != 1) return;
+                var clientX = e.targetTouches[0].clientX;
+                var clientY = e.targetTouches[0].clientY;
+                elem.lastClientX = clientX;
+                elem.lastClientY = clientY;
+                touchClick = false;
+                moveHandler(e, clientX, clientY);
+            };
+            var upHandler = function upHandler(e, clientX, clientY) {
+                document.removeEventListener('mouseup', mouseUp, true);
+                document.removeEventListener('mousemove', mouseMove, true);
+                elem.removeEventListener('touchend', touchEnd, false);
+                elem.removeEventListener('touchmove', touchMove, false);
                 e.stopPropagation();
                 if (!mqFullsize.matches) elem.classList.remove('dragging');
                 var bpos = _this2.toBoardPosition(clientX - deltaX, clientY - deltaY);
@@ -912,10 +899,25 @@ var Input = function () {
                     if (x < 20 || x > 280 || y < 10 || y > 340) _this2.unselect();
                 }
             };
-            document.addEventListener('mousemove', moveHandler, true);
-            document.addEventListener('mouseup', upHandler, true);
-            elem.addEventListener('touchmove', moveHandler, false);
-            elem.addEventListener('touchend', upHandler, false);
+            var mouseUp = function mouseUp(e) {
+                upHandler(e, e.clientX, e.clientY);
+            };
+            var touchEnd = function touchEnd(e) {
+                if (e.targetTouches.length > 0) return;
+                var clientX = elem.lastClientX;
+                var clientY = elem.lastClientY;
+                if (touchClick) {
+                    _this2.rotate(elem, 'cyclic');
+                } else if (!mqFullsize.matches) {
+                    var elapsed = new Date().getTime() - touchTime;
+                    if (elapsed < 100) _this2.rotate(elem, 'cyclic');
+                }
+                upHandler(e, clientX, clientY);
+            };
+            document.addEventListener('mousemove', mouseMove, true);
+            document.addEventListener('mouseup', mouseUp, true);
+            elem.addEventListener('touchmove', touchMove, false);
+            elem.addEventListener('touchend', touchEnd, false);
         }
     }]);
     return Input;
