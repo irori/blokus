@@ -340,3 +340,8 @@ function containerOffset(e: MouseEvent) {
   let y = e.pageY - offsetParent.offsetTop;
   return {x, y};
 }
+
+// For IE
+if (!(window as any).TouchEvent) {
+  (window as any).TouchEvent = function() {};
+}

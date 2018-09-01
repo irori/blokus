@@ -172,7 +172,7 @@ export class Input {
         this.createPieces();
     }
     click(e) {
-        if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
+        if (mqFullsize.matches && !e.shiftKey)
             return;
         if (this.board.player() != this.player)
             return;
@@ -181,7 +181,7 @@ export class Input {
     }
     // For full-size mode
     dblclick(e) {
-        if (e.shiftKey) // do not handle shift+dblclick
+        if (e.shiftKey)
             return;
         if (this.board.player() != this.player)
             return;
@@ -297,4 +297,8 @@ function containerOffset(e) {
     let x = e.pageX - offsetParent.offsetLeft;
     let y = e.pageY - offsetParent.offsetTop;
     return { x, y };
+}
+// For IE
+if (!window.TouchEvent) {
+    window.TouchEvent = function () { };
 }

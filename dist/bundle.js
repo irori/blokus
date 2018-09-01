@@ -798,8 +798,7 @@ var Input = function () {
     }, {
         key: 'click',
         value: function click(e) {
-            if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
-                return;
+            if (mqFullsize.matches && !e.shiftKey) return;
             if (this.board.player() != this.player) return;
 
             var _containerOffset2 = containerOffset(e),
@@ -813,8 +812,7 @@ var Input = function () {
     }, {
         key: 'dblclick',
         value: function dblclick(e) {
-            if (e.shiftKey) // do not handle shift+dblclick
-                return;
+            if (e.shiftKey) return;
             if (this.board.player() != this.player) return;
 
             var _containerOffset3 = containerOffset(e),
@@ -927,6 +925,10 @@ function containerOffset(e) {
     var x = e.pageX - offsetParent.offsetLeft;
     var y = e.pageY - offsetParent.offsetTop;
     return { x: x, y: y };
+}
+// For IE
+if (!window.TouchEvent) {
+    window.TouchEvent = function () {};
 }
 
 var WorkerBackend = function () {
