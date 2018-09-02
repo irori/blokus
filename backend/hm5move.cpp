@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 #include "board.h"
 #include "search.h"
 #include "opening.h"
@@ -30,6 +31,12 @@ Move com_move(Board* b, int max_depth, int time_ms)
 
 const char* hm5move(const char* path, int max_depth, int time_limit)
 {
+    static bool initialized = false;
+    if (!initialized) {
+        srand(time(NULL));
+        initialized = true;
+    }
+
     Board b;
     while (*path) {
 	Move m(path);
