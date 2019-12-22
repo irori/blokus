@@ -53,6 +53,8 @@ addEventListener('message', function(e) {
     onReady = function() { handle(e.data) };
 });
 
+if (!Module['preRun'])
+    Module['preRun'] = [];
 Module['preRun'].push(function() {
   ready = true;
   if (onReady)

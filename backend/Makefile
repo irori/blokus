@@ -1,20 +1,17 @@
 # -*- Makefile -*- for emscripten
 
 CXX = em++
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -Oz
 #CXXFLAGS = -g
 #CXXFLAGS = -pg -O -g
 
-EMFLAGS = -O2 \
-	  -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
-	  -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']" \
-	  -s LEGACY_VM_SUPPORT=1 -s WASM=0
+EMFLAGS = -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
+	  -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
 
-../dist/hm5move.js: hm5move.bc hm5move_post.js
-	emcc $(EMFLAGS) --post-js hm5move_post.js hm5move.bc -o $@
+OBJS = hm5move.o search.o board.o opening.o piece.o
 
-hm5move.bc: hm5move.o search.o board.o opening.o piece.o
-	$(CXX) $(CXXFLAGS) -o $@ hm5move.o search.o board.o opening.o piece.o
+../dist/hm5move.js: $(OBJS) hm5move_post.js
+	$(CXX) $(CXXFLAGS) $(EMFLAGS) --post-js hm5move_post.js -o $@ $(OBJS)
 
 piece.cpp: piece.rb
 	ruby piece.rb >piece.cpp
