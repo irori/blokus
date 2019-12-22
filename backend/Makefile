@@ -5,7 +5,8 @@ CXXFLAGS = -Wall -Oz
 #CXXFLAGS = -g
 #CXXFLAGS = -pg -O -g
 
-EMFLAGS = -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
+EMFLAGS = -s ENVIRONMENT=worker \
+          -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
 	  -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap']"
 
 OBJS = hm5move.o search.o board.o opening.o piece.o
