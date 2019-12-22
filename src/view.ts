@@ -28,19 +28,18 @@ export const piecePositionTable = [ // x, y, dir
 ];
 
 export class View {
-  private elapsed: [number, number];
-  private timer: number;
+  private elapsed: [number, number] = [0, 0];
+  private timer: number = 0;
 
   constructor(private board: Board, private player: number) {}
 
   startGame() {
     const names = ['You', 'Computer'];
-    document.getElementById('violet-name').innerHTML = names[this.player];
-    document.getElementById('orange-name').innerHTML = names[this.player ^ 1];
+    document.getElementById('violet-name')!.innerHTML = names[this.player];
+    document.getElementById('orange-name')!.innerHTML = names[this.player ^ 1];
     this.createOpponentsPieces();
     this.update();
     this.setActiveArea();
-    this.elapsed = [0, 0];
     this.timer = setInterval(this.timerHandler.bind(this), 1000);
   }
 
@@ -72,12 +71,12 @@ export class View {
     }
 
     this.elapsed[this.board.player()]++;
-    document.getElementById('violet-time').innerHTML = formatTime(this.elapsed[0]);
-    document.getElementById('orange-time').innerHTML = formatTime(this.elapsed[1]);
+    document.getElementById('violet-time')!.innerHTML = formatTime(this.elapsed[0]);
+    document.getElementById('orange-time')!.innerHTML = formatTime(this.elapsed[1]);
   }
 
   createOpponentsPieces() {
-    let area = document.getElementById('opponents-pieces');
+    let area = document.getElementById('opponents-pieces')!;
     for (let id = 0; id < piecePositionTable.length; id++) {
       let a = piecePositionTable[id];
       if (this.board.isUsed(1 - this.player, id))
@@ -112,11 +111,11 @@ export class View {
 
   hideOpponentsPiece(move: Move) {
     if (!move.isPass())
-      document.getElementById('o' + move.blockId()).style.visibility = 'hidden';
+      document.getElementById('o' + move.blockId())!.style.visibility = 'hidden';
   }
 
   updateBoard(moveToHighlight?: Move) {
-    let boardElem = document.getElementById('board');
+    let boardElem = document.getElementById('board')!;
     let coordsToHighlight = moveToHighlight ? moveToHighlight.coords() : [];
     for (let y = 0; y < 14; y++) {
       for (let x = 0; x < 14; x++) {
@@ -150,9 +149,9 @@ export class View {
   }
 
   updateScore() {
-    document.getElementById('violet-score').innerHTML =
+    document.getElementById('violet-score')!.innerHTML =
       this.board.score(0) + ' points';
-    document.getElementById('orange-score').innerHTML =
+    document.getElementById('orange-score')!.innerHTML =
       this.board.score(1) + ' points';
   }
 
@@ -164,10 +163,10 @@ export class View {
   setActiveArea() {
     let p = this.board.player() ^ this.player;
     let classes = ['active-area', 'inactive-area'];
-    document.getElementById('piece-area').className = classes[p];
-    document.getElementById('opponents-piece-area').className = classes[1 - p];
+    document.getElementById('piece-area')!.className = classes[p];
+    document.getElementById('opponents-piece-area')!.className = classes[1 - p];
 
-    document.getElementById('pieces').className = (p == 0) ? 'active' : '';
+    document.getElementById('pieces')!.className = (p == 0) ? 'active' : '';
   }
 
   showOpponentsPlaying(show: boolean) {
@@ -194,12 +193,12 @@ export class View {
   }
 
   showMessage(msg: string) {
-    let elem = document.getElementById('message');
+    let elem = document.getElementById('message')!;
     elem.innerHTML = msg;
     elem.style.visibility = 'visible';
   }
 
   hideMessage() {
-    document.getElementById('message').style.visibility = 'hidden';
+    document.getElementById('message')!.style.visibility = 'hidden';
   }
 }

@@ -1,3 +1,4 @@
+"use strict";
 let toolBarClosingTimer;
 function openToolBar() {
     let toolbar = document.getElementById('toolbar');

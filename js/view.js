@@ -27,6 +27,8 @@ export class View {
     constructor(board, player) {
         this.board = board;
         this.player = player;
+        this.elapsed = [0, 0];
+        this.timer = 0;
     }
     startGame() {
         const names = ['You', 'Computer'];
@@ -35,7 +37,6 @@ export class View {
         this.createOpponentsPieces();
         this.update();
         this.setActiveArea();
-        this.elapsed = [0, 0];
         this.timer = setInterval(this.timerHandler.bind(this), 1000);
     }
     gameEnd(shouldShowScore) {

@@ -3,7 +3,7 @@
         "target": "es6",
         "outDir": "../js",
         "newLine": "LF",
-        "noImplicitAny": true,
+        "strict": true,
         "sourceMap": false
     }
 }

@@ -6,8 +6,8 @@ import { SCALE, piecePositionTable } from './view.js';
 interface PieceElement extends HTMLElement {
   blockId: number;
   direction: number;
-  lastClientX: number;
-  lastClientY: number;
+  lastClientX: number | null;
+  lastClientY: number | null;
 }
 
 export const mqFullsize = window.matchMedia('(min-width: 580px)');
@@ -55,14 +55,14 @@ export class Input {
       child.style.left = rot.coords[i].x * SCALE + 'px';
       child.style.top = rot.coords[i].y * SCALE + 'px';
     }
-    if (x != undefined) {
+    if (x !== undefined && y !== undefined) {
       elem.style.left = x - SCALE / 2 + 'px';
       elem.style.top = y - SCALE / 2 + 'px';
     }
   }
 
   toBoardPosition(x: number, y: number) {
-    let boardStyle = window.getComputedStyle(document.getElementById('board'));
+    let boardStyle = window.getComputedStyle(document.getElementById('board')!);
     x -= parseInt(boardStyle.left) + parseInt(boardStyle.borderLeftWidth);
     y -= parseInt(boardStyle.top) + parseInt(boardStyle.borderTopWidth);
     x = Math.round(x / SCALE);
@@ -74,7 +74,7 @@ export class Input {
   }
 
   fromBoardPosition(pos: {x: number, y: number}) {
-    let boardStyle = window.getComputedStyle(document.getElementById('board'));
+    let boardStyle = window.getComputedStyle(document.getElementById('board')!);
     return {
       x: pos.x * SCALE + parseInt(boardStyle.left) +
         parseInt(boardStyle.borderLeftWidth),
@@ -124,17 +124,15 @@ export class Input {
       elem.onclick = this.click.bind(this);
       elem.ondblclick = this.dblclick.bind(this);
       elem.onwheel = this.wheel.bind(this);
-      if (elem.addEventListener)
-        elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false);  // for FF
     } else {
       elem.classList.add('unselected');
       elem.onclick = this.select.bind(this);
     }
-    document.getElementById('pieces').appendChild(elem);
+    document.getElementById('pieces')!.appendChild(elem);
   }
 
   createPieces() {
-    let area = window.getComputedStyle(document.getElementById('piece-area'));
+    let area = window.getComputedStyle(document.getElementById('piece-area')!);
     let left = parseInt(area.left) + parseInt(area.paddingLeft);
     let top = parseInt(area.top) + parseInt(area.paddingTop);
     for (let i = 0; i < piecePositionTable.length; i++) {
@@ -149,7 +147,7 @@ export class Input {
   }
 
   // For full-size mode
-  private wheel_lock: boolean;
+  private wheel_lock = false;
   wheel(e: WheelEvent) {
     e.stopPropagation();
     e.preventDefault();
@@ -169,7 +167,7 @@ export class Input {
   }
 
   // For compact mode
-  private selected: PieceElement;
+  private selected: PieceElement | null = null;
   select(e: MouseEvent) {
     if (this.board.player() != this.player)
       return;
@@ -314,8 +312,8 @@ export class Input {
     let touchEnd = (e: TouchEvent) => {
       if (e.targetTouches.length > 0)
         return;
-      let clientX = elem.lastClientX;
-      let clientY = elem.lastClientY;
+      let clientX = elem.lastClientX!;
+      let clientY = elem.lastClientY!;
 
       if (touchClick) {
         this.rotate(elem, 'cyclic');
@@ -338,9 +336,4 @@ function containerOffset(e: MouseEvent) {
   let x = e.pageX - offsetParent.offsetLeft;
   let y = e.pageY - offsetParent.offsetTop;
   return {x, y};
-}
-
-// For IE
-if (!(window as any).TouchEvent) {
-  (window as any).TouchEvent = function() {};
 }

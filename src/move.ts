@@ -6,7 +6,7 @@ export class Move {
   constructor(x: number | string, y?: number, piece_id?: number) {
     if (typeof x == 'number') {
       if (arguments.length == 3)
-        this.m = x << 4 | y | piece_id << 8;
+        this.m = x << 4 | y! | piece_id! << 8;
       else
         this.m = x;
     } else if (x == '----') {

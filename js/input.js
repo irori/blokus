@@ -7,6 +7,10 @@ export class Input {
         this.board = board;
         this.player = player;
         this.onPlayerMove = onPlayerMove;
+        // For full-size mode
+        this.wheel_lock = false;
+        // For compact mode
+        this.selected = null;
         this.touchDragHandler = this.touchDrag.bind(this);
     }
     rotate(elem, dir, x, y) {
@@ -45,7 +49,7 @@ export class Input {
             child.style.left = rot.coords[i].x * SCALE + 'px';
             child.style.top = rot.coords[i].y * SCALE + 'px';
         }
-        if (x != undefined) {
+        if (x !== undefined && y !== undefined) {
             elem.style.left = x - SCALE / 2 + 'px';
             elem.style.top = y - SCALE / 2 + 'px';
         }
@@ -106,8 +110,6 @@ export class Input {
             elem.onclick = this.click.bind(this);
             elem.ondblclick = this.dblclick.bind(this);
             elem.onwheel = this.wheel.bind(this);
-            if (elem.addEventListener)
-                elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false); // for FF
         }
         else {
             elem.classList.add('unselected');
@@ -295,8 +297,4 @@ function containerOffset(e) {
     let x = e.pageX - offsetParent.offsetLeft;
     let y = e.pageY - offsetParent.offsetTop;
     return { x, y };
-}
-// For IE
-if (!window.TouchEvent) {
-    window.TouchEvent = function () { };
 }
