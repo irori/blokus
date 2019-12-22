@@ -65,7 +65,7 @@
       <div class="usage"><a href="https://github.com/irori/blokus#readme" target="_blank">[?]</a></div>
     </div>
     <div id="message"></div>
-    <div id="start-game">
+    <div id="start-game" class="start">
       <p>
         <input type="radio" name="level" id="level1" value="1" checked><label for="level1">Easy</label>
         <input type="radio" name="level" id="level2" value="2"><label for="level2">Normal</label>
@@ -75,6 +75,9 @@
         <button class="start-button" id="start-violet">Violet</button>
         <button class="start-button" id="start-orange">Orange</button>
       </p>
+    </div>
+    <div id="unsupported" class="start" hidden>
+      This browser is not supported.
     </div>
   </div>
   <div id="help" class="closed">
@@ -92,7 +95,10 @@
     </div>
   </div>
   <script type="module" src="js/blokus.js"></script>
-  <script nomodule type="text/javascript" src="dist/bundle.js" async></script>
+  <script nomodule>
+    document.getElementById('unsupported').hidden = false;
+    document.getElementById('start-game').hidden = true;
+  </script>
   <script src="js/register-sw.js" async></script>
 </body>
 </html>

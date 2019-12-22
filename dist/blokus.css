@@ -404,19 +404,19 @@ body {
   }
 }
 
-#start-game {
+.start {
   position: absolute;
   width: 280px;
   text-align: center;
 }
 @media all and (min-width: 580px) {
-  #start-game {
+  .start {
     left: 160px;
     top: 330px;
   }
 }
 @media not all and (min-width: 580px) {
-  #start-game {
+  .start {
     left: 20px;
     top: 340px;
   }

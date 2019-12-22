@@ -58,7 +58,7 @@ body {
 	background-color: #bdf;
 	visibility: hidden;
 }
-#start-game {
+.start {
 	position: absolute;
 	@include full-size {
 		left: 160px;
