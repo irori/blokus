@@ -10,7 +10,7 @@
   "license": "Unlicense",
   "repository": "github:irori/blokus",
   "devDependencies": {
-    "sass": "^1.0.0-rc.1",
+    "sass": "^1.24.0",
     "typescript": "^3.7.4"
   }
 }
