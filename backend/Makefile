@@ -10,7 +10,7 @@ EMFLAGS = -s EXPORTED_FUNCTIONS="['_hm5move', '_getVisitedNodes']" \
 
 OBJS = hm5move.o search.o board.o opening.o piece.o
 
-../dist/hm5move.js: $(OBJS) hm5move_post.js
+../docs/hm5move.js: $(OBJS) hm5move_post.js
 	$(CXX) $(CXXFLAGS) $(EMFLAGS) --post-js hm5move_post.js -o $@ $(OBJS)
 
 piece.cpp: piece.rb
@@ -23,4 +23,4 @@ opening.o: opening.cpp opening.h
 piece.o: piece.cpp piece.h
 
 clean:
-	rm -f *.o hm5move.bc ../dist/hm5move.js*
+	rm -f *.o hm5move.bc ../docs/hm5move.js*

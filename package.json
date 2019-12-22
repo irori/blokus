@@ -4,7 +4,7 @@
   "description": "Browser-based Blokus Duo game",
   "scripts": {
     "tsc": "cd src && tsc",
-    "scss": "sass scss/blokus.scss >dist/blokus.css"
+    "scss": "sass scss/blokus.scss >docs/blokus.css"
   },
   "author": "irori",
   "license": "Unlicense",

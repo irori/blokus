@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "outDir": "../js",
+        "outDir": "../docs/js",
         "newLine": "LF",
         "strict": true,
         "sourceMap": false
