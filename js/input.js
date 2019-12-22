@@ -105,7 +105,7 @@ export class Input {
                 elem.addEventListener('touchstart', this.touchDrag.bind(this), false);
             elem.onclick = this.click.bind(this);
             elem.ondblclick = this.dblclick.bind(this);
-            elem.onmousewheel = this.wheel.bind(this);
+            elem.onwheel = this.wheel.bind(this);
             if (elem.addEventListener)
                 elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false); // for FF
         }
@@ -138,9 +138,8 @@ export class Input {
         setTimeout(() => { this.wheel_lock = false; }, 50);
         if (this.board.player() != this.player)
             return;
-        let raw = e.detail ? e.detail : -e.wheelDelta;
         let { x, y } = containerOffset(e);
-        if (raw < 0)
+        if (e.deltaY < 0)
             this.rotate(e.currentTarget, 'left', x, y);
         else
             this.rotate(e.currentTarget, 'right', x, y);
@@ -172,7 +171,7 @@ export class Input {
         this.createPieces();
     }
     click(e) {
-        if (mqFullsize.matches && !e.shiftKey)
+        if (mqFullsize.matches && !e.shiftKey) // handle only shift+click
             return;
         if (this.board.player() != this.player)
             return;
@@ -181,7 +180,7 @@ export class Input {
     }
     // For full-size mode
     dblclick(e) {
-        if (e.shiftKey)
+        if (e.shiftKey) // do not handle shift+dblclick
             return;
         if (this.board.player() != this.player)
             return;

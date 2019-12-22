@@ -123,7 +123,7 @@ export class Input {
 
       elem.onclick = this.click.bind(this);
       elem.ondblclick = this.dblclick.bind(this);
-      elem.onmousewheel = this.wheel.bind(this);
+      elem.onwheel = this.wheel.bind(this);
       if (elem.addEventListener)
         elem.addEventListener('DOMMouseScroll', this.wheel.bind(this), false);  // for FF
     } else {
@@ -161,9 +161,8 @@ export class Input {
 
     if (this.board.player() != this.player)
       return;
-    let raw = e.detail ? e.detail : -e.wheelDelta;
     let {x, y} = containerOffset(e);
-    if (raw < 0)
+    if (e.deltaY < 0)
       this.rotate(e.currentTarget as PieceElement, 'left', x, y);
     else
       this.rotate(e.currentTarget as PieceElement, 'right', x, y);
