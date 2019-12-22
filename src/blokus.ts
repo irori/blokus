@@ -5,6 +5,8 @@ import { Input, mqFullsize } from './input.js';
 import Backend from './backend.js';
 import './toolbar.js';
 
+declare function gtag(...args: any): void;
+
 class Blokus {
   private board: Board;
   private view: View;
@@ -49,12 +51,14 @@ class Blokus {
 
   gameEnd() {
     this.view.gameEnd(!mqFullsize.matches);
+    gtag('event', 'gameend');
   }
 
   startGame() {
     document.getElementById('start-game')!.style.visibility = 'hidden';
     this.input.createPieces();
     this.view.startGame();
+    gtag('event', 'gamestart');
   }
 }
 

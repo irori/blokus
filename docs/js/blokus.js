@@ -39,11 +39,13 @@ class Blokus {
     }
     gameEnd() {
         this.view.gameEnd(!mqFullsize.matches);
+        gtag('event', 'gameend');
     }
     startGame() {
         document.getElementById('start-game').style.visibility = 'hidden';
         this.input.createPieces();
         this.view.startGame();
+        gtag('event', 'gamestart');
     }
 }
 let level = 1;
