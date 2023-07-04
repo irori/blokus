@@ -1,5 +1,6 @@
 *.o
 *.bc
 *.css.map
+*.js.map
 node_modules/
 backend/piece.cpp
