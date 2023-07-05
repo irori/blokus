@@ -21,7 +21,6 @@
     margin-left: 21px;
     border: solid #333;
     border-width: 2px 2px 0 0;
-    -webkit-transform: rotate(135deg);
     transform: rotate(135deg);
 }
 #toolbar {

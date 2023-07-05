@@ -44,23 +44,9 @@
   animation-duration: 2s;
   animation-iteration-count: 5;
   animation-name: animation0;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: 5;
-  -webkit-animation-name: animation0;
   background-color: var(--violet);
 }
 @keyframes animation0 {
-  0% {
-    background-color: var(--violet);
-  }
-  50% {
-    background-color: var(--bright-violet);
-  }
-  100% {
-    background-color: var(--violet);
-  }
-}
-@-webkit-keyframes animation0 {
   0% {
     background-color: var(--violet);
   }
@@ -75,9 +61,6 @@
   animation-duration: 2s;
   animation-iteration-count: 5;
   animation-name: animation1;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: 5;
-  -webkit-animation-name: animation1;
   background-color: var(--orange);
 }
 @keyframes animation1 {
@@ -91,53 +74,30 @@
     background-color: var(--orange);
   }
 }
-@-webkit-keyframes animation1 {
-  0% {
-    background-color: var(--orange);
-  }
-  50% {
-    background-color: var(--bright-orange);
-  }
-  100% {
-    background-color: var(--orange);
-  }
-}
 
 /* css/piece.css */
 .piece {
-  -webkit-transition-property:
-    -webkit-transform,
-    left,
-    top;
   transition-property:
     transform,
     left,
     top;
   transition-duration: 0.1s;
   transition-timing-function: linear;
-  -webkit-transform-origin: 10px 10px;
   transform-origin: 10px 10px;
 }
 .dragging {
-  -webkit-transition-property: -webkit-transform;
   transition-property: transform;
 }
 .rotate-left {
-  -webkit-transition-property: none;
   transition-property: none;
-  -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 .rotate-right {
-  -webkit-transition-property: none;
   transition-property: none;
-  -webkit-transform: rotate(-90deg);
   transform: rotate(-90deg);
 }
 .rotate-flip {
-  -webkit-transition-property: none;
   transition-property: none;
-  -webkit-transform: perspective(100px) rotateY(180deg);
   transform: perspective(100px) rotateY(180deg);
 }
 @media all and (min-width: 580px) {
@@ -148,7 +108,6 @@
 }
 @media not all and (min-width: 580px) {
   .unselected {
-    -webkit-transform: scale(0.5, 0.5);
     transform: scale(0.5, 0.5);
   }
   .selected {
@@ -276,7 +235,6 @@
   margin-left: 21px;
   border: solid #333;
   border-width: 2px 2px 0 0;
-  -webkit-transform: rotate(135deg);
   transform: rotate(135deg);
 }
 #toolbar {

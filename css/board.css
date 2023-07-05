@@ -39,17 +39,9 @@
 	animation-duration: 2s;
 	animation-iteration-count: 5;
 	animation-name: animation0;
-	-webkit-animation-duration: 2s;
-	-webkit-animation-iteration-count: 5;
-	-webkit-animation-name: animation0;
 	background-color: var(--violet);
 }
 @keyframes animation0 {
-	0%   { background-color: var(--violet); }
-	50%  { background-color: var(--bright-violet); }
-	100% { background-color: var(--violet); }
-}
-@-webkit-keyframes animation0 {
 	0%   { background-color: var(--violet); }
 	50%  { background-color: var(--bright-violet); }
 	100% { background-color: var(--violet); }
@@ -58,17 +50,9 @@
 	animation-duration: 2s;
 	animation-iteration-count: 5;
 	animation-name: animation1;
-	-webkit-animation-duration: 2s;
-	-webkit-animation-iteration-count: 5;
-	-webkit-animation-name: animation1;
 	background-color: var(--orange);
 }
 @keyframes animation1 {
-	0%   { background-color: var(--orange); }
-	50%  { background-color: var(--bright-orange); }
-	100% { background-color: var(--orange); }
-}
-@-webkit-keyframes animation1 {
 	0%   { background-color: var(--orange); }
 	50%  { background-color: var(--bright-orange); }
 	100% { background-color: var(--orange); }
