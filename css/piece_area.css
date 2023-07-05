@@ -1,12 +1,12 @@
 #piece-area {
 	position: absolute;
 	left: 20px;
-	@include full-size {
+	@media all and (min-width: 580px) {
 		top: 360px;
 		width: 520px;
 		height: 200px;
 	}
-	@include compact {
+	@media not all and (min-width: 580px) {
 		top: 340px;
 		width: 260px;
 		height: 100px;
@@ -29,7 +29,7 @@
 	height: 260px;
 	padding: 10px;
 	border-radius: 5px;
-	@include compact {
+	@media not all and (min-width: 580px) {
 		display: none;
 	}
 }

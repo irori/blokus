@@ -1,0 +1,74 @@
+@import 'board.css';
+@import 'piece.css';
+@import 'piece_area.css';
+@import 'right_pane.css';
+@import 'toolbar.css';
+
+:root {
+	--violet: #63d;
+	--orange: #f72;
+	--bright-violet: #a385eb;  /* mix(var(--violet), #fff, 60%); */
+	--bright-orange: #ffad7a;  /* mix(var(--orange), #fff, 60%); */
+}
+
+body {
+	background-color: #ffe;
+	font-family: sans-serif;
+}
+
+.container {
+	@media all and (min-width: 580px) {
+		width: 580px;
+	}
+	@media not all and (min-width: 580px) {
+		width: 320px;
+	}
+	position: relative;
+	margin: 0 auto;
+}
+
+.block0 {
+	background-color: var(--violet);
+}
+.block1 {
+	background-color: var(--orange);
+}
+
+#message {
+	position: absolute;
+	@media all and (min-width: 580px) {
+		left: 100px;
+		top: 315px;
+		width: 360px;
+	}
+	@media not all and (min-width: 580px) {
+		left: 20px;
+		top: 300px;
+		width: 270px;
+	}
+	padding: 5px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #bdf;
+	visibility: hidden;
+}
+.start {
+	position: absolute;
+	@media all and (min-width: 580px) {
+		left: 160px;
+		top: 330px;
+	}
+	@media not all and (min-width: 580px) {
+		left: 20px;
+		top: 340px;
+	}
+	width: 280px;
+	text-align: center;
+}
+.start-button {
+	padding: 5px 10px 5px 10px;
+	margin: 10px;
+	@media not all and (min-width: 580px) {
+		font-size: large;
+	}
+}

@@ -1,5 +1,5 @@
 .right-pane {
-	@include compact {
+	@media not all and (min-width: 580px) {
 		display: none;
 	}
     .logo {
@@ -16,7 +16,7 @@
         left: 460px;
         top: 110px;
         width: 100px;
-        color: $violet;
+        color: var(--violet);
         border-spacing: 0px;
     }
     .orange-scoreboard {
@@ -24,7 +24,7 @@
         left: 460px;
         top: 200px;
         width: 100px;
-        color: $orange;
+        color: var(--orange);
         border-spacing: 0px;
     }
 	.scoreboard-name {

@@ -1,3 +1,4 @@
+/* css/board.css */
 #board {
   position: absolute;
   border: solid black;
@@ -21,26 +22,24 @@
     top: 10px;
   }
 }
-
-.marker, .orange-marker, .violet-marker {
+.marker,
+.violet-marker,
+.orange-marker {
   position: absolute;
   width: 17px;
   height: 17px;
   border-radius: 17px;
 }
-
 .violet-marker {
   left: 81px;
   top: 81px;
-  background-color: #a385eb;
+  background-color: var(--bright-violet);
 }
-
 .orange-marker {
   left: 181px;
   top: 181px;
-  background-color: #ffad7a;
+  background-color: var(--bright-orange);
 }
-
 .block0highlight {
   animation-duration: 2s;
   animation-iteration-count: 5;
@@ -48,29 +47,28 @@
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: 5;
   -webkit-animation-name: animation0;
-  background-color: #63d;
+  background-color: var(--violet);
 }
-
 @keyframes animation0 {
   0% {
-    background-color: #63d;
+    background-color: var(--violet);
   }
   50% {
-    background-color: #a385eb;
+    background-color: var(--bright-violet);
   }
   100% {
-    background-color: #63d;
+    background-color: var(--violet);
   }
 }
 @-webkit-keyframes animation0 {
   0% {
-    background-color: #63d;
+    background-color: var(--violet);
   }
   50% {
-    background-color: #a385eb;
+    background-color: var(--bright-violet);
   }
   100% {
-    background-color: #63d;
+    background-color: var(--violet);
   }
 }
 .block1highlight {
@@ -80,68 +78,71 @@
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: 5;
   -webkit-animation-name: animation1;
-  background-color: #f72;
+  background-color: var(--orange);
 }
-
 @keyframes animation1 {
   0% {
-    background-color: #f72;
+    background-color: var(--orange);
   }
   50% {
-    background-color: #ffad7a;
+    background-color: var(--bright-orange);
   }
   100% {
-    background-color: #f72;
+    background-color: var(--orange);
   }
 }
 @-webkit-keyframes animation1 {
   0% {
-    background-color: #f72;
+    background-color: var(--orange);
   }
   50% {
-    background-color: #ffad7a;
+    background-color: var(--bright-orange);
   }
   100% {
-    background-color: #f72;
+    background-color: var(--orange);
   }
 }
+
+/* css/piece.css */
 .piece {
-  -webkit-transition-property: -webkit-transform, left, top;
-  transition-property: transform, left, top;
+  -webkit-transition-property:
+    -webkit-transform,
+    left,
+    top;
+  transition-property:
+    transform,
+    left,
+    top;
   transition-duration: 0.1s;
   transition-timing-function: linear;
   -webkit-transform-origin: 10px 10px;
   transform-origin: 10px 10px;
 }
-
 .dragging {
   -webkit-transition-property: -webkit-transform;
   transition-property: transform;
 }
-
 .rotate-left {
   -webkit-transition-property: none;
   transition-property: none;
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-
 .rotate-right {
   -webkit-transition-property: none;
   transition-property: none;
   -webkit-transform: rotate(-90deg);
   transform: rotate(-90deg);
 }
-
 .rotate-flip {
   -webkit-transition-property: none;
   transition-property: none;
   -webkit-transform: perspective(100px) rotateY(180deg);
   transform: perspective(100px) rotateY(180deg);
 }
-
 @media all and (min-width: 580px) {
-  .active .block0, .active .block1 {
+  .active .block0,
+  .active .block1 {
     cursor: pointer;
   }
 }
@@ -150,11 +151,12 @@
     -webkit-transform: scale(0.5, 0.5);
     transform: scale(0.5, 0.5);
   }
-
   .selected {
     filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.4));
   }
 }
+
+/* css/piece_area.css */
 #piece-area {
   position: absolute;
   left: 20px;
@@ -175,15 +177,12 @@
     height: 100px;
   }
 }
-
 .active-area {
   background-color: #eee;
 }
-
 .inactive-area {
   background-color: #ddd;
 }
-
 #opponents-piece-area {
   position: absolute;
   left: 20px;
@@ -198,11 +197,11 @@
     display: none;
   }
 }
-
 #opponents-pieces {
   position: relative;
 }
 
+/* css/right_pane.css */
 @media not all and (min-width: 580px) {
   .right-pane {
     display: none;
@@ -222,7 +221,7 @@
   left: 460px;
   top: 110px;
   width: 100px;
-  color: #63d;
+  color: var(--violet);
   border-spacing: 0px;
 }
 .right-pane .orange-scoreboard {
@@ -230,7 +229,7 @@
   left: 460px;
   top: 200px;
   width: 100px;
-  color: #f72;
+  color: var(--orange);
   border-spacing: 0px;
 }
 .right-pane .scoreboard-name {
@@ -253,10 +252,10 @@
   font-size: small;
 }
 
-/* Font Awesome by Dave Gandy - http://fontawesome.io */
+/* css/toolbar.css */
 @font-face {
   font-family: FontAwesome;
-  src: url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
+  src: url(//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0) format("woff2"), url(//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0) format("woff");
 }
 #handler {
   position: absolute;
@@ -271,7 +270,6 @@
     display: none;
   }
 }
-
 #handlerDownIcon {
   width: 5px;
   height: 5px;
@@ -281,7 +279,6 @@
   -webkit-transform: rotate(135deg);
   transform: rotate(135deg);
 }
-
 #toolbar {
   position: absolute;
   top: 0;
@@ -327,7 +324,6 @@
 #toolbar button:active {
   background-color: #008aaa;
 }
-
 #help {
   position: absolute;
   top: 10px;
@@ -353,11 +349,17 @@
   text-align: center;
 }
 
+/* css/blokus.css */
+:root {
+  --violet: #63d;
+  --orange: #f72;
+  --bright-violet: #a385eb;
+  --bright-orange: #ffad7a;
+}
 body {
   background-color: #ffe;
   font-family: sans-serif;
 }
-
 .container {
   position: relative;
   margin: 0 auto;
@@ -372,15 +374,12 @@ body {
     width: 320px;
   }
 }
-
 .block0 {
-  background-color: #63d;
+  background-color: var(--violet);
 }
-
 .block1 {
-  background-color: #f72;
+  background-color: var(--orange);
 }
-
 #message {
   position: absolute;
   padding: 5px;
@@ -403,7 +402,6 @@ body {
     width: 270px;
   }
 }
-
 .start {
   position: absolute;
   width: 280px;
@@ -421,7 +419,6 @@ body {
     top: 340px;
   }
 }
-
 .start-button {
   padding: 5px 10px 5px 10px;
   margin: 10px;

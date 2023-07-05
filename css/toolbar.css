@@ -5,7 +5,7 @@
          url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff');
 }
 #handler {
-    @include full-size {
+    @media all and (min-width: 580px) {
         display: none;
     }
     position: absolute;
@@ -25,7 +25,7 @@
     transform: rotate(135deg);
 }
 #toolbar {
-    @include full-size {
+    @media all and (min-width: 580px) {
         display: none;
     }
     position: absolute;
@@ -40,19 +40,19 @@
     &.closed {
         top: -40px;
     }
-    ul {
+    & ul {
         float: left;
         list-style: none;
         padding: 0;
         margin: 0;
     }
-    ul:last-child {
+    & ul:last-child {
         float: right;
     }
-    li {
+    & li {
         float: left;
     }
-    button {
+    & button {
         width: 80px;
         height: 40px;
         border: none;
@@ -64,7 +64,7 @@
         text-align: center;
         border-radius: 0;
     }
-    button:active {
+    & button:active {
         background-color: #008aaa;
     }
 }
@@ -82,7 +82,7 @@
     &.closed {
         display: none;
     }
-    button {
+    & button {
         width: 180px;
         height: 40px;
         font-family: sans-serif;

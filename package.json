@@ -4,13 +4,12 @@
   "description": "Browser-based Blokus Duo game",
   "scripts": {
     "build": "esbuild src/blokus.ts --bundle --target=es2017 --format=esm --outfile=docs/blokus.js --charset=utf8 --sourcemap --minify",
-    "scss": "sass scss/blokus.scss >docs/blokus.css"
+    "build-css": "esbuild --bundle css/blokus.css --outfile=docs/blokus.css --supported:nesting=false"
   },
   "author": "irori",
   "license": "Unlicense",
   "repository": "github:irori/blokus",
   "devDependencies": {
-    "esbuild": "^0.18.11",
-    "sass": "^1.24.0"
+    "esbuild": "^0.18.11"
   }
 }
