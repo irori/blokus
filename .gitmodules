@@ -1,0 +1,3 @@
+[submodule "wasm/blokusduo"]
+	path = wasm/blokusduo
+	url = https://github.com/irori/blokusduo.git
