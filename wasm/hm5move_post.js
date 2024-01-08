@@ -2,7 +2,7 @@ var hm5move = Module.cwrap('hm5move', 'string', ['string', 'number'])
 var getVisitedNodes = Module.cwrap('getVisitedNodes', 'number')
 
 function isValidPath(path) {
-  return path.search(/^((----|[1-9a-e]{2}[a-u][0-7])\/?)*$/) >= 0;
+  return path.search(/^((0000|[1-9a-e]{2}[a-u][0-7])\/?)*$/) >= 0;
 }
 
 function depth(level) {
@@ -21,11 +21,11 @@ function limit(level, player) {
 
   switch (level) {
   case 2:
-    return 1000 * mult;
+    return 300 * mult;
   case 3:
-    return 10000 * mult;
+    return 3000 * mult;
   }
-  return 1000 * mult;
+  return 300 * mult;
 }  
 
 function handle(data) {

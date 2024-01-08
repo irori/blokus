@@ -9,7 +9,7 @@ export class Move {
         this.m = x << 4 | y! | piece_id! << 8;
       else
         this.m = x;
-    } else if (x == '----') {
+    } else if (x == '0000') {
       this.m = 0xffff;
     } else {
       let xy = parseInt(x.substring(0, 2), 16);
@@ -28,7 +28,7 @@ export class Move {
 
   fourcc() {
     if (this.isPass())
-      return '----';
+      return '0000';
     return ((this.m & 0xff) + 0x11).toString(16) +
       String.fromCharCode(117 - this.blockId()) +
       this.direction();

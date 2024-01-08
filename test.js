@@ -1,7 +1,7 @@
 
 test("Move", function(){
     ok(Move.PASS.isPass());
-    ok((new Move("----")).isPass());
+    ok((new Move("0000")).isPass());
     var m = new Move(3, 5, 0x12);
     same(m.x(), 3);
     same(m.y(), 5);
@@ -39,7 +39,7 @@ test("Board constructor", function(){
 
 test("first move", function(){
     var b = new Board();
-    ok(b.isValidMove(new Move("----")));
+    ok(b.isValidMove(new Move("0000")));
     ok(b.isValidMove(new Move("66t0")));
     ok(b.isValidMove(new Move("55t0")));
     ok(!b.isValidMove(new Move("44t0")));
@@ -120,8 +120,8 @@ test("end game", function(){
     checkMove(new Move("B6g0"));
     checkMove(new Move("8Ej2"));
     checkMove(new Move("81f6"));
-    checkMove(new Move("----"));
+    checkMove(new Move("0000"));
     checkMove(new Move("63a0"));
-    checkMove(new Move("----"));
+    checkMove(new Move("0000"));
     ok(!b.canMove());
 });

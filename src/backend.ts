@@ -7,7 +7,7 @@ export default class WorkerBackend {
     this.worker = new Worker('hm5move.js');
     this.worker.addEventListener('message', (e) => {
       let move = new Move(e.data.move);
-      console.log(e.data.nps + ' nps');
+      console.log(`${move.fourcc()} (${e.data.nps} nps)`);
       this.handler(move);
     });
   }
