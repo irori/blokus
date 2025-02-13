@@ -1,6 +1,6 @@
-*.o
-*.bc
-*.css.map
-*.js.map
 node_modules/
-backend/piece.cpp
+build/
+dist/blokus.js
+dist/blokus.css
+dist/*.js.map
+dist/hm5move.*

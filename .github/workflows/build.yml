@@ -1,0 +1,57 @@
+name: Build
+on: push
+
+env:
+  EM_VERSION: 4.0.1
+  EM_CACHE_FOLDER: 'emsdk-cache'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup cache
+      id: cache-system-libraries
+      uses: actions/cache@v4
+      with:
+        path: ${{env.EM_CACHE_FOLDER}}
+        key: ${{env.EM_VERSION}}-${{ runner.os }}
+
+    - name: Setup Emscripten toolchain
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: ${{env.EM_VERSION}}
+        actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
+
+    - name: Build Wasm
+      run: ./build-wasm.sh
+
+    - name: Build
+      run: |
+        npm install
+        npm run build
+        npm run build-css
+
+    - name: Upload artifacts for GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: dist
+
+  deploy:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        id: deployment
