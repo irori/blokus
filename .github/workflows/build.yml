@@ -10,23 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
 
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version: 24
 
     - name: Setup cache
       id: cache-system-libraries
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{env.EM_CACHE_FOLDER}}
         key: ${{env.EM_VERSION}}-${{ runner.os }}
 
     - name: Setup Emscripten toolchain
-      uses: mymindstorm/setup-emsdk@v14
+      uses: emscripten-core/setup-emsdk@v16
       with:
         version: ${{env.EM_VERSION}}
         actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
@@ -44,7 +44,7 @@ jobs:
       run: npm test
 
     - name: Upload artifacts for GitHub Pages
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v5
       with:
         path: dist
 
@@ -60,5 +60,5 @@ jobs:
       id-token: write
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         id: deployment
