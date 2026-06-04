@@ -3,6 +3,7 @@
         "target": "es2017",
         "noEmit": true,
         "strict": true,
-        "sourceMap": false
+        "sourceMap": false,
+        "allowImportingTsExtensions": true
     }
 }

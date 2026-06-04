@@ -1,5 +1,5 @@
-import { pieceSet, blockSet } from './piece.js';
-import { Move, PASS } from './move.js';
+import { pieceSet, blockSet } from './piece.ts';
+import { Move, PASS } from './move.ts';
 
 const VIOLET_MASK = 0x07;
 const ORANGE_MASK = 0x70;

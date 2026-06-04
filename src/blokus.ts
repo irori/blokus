@@ -1,9 +1,9 @@
-import { Move } from './move.js';
-import { Board } from './board.js';
-import { View } from './view.js';
-import { Input, mqFullsize } from './input.js';
-import Backend from './backend.js';
-import './toolbar.js';
+import { Move } from './move.ts';
+import { Board } from './board.ts';
+import { View } from './view.ts';
+import { Input, mqFullsize } from './input.ts';
+import Backend from './backend.ts';
+import './toolbar.ts';
 
 declare function gtag(...args: any): void;
 
@@ -12,8 +12,10 @@ class Blokus {
   private view: View;
   private input: Input;
   private backend: Backend;
+  private level: number;
 
-  constructor(player: number, private level: number) {
+  constructor(player: number, level: number) {
+    this.level = level;
     this.board = new Board();
     this.view = new View(this.board, player);
     this.input = new Input(this.board, player, this.onPlayerMove.bind(this));

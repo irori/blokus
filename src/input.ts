@@ -1,7 +1,7 @@
-import { Move } from './move.js';
-import { blockSet } from './piece.js';
-import { Board } from './board.js';
-import { SCALE, piecePositionTable } from './view.js';
+import { Move } from './move.ts';
+import { blockSet } from './piece.ts';
+import { Board } from './board.ts';
+import { SCALE, piecePositionTable } from './view.ts';
 
 interface PieceElement extends HTMLElement {
   blockId: number;
@@ -13,9 +13,15 @@ interface PieceElement extends HTMLElement {
 export const mqFullsize = window.matchMedia('(min-width: 580px)');
 
 export class Input {
+  private board: Board;
+  private player: number;
+  private onPlayerMove: (move: Move) => void;
   private touchDragHandler: (e: TouchEvent) => void;
 
-  constructor(private board: Board, private player: number, private onPlayerMove: (move: Move) => void) {
+  constructor(board: Board, player: number, onPlayerMove: (move: Move) => void) {
+    this.board = board;
+    this.player = player;
+    this.onPlayerMove = onPlayerMove;
     this.touchDragHandler = this.touchDrag.bind(this);
   }
 

@@ -1,6 +1,6 @@
-import { blockSet } from './piece.js';
-import { Move } from './move.js';
-import { Board } from './board.js';
+import { blockSet } from './piece.ts';
+import { Move } from './move.ts';
+import { Board } from './board.ts';
 
 export const SCALE = 20;
 export const piecePositionTable = [ // x, y, dir
@@ -28,10 +28,15 @@ export const piecePositionTable = [ // x, y, dir
 ];
 
 export class View {
+  private board: Board;
+  private player: number;
   private elapsed: [number, number] = [0, 0];
   private timer: number = 0;
 
-  constructor(private board: Board, private player: number) {}
+  constructor(board: Board, player: number) {
+    this.board = board;
+    this.player = player;
+  }
 
   startGame() {
     const names = ['You', 'Computer'];

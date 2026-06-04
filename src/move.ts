@@ -1,4 +1,4 @@
-import { blockSet } from './piece.js';
+import { blockSet } from './piece.ts';
 
 export class Move {
   private m: number;

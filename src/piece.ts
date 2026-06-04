@@ -1,8 +1,10 @@
 class Piece {
+  id: number;
   size: number;
   coords: {x: number, y: number}[];
 
-  constructor(public id: number, coords: [number, number][]) {
+  constructor(id: number, coords: [number, number][]) {
+    this.id = id;
     this.size = coords.length;
     this.coords = [];
     for (let i = 0; i < coords.length; i++)
@@ -29,9 +31,11 @@ class Rotation {
 }
 
 class Block {
+  size: number;
   rotations: Rotation[];
 
-  constructor(private id: number, public size: number, rotations: [number, number, Piece][]) {
+  constructor(_id: number, size: number, rotations: [number, number, Piece][]) {
+    this.size = size;
     this.rotations = [];
     for (let i = 0; i < 8; i++)
       this.rotations[i] = new Rotation(rotations[i]);

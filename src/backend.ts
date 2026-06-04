@@ -1,9 +1,11 @@
-import { Move } from './move.js';
+import { Move } from './move.ts';
 
 export default class WorkerBackend {
   private worker: Worker;
+  private handler: (move: Move) => void;
 
-  constructor(private handler: (move: Move) => void) {
+  constructor(handler: (move: Move) => void) {
+    this.handler = handler;
     this.worker = new Worker('hm5move.js');
     this.worker.addEventListener('message', (e) => {
       let move = new Move(e.data.move);
