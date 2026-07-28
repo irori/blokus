@@ -21,11 +21,11 @@ function limit(level, player) {
 
   switch (level) {
   case 2:
-    return 300 * mult;
+    return 60 * mult;
   case 3:
-    return 3000 * mult;
+    return 600 * mult;
   }
-  return 300 * mult;
+  return 60 * mult;
 }  
 
 function handle(data) {
