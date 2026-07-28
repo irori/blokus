@@ -1,5 +1,11 @@
-var hm5move = Module.cwrap('hm5move', 'string', ['string', 'number'])
-var getVisitedNodes = Module.cwrap('getVisitedNodes', 'number')
+var hm5move = Module.cwrap(
+  'hm5move',
+  'string',
+  ['string', 'number', 'number'])
+
+function getVisitedNodes() {
+  return Module['_getVisitedNodes']();
+}
 
 function isValidPath(path) {
   return path.search(/^((0000|[1-9a-e]{2}[a-u][0-7])\/?)*$/) >= 0;
