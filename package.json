@@ -4,8 +4,8 @@
   "description": "Browser-based Blokus Duo game",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/blokus.ts --bundle --target=es2017 --format=esm --outfile=dist/blokus.js --charset=utf8 --sourcemap --minify",
-    "build-css": "esbuild --bundle css/blokus.css --outfile=dist/blokus.css --supported:nesting=false",
+    "build": "esbuild src/blokus.ts css/blokus.css --bundle --target=es2017 --format=esm --outdir=dist \"--entry-names=[name]\" --charset=utf8 --sourcemap --minify --supported:nesting=false",
+    "serve": "esbuild src/blokus.ts css/blokus.css --bundle --target=es2017 --format=esm --outdir=dist \"--entry-names=[name]\" --charset=utf8 --sourcemap --supported:nesting=false --servedir=dist",
     "test": "node --test test/*.test.ts"
   },
   "author": "irori",

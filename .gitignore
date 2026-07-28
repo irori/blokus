@@ -3,4 +3,5 @@ build/
 dist/blokus.js
 dist/blokus.css
 dist/*.js.map
+dist/*.css.map
 dist/hm5move.*
