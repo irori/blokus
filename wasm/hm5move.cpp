@@ -9,15 +9,18 @@ using namespace blokusduo;
 
 EM_JS(unsigned, clock_ms, (), { return performance.now(); });
 
-Move com_move(const Board& b, int max_depth, int limit_ms) {
+Move com_move(const Board& b, int max_depth, int limit_ms,
+              double temperature) {
   Move move = search::opening_move(b);
   if (move.is_valid()) return move;
 
   unsigned start_ms = clock_ms();
   search::SearchResult r;
   if (b.turn() < 25) {
-    r = search::negascout(
-        b, max_depth, [start_ms, limit_ms](int depth, search::SearchResult r) {
+    uint64_t seed = (static_cast<uint64_t>(rand()) << 32) | rand();
+    r = search::negascout_gumbel(
+        b, max_depth, temperature, seed,
+        [start_ms, limit_ms](int depth, search::SearchResult r) {
           unsigned now = clock_ms();
           printf("%d> %s %d nodes %d ms\n", depth, r.first.code().c_str(),
                  search::visited_nodes, now - start_ms);
@@ -32,7 +35,8 @@ Move com_move(const Board& b, int max_depth, int limit_ms) {
 }
 
 extern "C"
-const char* hm5move(const char* path, int max_depth, int limit_ms) {
+const char* hm5move(const char* path, int max_depth, int limit_ms,
+                    double temperature) {
   static std::string fourcc;
   static bool initialized = false;
   if (!initialized) {
@@ -49,7 +53,7 @@ const char* hm5move(const char* path, int max_depth, int limit_ms) {
     b.play_move(m);
   }
   search::visited_nodes = 0;
-  Move m = com_move(b, max_depth, limit_ms);
+  Move m = com_move(b, max_depth, limit_ms, temperature);
   fourcc = m.code();
   return fourcc.c_str();
 }
