@@ -27,11 +27,11 @@ function limit(level, player) {
 
   switch (level) {
   case 2:
-    return 60 * mult;
+    return 50 * mult;
   case 3:
-    return 600 * mult;
+    return 500 * mult;
   }
-  return 60 * mult;
+  return 50 * mult;
 }  
 
 function temperature(level) {
@@ -62,6 +62,14 @@ function handle(data) {
 
 var ready = false;
 var onReady;
+var failed = false;
+
+function fail() {
+  if (failed)
+    return;
+  failed = true;
+  postMessage({type: 'error'});
+}
 
 addEventListener('message', function(e) {
   if (ready)
@@ -70,10 +78,11 @@ addEventListener('message', function(e) {
     onReady = function() { handle(e.data) };
 });
 
-if (!Module['preRun'])
-    Module['preRun'] = [];
-Module['preRun'].push(function() {
+Module['onAbort'] = fail;
+addEventListener('unhandledrejection', fail);
+
+Module['onRuntimeInitialized'] = function() {
   ready = true;
   if (onReady)
     onReady();
-});
+};

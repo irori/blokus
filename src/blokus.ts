@@ -14,12 +14,12 @@ class Blokus {
   private backend: Backend;
   private level: number;
 
-  constructor(player: number, level: number) {
+  constructor(player: number, level: number, backend: Backend) {
     this.level = level;
     this.board = new Board();
     this.view = new View(this.board, player);
     this.input = new Input(this.board, player, this.onPlayerMove.bind(this));
-    this.backend = new Backend(this.onOpponentMove.bind(this));
+    this.backend = backend;
     this.startGame();
     if (player == 1)
       this.opponentMove();
@@ -65,9 +65,25 @@ class Blokus {
 }
 
 let level = 1;
+let blokus: Blokus;
 function startButton(player: number) {
-  const blokus = new Blokus(player, level);
+  blokus = new Blokus(player, level, backend);
 }
+
+function showUnsupported(message: string) {
+  document.getElementById('unsupported')!.textContent = message;
+  document.getElementById('unsupported')!.hidden = false;
+  document.getElementById('start-game')!.hidden = true;
+}
+
+function showBackendError(error: Error) {
+  showUnsupported('The computer player could not be started.');
+  gtag('event', 'backenderror', {error_type: error.message});
+}
+
+const backend = new Backend((move) => blokus.onOpponentMove(move));
+backend.failure.then(showBackendError);
+
 document.getElementById('start-violet')!.addEventListener('click', () => startButton(0));
 document.getElementById('start-orange')!.addEventListener('click', () => startButton(1));
 document.getElementById('level1')!.addEventListener('click', () => level = 1);
