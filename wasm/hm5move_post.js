@@ -1,88 +1,100 @@
-var hm5move = Module.cwrap(
+const hm5move = Module.cwrap(
   'hm5move',
   'string',
-  ['string', 'number', 'number', 'number'])
+  ['string', 'number', 'number', 'number'],
+);
+
+const PATH_PATTERN = /^((0000|[1-9a-e]{2}[a-u][0-7])\/?)*$/;
 
 function getVisitedNodes() {
-  return Module['_getVisitedNodes']();
+  return Module._getVisitedNodes();
 }
 
 function isValidPath(path) {
-  return path.search(/^((0000|[1-9a-e]{2}[a-u][0-7])\/?)*$/) >= 0;
+  return PATH_PATTERN.test(path);
 }
 
 function depth(level) {
   switch (level) {
-  case 2:
-    return 10;
-  case 3:
-    return 10;
+    case 2:
+    case 3:
+      return 10;
+    default:
+      return 3;
   }
-  return 3;
 }
 
 function limit(level, player) {
   // Give Orange more time than Violet
-  var mult = [0.9, 1.1][player];
+  const multiplier = [0.9, 1.1][player];
 
   switch (level) {
-  case 2:
-    return 50 * mult;
-  case 3:
-    return 500 * mult;
+    case 2:
+      return 50 * multiplier;
+    case 3:
+      return 500 * multiplier;
+    default:
+      return 50 * multiplier;
   }
-  return 50 * mult;
-}  
+}
 
 function temperature(level) {
   switch (level) {
-  case 2:
-    return 1.5;
-  case 3:
-    return 1.0;
+    case 2:
+      return 1.5;
+    case 3:
+      return 1.0;
+    default:
+      return 2.0;
   }
-  return 2.0;
 }
 
 function handle(data) {
-  var path = data.path;
-  var level = data.level;
+  const {path, level} = data;
 
   if (isValidPath(path)) {
-    var start = Date.now();
-    var player = path.split('/').length % 2;
-    var move = hm5move(
-      path, depth(level), limit(level, player), temperature(level));
-    var elapsed = (Date.now() - start) / 1000;
-    postMessage({'move': move, 'nps': getVisitedNodes() / elapsed});
+    const start = Date.now();
+    const player = path.split('/').length % 2;
+    const move = hm5move(
+      path,
+      depth(level),
+      limit(level, player),
+      temperature(level),
+    );
+    const elapsed = (Date.now() - start) / 1000;
+    postMessage({move, nps: getVisitedNodes() / elapsed});
   } else {
-    postMessage({'move': "XXXX invalid path"});
+    postMessage({move: 'XXXX invalid path'});
   }
 }
 
-var ready = false;
-var onReady;
-var failed = false;
+let ready = false;
+let onReady;
+let failed = false;
 
 function fail() {
-  if (failed)
+  if (failed) {
     return;
+  }
+
   failed = true;
   postMessage({type: 'error'});
 }
 
-addEventListener('message', function(e) {
-  if (ready)
-    handle(e.data);
-  else
-    onReady = function() { handle(e.data) };
+addEventListener('message', (event) => {
+  if (ready) {
+    handle(event.data);
+  } else {
+    onReady = () => handle(event.data);
+  }
 });
 
-Module['onAbort'] = fail;
+Module.onAbort = fail;
 addEventListener('unhandledrejection', fail);
 
-Module['onRuntimeInitialized'] = function() {
+Module.onRuntimeInitialized = () => {
   ready = true;
-  if (onReady)
+  if (onReady) {
     onReady();
+  }
 };
